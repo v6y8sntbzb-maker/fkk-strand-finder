@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>FKK Strand Finder</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>🏖️ FKK Strand Finder</h1>
+      <p>FKK-Strände in deiner Nähe</p>
+    </div>
+    <button id="locateBtn" class="icon-btn" aria-label="Meinen Standort finden">📍</button>
+  </header>
+
+  <main>
+    <section class="controls">
+      <label for="radius">Umkreis: <strong id="radiusValue">25 km</strong></label>
+      <input id="radius" type="range" min="5" max="100" step="5" value="25">
+      <button id="locationBtn" class="primary">📍 Meinen Standort verwenden</button>
+      <div id="status" class="status">Standort noch nicht ermittelt.</div>
+    </section>
+
+    <section id="map"></section>
+
+    <section class="results">
+      <div class="section-title">
+        <h2>FKK-Strände</h2>
+        <span id="resultCount">0 gefunden</span>
+      </div>
+      <div id="places"></div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="closeModal" class="close">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <footer>
+    Kartendaten © OpenStreetMap-Mitwirkende
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
