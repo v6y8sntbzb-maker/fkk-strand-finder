@@ -1,14 +1,12 @@
-FKK Strand Finder – Version 10
+FKK Strand Finder – Version 11
 
-Trefferqualität verbessert:
-- OpenStreetMap-Tags nudism=yes/designated/obligatory/customary/permissive werden gezielt berücksichtigt.
-- nudism=no wird nicht mehr fälschlich als FKK-Treffer übernommen.
-- FKK-Begriffe in Name, offizieller Name und Beschreibung werden weiterhin erkannt.
-- Treffer werden als ausgewiesener FKK-Bereich, FKK erlaubt, Nacktbaden üblich usw. gekennzeichnet.
-- Wenn OpenStreetMap Angaben zu Zugang, Eintritt oder Öffnungszeiten enthält, werden sie angezeigt.
-- Geschwindigkeit aus V9 bleibt erhalten.
-
-OpenStreetMap dokumentiert nudism=* als sinnvolles Zusatz-Tag für Badeplätze, Strände und andere Badeeinrichtungen.
+Fehlerbehebung:
+- Ein erfolgreicher Overpass-Aufruf wurde zuvor als "1 FKK-Ort gefunden" angezeigt,
+  obwohl der Treffer später bei der lokalen Filterung verworfen wurde.
+- Die Anzeige zählt jetzt nur noch tatsächlich dargestellte Live-Treffer.
+- Die OSM-Auswertung berücksichtigt zusätzlich alt_name und note.
+- FKK-Hinweise werden etwas robuster erkannt.
+- Die schnelle Suche aus V9/V10 bleibt erhalten.
 
 Installation:
 index.html, style.css und app.js auf GitHub Pages ersetzen.

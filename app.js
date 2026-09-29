@@ -89,7 +89,7 @@ function renderResults(items, liveCount, failedParts, radius){
   resultsEl.innerHTML="";
 
   if (!items.length){
-    resultsEl.innerHTML='<div class="card"><div class="muted">Keine passenden FKK-Orte im gewählten Radius gefunden.</div></div>';
+    resultsEl.innerHTML='<div class="card"><div class="muted">Keine passenden FKK-Orte im gewählten Radius gefunden.</div><div class="source">Tipp: Größeren Suchradius wählen oder später erneut suchen.</div></div>';
     return;
   }
 
@@ -115,8 +115,12 @@ function renderResults(items, liveCount, failedParts, radius){
     resultsEl.appendChild(card);
   });
 
-  if(liveCount>0){
-    statusEl.innerHTML=`✅ Live-OpenStreetMap: ${liveCount} FKK-Ort(e) gefunden.`
+  const displayedLiveCount = items.filter(p=>p.live).length;
+  if(displayedLiveCount>0){
+    statusEl.innerHTML=`✅ Live-OpenStreetMap: ${displayedLiveCount} FKK-Ort(e) angezeigt.`
+      + (failedParts?` <span class="muted">(${failedParts} Teilabfrage(n) waren nicht erreichbar.)</span>`:"");
+  } else if(liveCount>0){
+    statusEl.innerHTML=`ℹ️ OpenStreetMap hat Daten geliefert, aber keine passenden FKK-Orte im Radius.`
       + (failedParts?` <span class="muted">(${failedParts} Teilabfrage(n) waren nicht erreichbar.)</span>`:"");
   } else {
     statusEl.textContent="⚠️ Live-OpenStreetMap ist gerade nicht erreichbar. Bekannte FKK-Orte werden angezeigt.";
@@ -183,20 +187,29 @@ async function fetchOverpass(query, maxMs=12000){
 
 function elementsToItems(elements,lat,lon,radiusKm){
   const byId=new Map();
+
   (elements||[]).forEach(el=>{
     const c=centerOf(el);
     if(!c) return;
+
     const d=haversineKm(lat,lon,c[0],c[1]);
     if(d>radiusKm) return;
 
     const tags=el.tags||{};
     const nudism=(tags.nudism||"").toLowerCase();
-    const text=((tags.name||"")+" "+(tags.official_name||"")+" "+(tags.description||"")).toLowerCase();
+    const text=[
+      tags.name||"",
+      tags.official_name||"",
+      tags.alt_name||"",
+      tags.description||"",
+      tags.note||""
+    ].join(" ").toLowerCase();
 
     const hasPositiveNudism=["yes","designated","obligatory","customary","permissive"].includes(nudism);
     const hasFkkText=/fkk|freikörper|nacktbad|nacktbade|nacktbadestrand|nudist|naturist/.test(text);
 
-    // Name/description matches are kept, but explicit nudism=no is rejected.
+    // Keep explicit nudism=no out unless the object itself contains a
+    // strong FKK term (useful for imperfect OSM tagging).
     if(nudism==="no" && !hasFkkText) return;
     if(!hasPositiveNudism && !hasFkkText) return;
 
@@ -206,6 +219,7 @@ function elementsToItems(elements,lat,lon,radiusKm){
     else if(nudism==="customary") label="Nacktbaden üblich";
     else if(nudism==="permissive") label="FKK erlaubt";
     else if(nudism==="yes") label="FKK / Nacktbaden";
+    else if(hasFkkText) label="FKK-Hinweis in OpenStreetMap";
 
     const type =
       tags.leisure==="bathing_place" ? "Badeplatz" :
@@ -223,11 +237,11 @@ function elementsToItems(elements,lat,lon,radiusKm){
         lat:c[0],
         lon:c[1],
         label,
-        status:tags.description||"",
+        status:tags.description||tags.note||"",
         distance:d,
         live:true,
         type,
-        nudism:nudism,
+        nudism,
         fee:tags.fee||"",
         access:tags.access||"",
         website:tags.website||"",
@@ -235,6 +249,7 @@ function elementsToItems(elements,lat,lon,radiusKm){
       });
     }
   });
+
   return [...byId.values()];
 }
 async function searchLive(lat,lon,radiusKm){
