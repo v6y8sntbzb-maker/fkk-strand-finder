@@ -1,6 +1,7 @@
 const OVERPASS_ENDPOINTS = [
   "https://overpass-api.de/api/interpreter",
-  "https://overpass.kumi.systems/api/interpreter"
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter"
 ];
 
 let map = L.map("map").setView([52.62, 10.08], 10);
@@ -117,20 +118,30 @@ function classify(tags) {
 
 async function fetchOverpass(query) {
   let lastError = null;
+
+  // GET ist für eine statische GitHub-Pages-App auf mobilen Browsern
+  // robuster als die bisherige POST-Variante.
   for (const endpoint of OVERPASS_ENDPOINTS) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 30000);
-      const response = await fetch(endpoint, {
-        method:"POST",
-        headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
-        body:"data="+encodeURIComponent(query),
-        signal:controller.signal
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      const url = endpoint + "?data=" + encodeURIComponent(query);
+      const response = await fetch(url, {
+        method: "GET",
+        mode: "cors",
+        cache: "no-store",
+        signal: controller.signal
       });
       clearTimeout(timeout);
-      if (!response.ok) throw new Error("HTTP "+response.status);
-      return await response.json();
-    } catch(e) {
+
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const text = await response.text();
+
+      if (!text || text.trim().startsWith("<")) {
+        throw new Error("Ungültige Antwort des Overpass-Servers");
+      }
+      return JSON.parse(text);
+    } catch (e) {
       lastError = e;
     }
   }
@@ -148,89 +159,20 @@ async function loadPlaces() {
   const lat = currentLocation.lat;
   const lon = currentLocation.lon;
 
-  // Breite Suche: FKK-Tags + Badestellen/Strände, damit nicht nur exakt
-  // "nudism=yes" gefunden wird.
+  // FKK-fokussierte Suche: deutlich kleiner als eine Abfrage
+  // aller Badeseen im 100-km-Radius.
   const query = `
-[out:json][timeout:30];
+[out:json][timeout:45];
 (
   nwr(around:${r},${lat},${lon})["nudism"];
-  nwr(around:${r},${lat},${lon})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
-  nwr(around:${r},${lat},${lon})["description"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
-  nwr(around:${r},${lat},${lon})["leisure"="bathing_place"];
-  nwr(around:${r},${lat},${lon})["leisure"="beach"];
-  nwr(around:${r},${lat},${lon})["leisure"="beach_resort"];
-  nwr(around:${r},${lat},${lon})["leisure"="swimming_area"];
-  nwr(around:${r},${lat},${lon})["natural"="beach"];
+  nwr(around:${r},${lat},${lon})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
+  nwr(around:${r},${lat},${lon})["description"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
+  nwr(around:${r},${lat},${lon})["note"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
+  nwr(around:${r},${lat},${lon})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
 );
 out center tags;
 `;
-
-  try {
-    const data = await fetchOverpass(query);
-    if (myRequest !== requestId) return;
-
-    const seen = new Set();
-    places = [];
-
-    for (const el of (data.elements || [])) {
-      const point = elementPoint(el);
-      if (!point) continue;
-      const tags = el.tags || {};
-      const key = (tags.name || "").trim().toLowerCase() + "|" + point.lat.toFixed(5) + "|" + point.lon.toFixed(5);
-      if (seen.has(key)) continue;
-      seen.add(key);
-
-      const distance = haversine(lat, lon, point.lat, point.lon);
-      if (distance > Number(radiusEl.value) + 0.5) continue;
-
-      const classification = classify(tags);
-      places.push({
-        id: el.type + "/" + el.id,
-        name: tags.name || "Unbenannte Badestelle",
-        lat: point.lat,
-        lon: point.lon,
-        distance,
-        tags,
-        label: classification.label,
-        score: classification.score
-      });
-    }
-
-    // FKK-Hinweise zuerst, danach Entfernung.
-    places.sort((a,b) => b.score-a.score || a.distance-b.distance);
-    renderPlaces();
-    setStatus(places.length
-      ? `✅ ${places.length} Einträge im Umkreis von ${radiusEl.value} km gefunden.`
-      : `Keine passenden OSM-Einträge im Umkreis von ${radiusEl.value} km. Das kann an unvollständigen OSM-Daten liegen.`
-    );
-  } catch (e) {
-    if (myRequest !== requestId) return;
-    setStatus("Die OpenStreetMap-Suche konnte gerade nicht geladen werden. Bitte später erneut versuchen.", true);
-    resultsEl.innerHTML = `<p class="hint">Technischer Fehler bei der Datenabfrage. Prüfe auch deine Internetverbindung.</p>`;
-    countEl.textContent = "0";
-  }
-}
-
-function renderPlaces() {
-  countEl.textContent = places.length;
-  resultsEl.innerHTML = "";
-
-  places.forEach((p, index) => {
-    const marker = L.marker([p.lat,p.lon]).addTo(map);
-    marker.bindPopup(`<strong>${escapeHtml(p.name)}</strong><br>${p.distance.toFixed(1)} km<br>${escapeHtml(p.label)}`);
-    marker.on("click", () => showDetails(index));
-    markers.push(marker);
-
-    const div = document.createElement("div");
-    div.className = "result";
-    const access = p.tags.access ? `<span class="tag">Zugang: ${escapeHtml(p.tags.access)}</span>` : "";
-    const nud = p.tags.nudism ? `<span class="tag">nudism=${escapeHtml(p.tags.nudism)}</span>` : "";
-    div.innerHTML = `
-      <h3>${escapeHtml(p.name)}</h3>
-      <p><strong>${p.distance.toFixed(1)} km</strong> · ${escapeHtml(p.label)}</p>
-      <p>${access}${nud}</p>
-      <button type="button">Details</button>
-    `;
+;
     div.querySelector("button").addEventListener("click", () => {
       map.setView([p.lat,p.lon], Math.max(map.getZoom(),13));
       showDetails(index);

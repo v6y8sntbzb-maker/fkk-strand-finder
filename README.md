@@ -23,3 +23,9 @@ Danach GitHub Pages neu laden und auf "Meinen Standort verwenden" tippen.
 ## Datenquelle
 
 OpenStreetMap und die Overpass API.
+
+
+## Version 5 – Fehlerbehebung
+
+Diese Version verwendet für Overpass eine GET-Abfrage statt POST und versucht drei öffentliche Overpass-Server.
+Die Abfrage wurde auf echte FKK-/Nudismus-Hinweise beschränkt, damit ein Radius von 100 km nicht unnötig tausende Badestellen laden muss.
