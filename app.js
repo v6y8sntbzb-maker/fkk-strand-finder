@@ -1,7 +1,6 @@
 const OVERPASS_ENDPOINTS = [
   "https://overpass-api.de/api/interpreter",
-  "https://overpass.kumi.systems/api/interpreter",
-  "https://overpass.private.coffee/api/interpreter"
+  "https://overpass.kumi.systems/api/interpreter"
 ];
 
 const FALLBACK_PLACES = [
@@ -121,29 +120,24 @@ function renderResults(items, liveCount, failedParts, radius){
 }
 
 function buildBboxes(lat,lon,radiusKm){
-  // Four overlapping boxes cover the complete radius bounding square.
+  // For normal searches use one compact circular query.
+  // Only large searches are split into 4 boxes.
+  if(radiusKm <= 40) return null;
+
   const latDelta=radiusKm/111.32;
   const lonDelta=radiusKm/(111.32*Math.max(0.2,Math.cos(lat*Math.PI/180)));
-  const halfLat=latDelta/2;
-  const halfLon=lonDelta/2;
-  const overlapLat=latDelta*0.08;
-  const overlapLon=lonDelta*0.08;
-
-  const south=lat-latDelta, north=lat+latDelta;
-  const west=lon-lonDelta, east=lon+lonDelta;
   const midLat=lat, midLon=lon;
-
   return [
-    [south, west, midLat+overlapLat, midLon+overlapLon],
-    [south, midLon-overlapLon, midLat+overlapLat, east],
-    [midLat-overlapLat, west, north, midLon+overlapLon],
-    [midLat-overlapLat, midLon-overlapLon, north, east]
+    [lat-latDelta, lon-lonDelta, midLat, midLon],
+    [lat-latDelta, midLon, midLat, lon+lonDelta],
+    [midLat, lon-lonDelta, lat+latDelta, midLon],
+    [midLat, midLon, lat+latDelta, lon+lonDelta]
   ];
 }
 
 function queryForBbox(b){
   const [s,w,n,e]=b;
-  return `[out:json][timeout:25];(
+  return `[out:json][timeout:12];(
     nwr(${s},${w},${n},${e})["nudism"];
     nwr(${s},${w},${n},${e})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
     nwr(${s},${w},${n},${e})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
@@ -151,12 +145,21 @@ function queryForBbox(b){
   );out center tags;`;
 }
 
-async function fetchOverpass(query){
+function queryForRadius(lat,lon,radiusKm){
+  return `[out:json][timeout:12];(
+    nwr(around:${radiusKm*1000},${lat},${lon})["nudism"];
+    nwr(around:${radiusKm*1000},${lat},${lon})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
+    nwr(around:${radiusKm*1000},${lat},${lon})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
+    nwr(around:${radiusKm*1000},${lat},${lon})["description"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
+  );out center tags;`;
+}
+
+async function fetchOverpass(query, maxMs=12000){
   let lastError=null;
   for(const endpoint of OVERPASS_ENDPOINTS){
     try{
       const controller=new AbortController();
-      const timeout=setTimeout(()=>controller.abort(),30000);
+      const timeout=setTimeout(()=>controller.abort(),maxMs);
       const response=await fetch(endpoint,{
         method:"POST",
         headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
@@ -173,41 +176,61 @@ async function fetchOverpass(query){
       lastError=e;
     }
   }
-  throw lastError || new Error("Keine Overpass-Datenquelle erreichbar");
+  throw lastError || new Error("Overpass nicht erreichbar");
 }
 
-async function searchLive(lat,lon,radiusKm){
-  const boxes=buildBboxes(lat,lon,radiusKm);
-  let successes=0, failures=0, all=[];
-
-  // Sequential requests are gentler on public Overpass servers.
-  for(const box of boxes){
-    try{
-      const data=await fetchOverpass(queryForBbox(box));
-      successes++;
-      if(data && Array.isArray(data.elements)) all.push(...data.elements);
-    }catch(e){
-      failures++;
-    }
-  }
-
+function elementsToItems(elements,lat,lon,radiusKm){
   const byId=new Map();
-  all.forEach(el=>{
+  (elements||[]).forEach(el=>{
     const c=centerOf(el);
     if(!c) return;
     const d=haversineKm(lat,lon,c[0],c[1]);
     if(d>radiusKm) return;
-
     const tags=el.tags||{};
     const name=tags.name||tags.official_name||tags.alt_name||"FKK-/Nacktbereich";
     const label=tags.nudism ? `nudism=${tags.nudism}` : "FKK-/Nacktbereich";
     const key=`${el.type}/${el.id}`;
     if(!byId.has(key)){
-      byId.set(key,{name,lat:c[0],lon:c[1],label,status:tags.description||"",distance:d,live:true});
+      byId.set(key,{
+        name,lat:c[0],lon:c[1],label,
+        status:tags.description||"",
+        distance:d,live:true
+      });
     }
   });
+  return [...byId.values()];
+}
 
-  return {items:[...byId.values()],successes,failures};
+async function searchLive(lat,lon,radiusKm){
+  const all=[];
+  let successes=0, failures=0;
+
+  if(radiusKm<=40){
+    try{
+      const data=await fetchOverpass(queryForRadius(lat,lon,radiusKm),12000);
+      successes=1;
+      all.push(...(data.elements||[]));
+    }catch(e){
+      failures=1;
+    }
+  }else{
+    const boxes=buildBboxes(lat,lon,radiusKm);
+    // Large searches run in parallel so the user doesn't wait for 4 x 12 seconds.
+    const results=await Promise.all(boxes.map(async box=>{
+      try{
+        const data=await fetchOverpass(queryForBbox(box),12000);
+        return {ok:true,elements:data.elements||[]};
+      }catch(e){
+        return {ok:false,elements:[]};
+      }
+    }));
+    results.forEach(r=>{
+      if(r.ok) successes++; else failures++;
+      all.push(...r.elements);
+    });
+  }
+
+  return {items:elementsToItems(all,lat,lon,radiusKm),successes,failures};
 }
 
 function fallbackFor(lat,lon,radiusKm){
@@ -223,7 +246,7 @@ async function searchPlaces(){
   const {lat,lon}=userLocation;
   const radiusKm=Number(radiusEl.value);
 
-  statusEl.textContent="🔎 Suche in mehreren kleineren Bereichen …";
+  statusEl.textContent=radiusKm<=40 ? "🔎 Schnelle Live-Suche …" : "🔎 Große Suche wird aufgeteilt …";
   resultsEl.innerHTML='<div class="card">Live-Daten werden geladen …</div>';
 
   const live=await searchLive(lat,lon,radiusKm);
