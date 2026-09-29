@@ -1,1 +1,47 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0f766e"><title>FKK Strand Finder</title><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="style.css"></head><body><header><div><h1>🏖️ FKK Strand Finder</h1><p>FKK-Strände in deiner Nähe</p></div><button id="locateBtn">📍</button></header><section class="controls"><label>Umkreis: <b id="radiusValue">25 km</b></label><input id="radius" type="range" min="5" max="100" step="5" value="25"><button id="locationBtn">📍 Meinen Standort verwenden</button><div id="status">Teststrände werden angezeigt. Standort kannst du freigeben.</div></section><div id="map"></div><section class="results"><h2>FKK-Strände <small id="resultCount"></small></h2><div id="places"></div></section><div id="modal" class="modal hidden"><div class="card"><button id="closeModal">×</button><div id="modalContent"></div></div></div><footer>Kartendaten © OpenStreetMap-Mitwirkende</footer><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b5d4f">
+  <title>FKK-Strand Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <header>
+    <h1>🏖️ FKK-Strand Finder</h1>
+    <p>FKK-Orte in deiner Umgebung</p>
+  </header>
+
+  <main>
+    <section class="controls">
+      <button id="locateBtn">📍 Meinen Standort verwenden</button>
+      <label for="radius">Suchradius: <strong><span id="radiusValue">25</span> km</strong></label>
+      <input id="radius" type="range" min="5" max="100" step="5" value="25">
+      <div id="status" class="status">Standort wird benötigt. Danach werden echte OSM-Daten geladen.</div>
+    </section>
+
+    <section id="map" aria-label="Karte"></section>
+
+    <section class="results-head">
+      <h2>Gefundene Orte <span id="count">0</span></h2>
+      <small>Quelle: OpenStreetMap / Overpass API</small>
+    </section>
+    <section id="results" class="results"></section>
+
+    <p class="note">Hinweis: Die App zeigt in OpenStreetMap erfasste FKK-/Nudismus-Hinweise. Die OSM-Daten sind nicht vollständig; 0 Treffer bedeutet daher nicht automatisch, dass es in der Gegend keinen FKK-Ort gibt.</p>
+  </main>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="closeModal" class="close" aria-label="Schließen">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

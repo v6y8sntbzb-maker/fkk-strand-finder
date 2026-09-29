@@ -1,1 +1,9 @@
-{"name":"FKK Strand Finder","short_name":"FKK Finder","start_url":"./","display":"standalone","background_color":"#f4f7f7","theme_color":"#0f766e"}
+{
+  "name": "FKK-Strand Finder",
+  "short_name": "FKK Finder",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f4f7f6",
+  "theme_color": "#0b5d4f",
+  "icons": []
+}
