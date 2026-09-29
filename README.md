@@ -1,20 +1,25 @@
-# FKK-Strand Finder v3
+# FKK Strand Finder v4
 
-Mobile Web-App/PWA für iPhone. Die App verwendet den aktuellen Standort und sucht in OpenStreetMap über die Overpass API nach erfassten FKK-/Nudismus-Orten.
+Version 4 nutzt OpenStreetMap/Overpass breiter als die vorherige Version.
 
-## Wichtig
-OpenStreetMap ist eine Community-Datenbank. Die App kann deshalb nicht garantieren, dass wirklich alle FKK-Orte gefunden werden. Treffer werden nach der Art des OSM-Hinweises gekennzeichnet.
+Die Suche berücksichtigt:
+- nudism=* Tags
+- FKK/Nacktbade-Hinweise in name und description
+- leisure=bathing_place
+- leisure=beach
+- leisure=beach_resort
+- leisure=swimming_area
+- natural=beach
 
-## GitHub Pages
-Die Dateien `index.html`, `style.css`, `app.js` und `manifest.webmanifest` in dein Repository hochladen und die vorhandenen Dateien ersetzen.
+Wichtig:
+OpenStreetMap ist nicht vollständig. Ein fehlender Treffer beweist nicht, dass es vor Ort keinen FKK-Bereich gibt.
 
-## Verwendung auf dem iPhone
-1. Website in Safari öffnen.
-2. Auf „Meinen Standort verwenden“ tippen.
-3. Standortzugriff erlauben.
-4. Radius auswählen.
+## Installation auf GitHub Pages
 
-Die Website braucht HTTPS; GitHub Pages erfüllt das.
+Die Dateien `index.html`, `style.css`, `app.js` und `manifest.webmanifest` ins Repository `fkk-strand-finder` hochladen und die bisherigen Versionen ersetzen.
+
+Danach GitHub Pages neu laden und auf "Meinen Standort verwenden" tippen.
 
 ## Datenquelle
-OpenStreetMap-Mitwirkende, Abfrage über Overpass API.
+
+OpenStreetMap und die Overpass API.
