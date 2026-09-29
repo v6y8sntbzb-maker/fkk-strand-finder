@@ -105,7 +105,11 @@ function renderResults(items, liveCount, failedParts, radius){
     card.innerHTML=`
       <h3>${escapeHtml(p.name)}</h3>
       <div class="meta">📍 ${p.distance.toFixed(1)} km entfernt<br>
-      ${escapeHtml(p.label||"FKK-Hinweis")}${p.status?`<br>ℹ️ ${escapeHtml(p.status)}`:""}</div>
+      ${escapeHtml(p.label||"FKK-Hinweis")}${p.type?` · ${escapeHtml(p.type)}`:""}
+      ${p.access?`<br>🚪 Zugang: ${escapeHtml(p.access)}`:""}
+      ${p.fee?`<br>💶 Eintritt: ${escapeHtml(p.fee)}`:""}
+      ${p.opening_hours?`<br>🕒 ${escapeHtml(p.opening_hours)}`:""}
+      ${p.status?`<br>ℹ️ ${escapeHtml(p.status)}`:""}</div>
       <div class="source">${p.live ? "Quelle: OpenStreetMap / Overpass" : "Zusatzdaten: bekannte FKK-Orte"}</div>`;
     card.addEventListener("click",()=>map.setView([p.lat,p.lon],14));
     resultsEl.appendChild(card);
@@ -138,22 +142,20 @@ function buildBboxes(lat,lon,radiusKm){
 function queryForBbox(b){
   const [s,w,n,e]=b;
   return `[out:json][timeout:12];(
-    nwr(${s},${w},${n},${e})["nudism"];
+    nwr(${s},${w},${n},${e})["nudism"~"yes|designated|obligatory|customary|permissive",i];
     nwr(${s},${w},${n},${e})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
     nwr(${s},${w},${n},${e})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
     nwr(${s},${w},${n},${e})["description"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
   );out center tags;`;
 }
-
 function queryForRadius(lat,lon,radiusKm){
   return `[out:json][timeout:12];(
-    nwr(around:${radiusKm*1000},${lat},${lon})["nudism"];
+    nwr(around:${radiusKm*1000},${lat},${lon})["nudism"~"yes|designated|obligatory|customary|permissive",i];
     nwr(around:${radiusKm*1000},${lat},${lon})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
     nwr(around:${radiusKm*1000},${lat},${lon})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
     nwr(around:${radiusKm*1000},${lat},${lon})["description"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
   );out center tags;`;
 }
-
 async function fetchOverpass(query, maxMs=12000){
   let lastError=null;
   for(const endpoint of OVERPASS_ENDPOINTS){
@@ -186,21 +188,55 @@ function elementsToItems(elements,lat,lon,radiusKm){
     if(!c) return;
     const d=haversineKm(lat,lon,c[0],c[1]);
     if(d>radiusKm) return;
+
     const tags=el.tags||{};
+    const nudism=(tags.nudism||"").toLowerCase();
+    const text=((tags.name||"")+" "+(tags.official_name||"")+" "+(tags.description||"")).toLowerCase();
+
+    const hasPositiveNudism=["yes","designated","obligatory","customary","permissive"].includes(nudism);
+    const hasFkkText=/fkk|freikörper|nacktbad|nacktbade|nacktbadestrand|nudist|naturist/.test(text);
+
+    // Name/description matches are kept, but explicit nudism=no is rejected.
+    if(nudism==="no" && !hasFkkText) return;
+    if(!hasPositiveNudism && !hasFkkText) return;
+
+    let label="FKK-/Nacktbereich";
+    if(nudism==="designated") label="Ausgewiesener FKK-Bereich";
+    else if(nudism==="obligatory") label="Nacktbaden vorgeschrieben";
+    else if(nudism==="customary") label="Nacktbaden üblich";
+    else if(nudism==="permissive") label="FKK erlaubt";
+    else if(nudism==="yes") label="FKK / Nacktbaden";
+
+    const type =
+      tags.leisure==="bathing_place" ? "Badeplatz" :
+      tags.leisure==="beach_resort" ? "Strandbad" :
+      tags.leisure==="swimming_area" ? "Schwimmbereich" :
+      tags.leisure==="beach" || tags.natural==="beach" ? "Strand" :
+      tags.amenity==="public_bath" ? "Bad" : "";
+
     const name=tags.name||tags.official_name||tags.alt_name||"FKK-/Nacktbereich";
-    const label=tags.nudism ? `nudism=${tags.nudism}` : "FKK-/Nacktbereich";
     const key=`${el.type}/${el.id}`;
+
     if(!byId.has(key)){
       byId.set(key,{
-        name,lat:c[0],lon:c[1],label,
+        name,
+        lat:c[0],
+        lon:c[1],
+        label,
         status:tags.description||"",
-        distance:d,live:true
+        distance:d,
+        live:true,
+        type,
+        nudism:nudism,
+        fee:tags.fee||"",
+        access:tags.access||"",
+        website:tags.website||"",
+        opening_hours:tags.opening_hours||""
       });
     }
   });
   return [...byId.values()];
 }
-
 async function searchLive(lat,lon,radiusKm){
   const all=[];
   let successes=0, failures=0;
