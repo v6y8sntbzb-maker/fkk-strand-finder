@@ -1,17 +1,12 @@
-FKK Strand Finder – Version 7
+FKK Strand Finder – Version 8
 
-Neu:
-- Große Suchradien werden in 4 kleinere Overpass-Teilbereiche aufgeteilt.
-- Teilabfragen laufen nacheinander, um öffentliche Overpass-Server weniger zu belasten.
-- Ergebnisse werden zusammengeführt und doppelte OSM-Objekte entfernt.
-- Ergebnisse werden anschließend exakt per Luftlinie auf den gewählten Radius gefiltert.
-- Falls einzelne Teilabfragen ausfallen, werden erfolgreiche Teilbereiche trotzdem verwendet.
-- Bekannte FKK-Orte bleiben als Zusatzdaten verfügbar, wenn Live-Daten fehlen.
+Wichtige Fehlerbehebung:
+- Die fehlerhaften Integritätsprüfungen (SRI) der Leaflet-Dateien wurden entfernt.
+- Dadurch kann die Leaflet-Karte auf iPhone/Safari wieder geladen werden.
+- Die Version 7 mit den aufgeteilten Overpass-Abfragen bleibt enthalten.
+- Zusätzliche Prüfung eingebaut, falls die Kartenbibliothek nicht geladen wird.
 
 Installation:
-1. Alle Dateien dieses ZIPs auf GitHub Pages hochladen.
-2. index.html öffnen.
-3. "Meinen Standort verwenden" drücken und Standortzugriff erlauben.
-
-Hinweis:
-Die Karte verwendet OpenStreetMap-Kacheln. Die FKK-Suche verwendet die separate Overpass-API.
+1. ZIP entpacken.
+2. In GitHub Pages die drei Dateien index.html, style.css und app.js ersetzen.
+3. Seite auf dem iPhone neu laden. Falls Safari die alte Version zeigt: Seite komplett schließen und erneut öffnen.

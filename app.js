@@ -49,6 +49,11 @@ radiusEl.addEventListener("input", () => {
 });
 
 function initMap(){
+  if (typeof L === "undefined") {
+    document.getElementById("map").innerHTML =
+      '<div style="padding:20px;font-size:15px">⚠️ Die Kartenbibliothek konnte nicht geladen werden. Bitte die Seite einmal neu laden.</div>';
+    return;
+  }
   map = L.map("map").setView([52.62,10.08], 9);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom:19,
@@ -260,3 +265,4 @@ locateBtn.addEventListener("click",useLocation);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
+window.FKK_APP_VERSION = "v8";
