@@ -6,138 +6,144 @@ const OVERPASS_ENDPOINTS = [
 
 const FALLBACK_PLACES = [
   {
-    id:"fallback-ricklingen",
     name:"Ricklinger Kiesteiche – Sieben-Meter-Teich",
     lat:52.3369, lon:9.7450,
     label:"FKK-Bereich ausgewiesen",
-    description:"Die Region Hannover weist das Nordufer des Sieben-Meter-Teichs als FKK-Bereich aus.",
-    status:"Aktuell besteht laut Region Hannover ein Badeverbot wegen Blaualgen (Stand 25.09.2026).",
-    source:"https://www.hannover.de/Kultur-Freizeit/Freizeit-Sport/Sport/Bäderführer/Badeseen/Ricklinger-Kiesteiche"
+    status:"Bitte aktuelle Baderegeln bzw. Sperrungen beachten.",
+    source:"Region Hannover"
   },
   {
-    id:"fallback-inselsee",
-    name:"Inselsee – FKK-Strand, Scharnebeck",
+    name:"Inselsee – FKK-Strand",
     lat:53.30388, lon:10.48878,
     label:"FKK-Strand",
-    description:"Die Gemeinde Scharnebeck beschreibt am Inselsee ausdrücklich einen FKK-Strand.",
-    status:"Öffentlich zugänglicher Inselsee; aktuelle Hinweise vor Ort beachten.",
-    source:"https://gemeinde-scharnebeck.de/kultur-und-tourismus/inselsee/"
+    status:"Offiziell ausgewiesener FKK-Bereich.",
+    source:"Gemeinde Scharnebeck"
   },
   {
-    id:"fallback-kennel",
-    name:"Kennel-Bad, Braunschweig",
+    name:"Kennel-Bad",
     lat:52.24216, lon:10.52115,
     label:"Abgetrennter FKK-Bereich",
-    description:"Das Kennel-Bad bestätigt auf seiner offiziellen Website einen abgetrennten FKK-Bereich.",
-    status:"Laut offizieller Website derzeit geschlossen bis Juni 2027.",
-    source:"https://kennel-bad.de/"
+    status:"Bitte aktuelle Öffnungs- und Saisonhinweise beachten.",
+    source:"Kennel-Bad"
   }
 ];
 
-let map = L.map("map").setView([52.62,10.08],10);
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom:19,
-  attribution:"&copy; OpenStreetMap-Mitwirkende"
-}).addTo(map);
+let map;
+let userMarker = null;
+let resultMarkers = [];
+let userLocation = null;
+let searchTimer = null;
 
-let userMarker=null, userCircle=null, markers=[], currentLocation=null, places=[];
-let requestTimer=null, requestId=0;
+const radiusEl = document.getElementById("radius");
+const radiusValueEl = document.getElementById("radiusValue");
+const statusEl = document.getElementById("status");
+const resultsEl = document.getElementById("results");
+const locateBtn = document.getElementById("locateBtn");
 
-const radiusEl=document.getElementById("radius");
-const radiusValueEl=document.getElementById("radiusValue");
-const statusEl=document.getElementById("status");
-const resultsEl=document.getElementById("results");
-const countEl=document.getElementById("count");
-
-radiusEl.addEventListener("input",()=>{
-  radiusValueEl.textContent=radiusEl.value;
-  if(currentLocation){
-    clearTimeout(requestTimer);
-    requestTimer=setTimeout(loadPlaces,700);
+radiusEl.addEventListener("input", () => {
+  radiusValueEl.textContent = radiusEl.value;
+  if (userLocation) {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => searchPlaces(), 500);
   }
 });
 
-document.getElementById("locateBtn").addEventListener("click",locate);
-document.getElementById("closeModal").addEventListener("click",closeModal);
-document.getElementById("modal").addEventListener("click",e=>{
-  if(e.target.id==="modal") closeModal();
-});
-
-function setStatus(text,error=false){
-  statusEl.textContent=text;
-  statusEl.className="status"+(error?" error":"");
+function initMap(){
+  map = L.map("map").setView([52.62,10.08], 9);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom:19,
+    attribution:"© OpenStreetMap-Mitwirkende"
+  }).addTo(map);
 }
 
-function locate(){
-  if(!navigator.geolocation){
-    setStatus("Dein Browser unterstützt keine Standortbestimmung.",true);
-    return;
-  }
-  setStatus("📍 Standort wird ermittelt …");
-  navigator.geolocation.getCurrentPosition(
-    pos=>{
-      currentLocation={lat:pos.coords.latitude,lon:pos.coords.longitude};
-      map.setView([currentLocation.lat,currentLocation.lon],11);
-      if(userMarker) map.removeLayer(userMarker);
-      if(userCircle) map.removeLayer(userCircle);
-      userMarker=L.marker([currentLocation.lat,currentLocation.lon]).addTo(map).bindPopup("Dein Standort");
-      updateCircle();
-      loadPlaces();
-    },
-    ()=>{
-      setStatus("Standort konnte nicht ermittelt werden. Bitte Standortzugriff für Safari erlauben.",true);
-    },
-    {enableHighAccuracy:true,timeout:15000,maximumAge:60000}
-  );
-}
-
-function updateCircle(){
-  if(!currentLocation) return;
-  if(userCircle) map.removeLayer(userCircle);
-  userCircle=L.circle(
-    [currentLocation.lat,currentLocation.lon],
-    {radius:Number(radiusEl.value)*1000,color:"#1677ff",fillOpacity:0.05}
-  ).addTo(map);
-}
-
-function clearMarkers(){
-  markers.forEach(m=>map.removeLayer(m));
-  markers=[];
-}
-
-function haversine(lat1,lon1,lat2,lon2){
+function haversineKm(aLat,aLon,bLat,bLon){
   const R=6371;
-  const dLat=(lat2-lat1)*Math.PI/180;
-  const dLon=(lon2-lon1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2+
-    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  const dLat=(bLat-aLat)*Math.PI/180;
+  const dLon=(bLon-aLon)*Math.PI/180;
+  const x=Math.sin(dLat/2)**2+
+    Math.cos(aLat*Math.PI/180)*Math.cos(bLat*Math.PI/180)*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
 }
 
-function escapeHtml(s=""){
-  return String(s).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-
-function elementPoint(el){
-  if(typeof el.lat==="number"&&typeof el.lon==="number")
-    return {lat:el.lat,lon:el.lon};
-  if(el.center&&typeof el.center.lat==="number"&&typeof el.center.lon==="number")
-    return {lat:el.center.lat,lon:el.center.lon};
+function centerOf(el){
+  if (typeof el.lat==="number" && typeof el.lon==="number") return [el.lat,el.lon];
+  if (el.center && typeof el.center.lat==="number") return [el.center.lat,el.center.lon];
   return null;
 }
 
-function classify(tags){
-  const nud=(tags.nudism||"").toLowerCase();
-  const text=Object.values(tags).join(" ").toLowerCase();
-  if(["yes","designated","obligatory"].includes(nud))
-    return {label:"FKK ausgewiesen",score:100};
-  if(["permissive","customary"].includes(nud))
-    return {label:"FKK erlaubt/üblich",score:90};
-  if(/\bfkk\b|freik[oö]rper|nacktbaden|nacktbad|nudist|naturist/.test(text))
-    return {label:"FKK-Hinweis im OSM-Eintrag",score:75};
-  return {label:"FKK-Hinweis",score:60};
+function escapeHtml(s){
+  return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
+function clearMarkers(){
+  resultMarkers.forEach(m=>map.removeLayer(m));
+  resultMarkers=[];
+}
+
+function renderResults(items, liveCount, failedParts, radius){
+  clearMarkers();
+  resultsEl.innerHTML="";
+
+  if (!items.length){
+    resultsEl.innerHTML='<div class="card"><div class="muted">Keine passenden FKK-Orte im gewählten Radius gefunden.</div></div>';
+    return;
+  }
+
+  items.sort((a,b)=>a.distance-b.distance);
+
+  items.forEach((p)=>{
+    const marker=L.marker([p.lat,p.lon]).addTo(map);
+    marker.bindPopup(`<strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.label||"FKK-Hinweis")}<br>${p.distance.toFixed(1)} km`);
+    resultMarkers.push(marker);
+
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <h3>${escapeHtml(p.name)}</h3>
+      <div class="meta">📍 ${p.distance.toFixed(1)} km entfernt<br>
+      ${escapeHtml(p.label||"FKK-Hinweis")}${p.status?`<br>ℹ️ ${escapeHtml(p.status)}`:""}</div>
+      <div class="source">${p.live ? "Quelle: OpenStreetMap / Overpass" : "Zusatzdaten: bekannte FKK-Orte"}</div>`;
+    card.addEventListener("click",()=>map.setView([p.lat,p.lon],14));
+    resultsEl.appendChild(card);
+  });
+
+  if(liveCount>0){
+    statusEl.innerHTML=`✅ Live-OpenStreetMap: ${liveCount} FKK-Ort(e) gefunden.`
+      + (failedParts?` <span class="muted">(${failedParts} Teilabfrage(n) waren nicht erreichbar.)</span>`:"");
+  } else {
+    statusEl.textContent="⚠️ Live-OpenStreetMap ist gerade nicht erreichbar. Bekannte FKK-Orte werden angezeigt.";
+  }
+}
+
+function buildBboxes(lat,lon,radiusKm){
+  // Four overlapping boxes cover the complete radius bounding square.
+  const latDelta=radiusKm/111.32;
+  const lonDelta=radiusKm/(111.32*Math.max(0.2,Math.cos(lat*Math.PI/180)));
+  const halfLat=latDelta/2;
+  const halfLon=lonDelta/2;
+  const overlapLat=latDelta*0.08;
+  const overlapLon=lonDelta*0.08;
+
+  const south=lat-latDelta, north=lat+latDelta;
+  const west=lon-lonDelta, east=lon+lonDelta;
+  const midLat=lat, midLon=lon;
+
+  return [
+    [south, west, midLat+overlapLat, midLon+overlapLon],
+    [south, midLon-overlapLon, midLat+overlapLat, east],
+    [midLat-overlapLat, west, north, midLon+overlapLon],
+    [midLat-overlapLat, midLon-overlapLon, north, east]
+  ];
+}
+
+function queryForBbox(b){
+  const [s,w,n,e]=b;
+  return `[out:json][timeout:25];(
+    nwr(${s},${w},${n},${e})["nudism"];
+    nwr(${s},${w},${n},${e})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
+    nwr(${s},${w},${n},${e})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
+    nwr(${s},${w},${n},${e})["description"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
+  );out center tags;`;
 }
 
 async function fetchOverpass(query){
@@ -145,9 +151,10 @@ async function fetchOverpass(query){
   for(const endpoint of OVERPASS_ENDPOINTS){
     try{
       const controller=new AbortController();
-      const timeout=setTimeout(()=>controller.abort(),35000);
+      const timeout=setTimeout(()=>controller.abort(),30000);
       const response=await fetch(endpoint,{
         method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
         body:"data="+encodeURIComponent(query),
         signal:controller.signal,
         cache:"no-store"
@@ -155,169 +162,101 @@ async function fetchOverpass(query){
       clearTimeout(timeout);
       if(!response.ok) throw new Error("HTTP "+response.status);
       const text=await response.text();
-      if(!text||text.trim().startsWith("<")) throw new Error("Keine JSON-Antwort");
+      if(!text || text.trim().startsWith("<")) throw new Error("Keine JSON-Antwort");
       return JSON.parse(text);
     }catch(e){
       lastError=e;
     }
   }
-  throw lastError||new Error("Keine Overpass-Datenquelle erreichbar");
+  throw lastError || new Error("Keine Overpass-Datenquelle erreichbar");
 }
 
-function mergeFallbackPlaces(userLat,userLon){
-  const maxKm=Number(radiusEl.value);
-  for(const p of FALLBACK_PLACES){
-    const distance=haversine(userLat,userLon,p.lat,p.lon);
-    if(distance>maxKm) continue;
-    const exists=places.some(x=>
-      haversine(x.lat,x.lon,p.lat,p.lon)<0.8 ||
-      x.name.toLowerCase()===p.name.toLowerCase()
-    );
-    if(exists) continue;
-    places.push({
-      ...p,
-      distance,
-      score:110,
-      tags:{name:p.name,nudism:"yes",description:p.description,note:p.status},
-      sourceType:"Zusatzdaten"
-    });
-  }
-}
+async function searchLive(lat,lon,radiusKm){
+  const boxes=buildBboxes(lat,lon,radiusKm);
+  let successes=0, failures=0, all=[];
 
-async function loadPlaces(){
-  if(!currentLocation) return;
-  const myRequest=++requestId;
-  updateCircle();
-  clearMarkers();
-  setStatus("🔎 FKK-Orte werden gesucht …");
-
-  const r=Number(radiusEl.value)*1000;
-  const lat=currentLocation.lat,lon=currentLocation.lon;
-
-  const query=`
-[out:json][timeout:35];
-(
-  nwr(around:${r},${lat},${lon})["nudism"];
-  nwr(around:${r},${lat},${lon})["name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nacktbadestrand|Nudist|Naturist",i];
-  nwr(around:${r},${lat},${lon})["official_name"~"FKK|Freikörper|Nacktbad|Nacktbade|Nudist|Naturist",i];
-);
-out center tags;
-`;
-
-  try{
-    const data=await fetchOverpass(query);
-    if(myRequest!==requestId) return;
-
-    const seen=new Set();
-    places=[];
-
-    for(const el of(data.elements||[])){
-      const point=elementPoint(el);
-      if(!point) continue;
-      const tags=el.tags||{};
-      const key=(tags.name||"").trim().toLowerCase()+"|"+
-        point.lat.toFixed(5)+"|"+point.lon.toFixed(5);
-      if(seen.has(key)) continue;
-      seen.add(key);
-
-      const distance=haversine(lat,lon,point.lat,point.lon);
-      if(distance>Number(radiusEl.value)+0.5) continue;
-
-      const c=classify(tags);
-      places.push({
-        id:el.type+"/"+el.id,
-        name:tags.name||"Unbenannter FKK-Ort",
-        lat:point.lat,lon:point.lon,distance,
-        tags,label:c.label,score:c.score,sourceType:"OpenStreetMap"
-      });
-    }
-
-    mergeFallbackPlaces(lat,lon);
-    places.sort((a,b)=>b.score-a.score||a.distance-b.distance);
-    renderPlaces();
-    setStatus(places.length
-      ? `✅ ${places.length} FKK-Treffer im Umkreis von ${radiusEl.value} km.`
-      : `Keine FKK-Treffer im Umkreis von ${radiusEl.value} km.`
-    );
-  }catch(e){
-    if(myRequest!==requestId) return;
-
-    places=[];
-    mergeFallbackPlaces(lat,lon);
-    places.sort((a,b)=>a.distance-b.distance);
-    renderPlaces();
-
-    if(places.length){
-      setStatus(`⚠️ Live-OpenStreetMap ist gerade nicht erreichbar. ${places.length} bekannte FKK-Orte werden angezeigt.`);
-    }else{
-      setStatus("⚠️ Live-Daten sind gerade nicht erreichbar und im gewählten Radius sind keine Zusatzdaten vorhanden.",true);
+  // Sequential requests are gentler on public Overpass servers.
+  for(const box of boxes){
+    try{
+      const data=await fetchOverpass(queryForBbox(box));
+      successes++;
+      if(data && Array.isArray(data.elements)) all.push(...data.elements);
+    }catch(e){
+      failures++;
     }
   }
-}
 
-function renderPlaces(){
-  countEl.textContent=places.length;
-  resultsEl.innerHTML="";
+  const byId=new Map();
+  all.forEach(el=>{
+    const c=centerOf(el);
+    if(!c) return;
+    const d=haversineKm(lat,lon,c[0],c[1]);
+    if(d>radiusKm) return;
 
-  places.forEach((p,index)=>{
-    const marker=L.marker([p.lat,p.lon]).addTo(map);
-    marker.bindPopup(
-      `<strong>${escapeHtml(p.name)}</strong><br>${p.distance.toFixed(1)} km<br>${escapeHtml(p.label)}`
-    );
-    marker.on("click",()=>showDetails(index));
-    markers.push(marker);
-
-    const div=document.createElement("div");
-    div.className="result";
-    const nud=p.tags.nudism
-      ? `<span class="tag">FKK</span>`:"";
-    div.innerHTML=`
-      <h3>${escapeHtml(p.name)}</h3>
-      <p><strong>${p.distance.toFixed(1)} km</strong> · ${escapeHtml(p.label)}</p>
-      <p>${nud}${p.sourceType==="Zusatzdaten"
-        ? `<span class="tag">Zusatzdaten</span>`:""}</p>
-      ${p.status?`<p>ℹ️ ${escapeHtml(p.status)}</p>`:""}
-      <button type="button">Details</button>
-    `;
-    div.querySelector("button").addEventListener("click",()=>{
-      map.setView([p.lat,p.lon],Math.max(map.getZoom(),13));
-      showDetails(index);
-    });
-    resultsEl.appendChild(div);
+    const tags=el.tags||{};
+    const name=tags.name||tags.official_name||tags.alt_name||"FKK-/Nacktbereich";
+    const label=tags.nudism ? `nudism=${tags.nudism}` : "FKK-/Nacktbereich";
+    const key=`${el.type}/${el.id}`;
+    if(!byId.has(key)){
+      byId.set(key,{name,lat:c[0],lon:c[1],label,status:tags.description||"",distance:d,live:true});
+    }
   });
 
-  if(!places.length){
-    resultsEl.innerHTML="<p>Keine Treffer. Vergrößere den Radius oder versuche es später erneut.</p>";
+  return {items:[...byId.values()],successes,failures};
+}
+
+function fallbackFor(lat,lon,radiusKm){
+  return FALLBACK_PLACES.map(p=>({
+    ...p,
+    distance:haversineKm(lat,lon,p.lat,p.lon),
+    live:false
+  })).filter(p=>p.distance<=radiusKm);
+}
+
+async function searchPlaces(){
+  if(!userLocation) return;
+  const {lat,lon}=userLocation;
+  const radiusKm=Number(radiusEl.value);
+
+  statusEl.textContent="🔎 Suche in mehreren kleineren Bereichen …";
+  resultsEl.innerHTML='<div class="card">Live-Daten werden geladen …</div>';
+
+  const live=await searchLive(lat,lon,radiusKm);
+  let items=live.items;
+
+  // Keep known places visible when live data is sparse.
+  const liveKeys=new Set(items.map(p=>p.name+"|"+p.lat.toFixed(5)+"|"+p.lon.toFixed(5)));
+  fallbackFor(lat,lon,radiusKm).forEach(p=>{
+    const key=p.name+"|"+p.lat.toFixed(5)+"|"+p.lon.toFixed(5);
+    if(!liveKeys.has(key)) items.push(p);
+  });
+
+  renderResults(items, live.successes, live.failures, radiusKm);
+}
+
+function useLocation(){
+  if(!navigator.geolocation){
+    statusEl.textContent="❌ Dein Browser unterstützt keine Standortabfrage.";
+    return;
   }
+
+  statusEl.textContent="📍 Standort wird ermittelt …";
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      userLocation={lat:pos.coords.latitude,lon:pos.coords.longitude};
+      if(userMarker) map.removeLayer(userMarker);
+      userMarker=L.marker([userLocation.lat,userLocation.lon]).addTo(map).bindPopup("Dein Standort");
+      map.setView([userLocation.lat,userLocation.lon],10);
+      searchPlaces();
+    },
+    err=>{
+      statusEl.textContent="❌ Standort konnte nicht ermittelt werden. Bitte Standortfreigabe für diese Website erlauben.";
+    },
+    {enableHighAccuracy:true,timeout:15000,maximumAge:60000}
+  );
 }
 
-function showDetails(index){
-  const p=places[index];
-  if(!p) return;
-  const t=p.tags;
-  const website=t.website||t["contact:website"];
-  const details=Object.entries(t)
-    .filter(([k])=>!["name","website","contact:website"].includes(k))
-    .slice(0,12)
-    .map(([k,v])=>`<div><strong>${escapeHtml(k)}:</strong> ${escapeHtml(v)}</div>`)
-    .join("");
+locateBtn.addEventListener("click",useLocation);
+document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
-  document.getElementById("modalContent").innerHTML=`
-    <h2>${escapeHtml(p.name)}</h2>
-    <p><strong>${p.distance.toFixed(1)} km entfernt</strong></p>
-    <p><span class="tag">${escapeHtml(p.label)}</span></p>
-    ${p.status?`<p>ℹ️ ${escapeHtml(p.status)}</p>`:""}
-    ${website?`<p><a href="${escapeHtml(website)}" target="_blank" rel="noopener">Website öffnen</a></p>`:""}
-    ${p.source?`<p><a href="${escapeHtml(p.source)}" target="_blank" rel="noopener">Quelle öffnen</a></p>`:""}
-    <hr>
-    ${details||"<p>Keine weiteren Angaben vorhanden.</p>"}
-    ${p.sourceType==="OpenStreetMap"
-      ? `<p><a href="https://www.openstreetmap.org/${p.id}" target="_blank" rel="noopener">OpenStreetMap-Eintrag öffnen</a></p>`:""}
-    <p><a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}" target="_blank" rel="noopener">🧭 Route starten</a></p>
-  `;
-  document.getElementById("modal").classList.remove("hidden");
-}
-
-function closeModal(){
-  document.getElementById("modal").classList.add("hidden");
-}
+initMap();
