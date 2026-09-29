@@ -1,31 +1,18 @@
-# FKK Strand Finder v4
+# FKK Strand Finder v6
 
-Version 4 nutzt OpenStreetMap/Overpass breiter als die vorherige Version.
+Version 6 behebt das Problem, dass ein Ausfall der öffentlichen Overpass-Server zu einer komplett leeren App führt.
 
-Die Suche berücksichtigt:
-- nudism=* Tags
-- FKK/Nacktbade-Hinweise in name und description
-- leisure=bathing_place
-- leisure=beach
-- leisure=beach_resort
-- leisure=swimming_area
-- natural=beach
+Die App:
+- ermittelt den iPhone-Standort
+- nutzt OpenStreetMap/Overpass für Live-FKK-Daten
+- verwendet POST für Overpass
+- probiert mehrere Overpass-Server
+- zeigt zusätzlich einige recherchierte FKK-Orte als Fallback, wenn Live-Daten nicht erreichbar sind
+- filtert nach dem gewählten Radius
 
-Wichtig:
-OpenStreetMap ist nicht vollständig. Ein fehlender Treffer beweist nicht, dass es vor Ort keinen FKK-Bereich gibt.
+Die Zusatzdaten sind:
+- Ricklinger Kiesteiche – Sieben-Meter-Teich, Hannover
+- Inselsee – FKK-Strand, Scharnebeck
+- Kennel-Bad, Braunschweig
 
-## Installation auf GitHub Pages
-
-Die Dateien `index.html`, `style.css`, `app.js` und `manifest.webmanifest` ins Repository `fkk-strand-finder` hochladen und die bisherigen Versionen ersetzen.
-
-Danach GitHub Pages neu laden und auf "Meinen Standort verwenden" tippen.
-
-## Datenquelle
-
-OpenStreetMap und die Overpass API.
-
-
-## Version 5 – Fehlerbehebung
-
-Diese Version verwendet für Overpass eine GET-Abfrage statt POST und versucht drei öffentliche Overpass-Server.
-Die Abfrage wurde auf echte FKK-/Nudismus-Hinweise beschränkt, damit ein Radius von 100 km nicht unnötig tausende Badestellen laden muss.
+OpenStreetMap-Daten können unvollständig sein.
