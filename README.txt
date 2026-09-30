@@ -13,3 +13,6 @@ INSTALLATION:
 
 HINWEIS:
 Die FKK-Datenbank ist weiterhin eine kuratierte lokale Datenbasis. Die Ortssuche liefert nur den Ausgangspunkt; sie lädt keine FKK-Orte live aus Overpass.
+
+
+Version 15: bundesweite Erweiterung der lokalen Datenbasis mit verifizierten FKK-Badestellen/-Stränden aus aktuellen Quellen. Die Suche bleibt lokal und benötigt keine Overpass-Liveabfrage.

@@ -2,53 +2,72 @@
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
-  {
-    name: "Altwarmbüchener See", lat: 52.4211, lon: 9.8506,
-    label: "FKK erlaubt", type: "Badesee", evidence: "FKK-Verzeichnis", source: "Badesee-heute",
-    sourceUrl: "https://badesee-heute.de/fkk/niedersachsen/",
-    status: "FKK ist für den See in einem aktuellen FKK-Badesee-Verzeichnis verzeichnet."
-  },
-  {
-    name: "Ricklinger Kiesteiche – Sieben-Meter-Teich", lat: 52.3369, lon: 9.7450,
-    label: "FKK-Bereich ausgewiesen", type: "Badesee", evidence: "offizielle Quelle", source: "Region Hannover",
-    sourceUrl: "https://www.hannover.de/Kultur-Freizeit/Naherholung/Raus-in-die-Natur/Seen/Ricklinger-Kiesteiche",
-    status: "Das Nordufer des Sieben-Meter-Teichs ist als FKK-Bereich ausgewiesen."
-  },
-  {
-    name: "Kennel-Bad", lat: 52.24216, lon: 10.52115,
-    label: "Abgetrennter FKK-Bereich", type: "Naturbad", evidence: "offizielle Quelle", source: "Kennel-Bad / Badegewässer-Atlas",
-    sourceUrl: "https://kennel-bad.de/", status: "Das Bad verfügt über einen abgetrennten FKK-Bereich."
-  },
-  {
-    name: "Allersee Wolfsburg", lat: 52.43361, lon: 10.81917,
-    label: "FKK erlaubt", type: "Badesee", evidence: "FKK-Verzeichnis", source: "Badesee-heute",
-    sourceUrl: "https://badesee-heute.de/fkk/niedersachsen/", status: "Als Badesee mit FKK-Möglichkeit verzeichnet."
-  },
-  {
-    name: "Oldenstädter See – Uelzen", lat: 52.9819, lon: 10.5903,
-    label: "FKK", type: "Badesee", evidence: "FKK-Verzeichnis", source: "Badesee-Suche",
-    sourceUrl: "https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/", status: "Als Badesee mit FKK-Möglichkeit verzeichnet."
-  },
-  {
-    name: "Fümmelsee – Wolfenbüttel", lat: 52.1679, lon: 10.5017,
-    label: "FKK", type: "Naturbad", evidence: "FKK-Verzeichnis", source: "Badesee-Suche",
-    sourceUrl: "https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/", status: "Als Badesee mit FKK-Möglichkeit verzeichnet."
-  },
-  {
-    name: "Inselsee – FKK-Strand", lat: 53.30388, lon: 10.48878,
-    label: "FKK-Strand", type: "Badesee", evidence: "offizielle Quelle", source: "Gemeinde Scharnebeck",
-    sourceUrl: "https://gemeinde-scharnebeck.de/kultur-und-tourismus/inselsee/", status: "Die Gemeinde nennt ausdrücklich einen FKK-Strand am Inselsee."
-  },
-  {
-    name: "Pulvermühlenteich – Seevetal", lat: 53.41451, lon: 10.03654,
-    label: "FKK", type: "See", evidence: "FKK-Verzeichnis", source: "Badesee-Suche",
-    sourceUrl: "https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/", status: "Als Badesee mit FKK-Möglichkeit verzeichnet."
-  },
-  {
-    name: "Kiefhölzer Teich – Oberharz", lat: 51.8303, lon: 10.3686,
-    label: "FKK", type: "Badesee", evidence: "FKK-Verzeichnis", source: "Badesee-heute",
-    sourceUrl: "https://badesee-heute.de/fkk/niedersachsen/", status: "Als FKK-Badesee verzeichnet."
-  }
+  // Niedersachsen / Norddeutschland
+  {name:"Altwarmbüchener See",lat:52.4211,lon:9.8506,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/niedersachsen/",status:"Als FKK-Badesee verzeichnet."},
+  {name:"Ricklinger Kiesteiche – Sieben-Meter-Teich",lat:52.3369,lon:9.7450,label:"FKK-Bereich ausgewiesen",type:"Badesee",evidence:"offizielle Quelle",source:"Region Hannover",sourceUrl:"https://www.hannover.de/Kultur-Freizeit/Naherholung/Raus-in-die-Natur/Seen/Ricklinger-Kiesteiche",status:"Das Nordufer des Sieben-Meter-Teichs ist als FKK-Bereich ausgewiesen."},
+  {name:"Kennel-Bad",lat:52.24216,lon:10.52115,label:"Abgetrennter FKK-Bereich",type:"Naturbad",evidence:"offizielle Quelle",source:"Kennel-Bad",sourceUrl:"https://kennel-bad.de/",status:"Das Bad verfügt über einen abgetrennten FKK-Bereich."},
+  {name:"Allersee Wolfsburg",lat:52.43361,lon:10.81917,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/niedersachsen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Oldenstädter See – Uelzen",lat:52.9819,lon:10.5903,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Fümmelsee – Wolfenbüttel",lat:52.1679,lon:10.5017,label:"FKK",type:"Naturbad",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Inselsee – FKK-Strand",lat:53.30388,lon:10.48878,label:"FKK-Strand",type:"Badesee",evidence:"offizielle Quelle",source:"Gemeinde Scharnebeck",sourceUrl:"https://gemeinde-scharnebeck.de/kultur-und-tourismus/inselsee/",status:"Die Gemeinde nennt ausdrücklich einen FKK-Strand am Inselsee."},
+  {name:"Pulvermühlenteich – Seevetal",lat:53.41451,lon:10.03654,label:"FKK",type:"See",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Kiefhölzer Teich – Oberharz",lat:51.8303,lon:10.3686,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/niedersachsen/",status:"Als FKK-Badesee verzeichnet."},
+
+  // Schleswig-Holstein / Nordsee
+  {name:"Bottsand",lat:54.4325,lon:10.2987,label:"FKK erlaubt",type:"Strand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/bottsand/",status:"Eine FKK-Stelle ist in OpenStreetMap als textilfrei verzeichnet."},
+  {name:"Holnis Drei",lat:54.8628,lon:9.5963,label:"FKK erlaubt",type:"Strand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/holnis-drei/",status:"Eine FKK-Stelle ist in OpenStreetMap als textilfrei verzeichnet."},
+  {name:"Kalifornien Kurstrand",lat:54.4309,lon:10.3691,label:"FKK-Bereich ausgewiesen",type:"Strand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/kalifornien-kurstrand/",status:"Ein FKK-Bereich ist in OpenStreetMap ausgewiesen."},
+  {name:"Dagebüll",lat:54.7294,lon:8.6935,label:"FKK-Bereich ausgewiesen",type:"Nordseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/dagebuell/",status:"Mehrere FKK-Stellen sind als ausgewiesene FKK-Bereiche verzeichnet."},
+  {name:"Elpersbütteler Deich",lat:54.0893,lon:8.9565,label:"FKK erlaubt",type:"Nordseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/elpersbuetteler-deich/",status:"Eine FKK-Stelle ist als FKK erlaubt verzeichnet."},
+  {name:"Föhr – Nieblum FKK-Strand",lat:54.6901,lon:8.4600,label:"FKK-Bereich ausgewiesen",type:"Nordseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/foehr-nieblum-fkk-strand/",status:"Mehrere ausgewiesene FKK-Stellen sind verzeichnet."},
+
+  // Mecklenburg-Vorpommern / Ostsee
+  {name:"Ahlbeck – Sportferienpark",lat:53.9400,lon:14.1900,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-ahlbeck-sportferienpark/",status:"Mehrere FKK-Bereiche sind verzeichnet."},
+  {name:"Ahrenshoop – Hohes Ufer",lat:54.3772,lon:12.4088,label:"FKK",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-ahrenshoop-hohes-ufer/",status:"Als textilfreie Stelle verzeichnet."},
+  {name:"Ahrenshoop – REHA-Klinik",lat:54.3908,lon:12.4357,label:"FKK",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-ahrenshoop-reha-klinik/",status:"Als textilfreie Stelle verzeichnet."},
+  {name:"Born – Nordstrand Bernsteinweg",lat:54.4573,lon:12.5483,label:"Textilfreiheit vorgeschrieben",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-born-nordstrand-bernsteinweg/",status:"Als textilfreie Stelle verzeichnet."},
+  {name:"Börgerende – Ferien-Camp",lat:54.1540,lon:11.9009,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-boergerende-ferien-camp/",status:"Als FKK-Stelle verzeichnet."},
+  {name:"Dierhagen – Am Plateau",lat:54.2936,lon:12.3305,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-dierhagen-am-plateau/",status:"Als FKK-Stelle verzeichnet."},
+  {name:"Dierhagen – Dierhagen-Ost",lat:54.3094,lon:12.3505,label:"FKK",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-dierhagen-dierhagen-ost/",status:"Als textilfreie Stelle verzeichnet."},
+  {name:"Nienhagen – Strandtreppe",lat:54.1649,lon:11.9475,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-nienhagen-strandtreppe/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Prerow – An der Seebrücke",lat:54.4536,lon:12.5695,label:"Textilfreiheit vorgeschrieben",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-prerow-an-der-seebruecke/",status:"Als textilfreie Stelle verzeichnet."},
+  {name:"Prerow – Parkplatz Hohe Düne",lat:54.4514,lon:12.5922,label:"FKK-Bereich ausgewiesen",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-prerow-parkplatz-hohe-duene/",status:"Ein ausgewiesener FKK-Bereich ist verzeichnet."},
+  {name:"Karlshagen – Campingplatz",lat:54.1111,lon:13.8573,label:"FKK",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-karlshagen-campingplatz/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Karlshagen – Hauptstrand",lat:54.1208,lon:13.8442,label:"FKK",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-karlshagen-hauptstrand/",status:"Als FKK-Stelle verzeichnet."},
+  {name:"Koserow – FKK-Parkplatz",lat:54.0644,lon:13.9838,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-koserow-fkk-parkplatz/",status:"Mehrere FKK-Bereiche sind verzeichnet."},
+  {name:"Koserow – Kurplatz",lat:54.0591,lon:14.0004,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-koserow-kurplatz/",status:"Ein FKK-Bereich ist verzeichnet."},
+  {name:"Trassenheide – Campingplatz",lat:54.0918,lon:13.8910,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-trassenheide-campingplatz/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Trassenheide – Hauptstrand",lat:54.0967,lon:13.8805,label:"FKK",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-trassenheide-hauptstrand/",status:"Als textilfreie Stelle verzeichnet."},
+  {name:"Wustrow – Fischländer Strand",lat:54.3516,lon:12.3856,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-wustrow-fischlaender-strand/",status:"Mehrere FKK-Bereiche sind verzeichnet."},
+  {name:"Zingst – Kurhaus",lat:54.4418,lon:12.6824,label:"FKK-Bereich ausgewiesen",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-zingst-kurhaus/",status:"Ein ausgewiesener FKK-Bereich ist verzeichnet."},
+  {name:"Zingst – Müggenburg",lat:54.4420,lon:12.7461,label:"FKK-Bereich ausgewiesen",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-zingst-mueggenburg/",status:"Mehrere FKK-Bereiche sind verzeichnet."},
+  {name:"Zinnowitz – Campingplatz",lat:54.0860,lon:13.9041,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-zinnowitz-campingplatz/",status:"Als FKK-Stelle verzeichnet."},
+  {name:"Zinnowitz – Hauptzugang",lat:54.0785,lon:13.9250,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-zinnowitz-hauptzugang/",status:"Als FKK-Stelle verzeichnet."},
+  {name:"Ückeritz – DLRG",lat:54.0183,lon:14.0685,label:"FKK erlaubt",type:"Ostseestrand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/ostsee-ueckeritz-dlrg/",status:"Ein FKK-Bereich ist verzeichnet."},
+
+  // Brandenburg / Sachsen / Thüringen / Sachsen-Anhalt
+  {name:"Beetzsee",lat:52.4780,lon:12.5800,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Badesee verzeichnet."},
+  {name:"Germendorfer Waldsee",lat:52.7180,lon:13.1900,label:"FKK-Bereich ausgewiesen",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als ausgewiesener FKK-Bereich verzeichnet."},
+  {name:"Helenesee",lat:52.2620,lon:14.4250,label:"FKK-Bereich ausgewiesen",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als ausgewiesener FKK-Bereich verzeichnet."},
+  {name:"Cospudener See",lat:51.2670,lon:12.3363,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/cospudener-see/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Bärwalder See",lat:51.3782,lon:14.5446,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/baerwalder-see/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Talsperre Pöhl",lat:50.5348,lon:12.2068,label:"FKK-Bereich ausgewiesen",type:"Stausee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/talsperre-poehl/",status:"Als FKK-Stelle verzeichnet."},
+  {name:"Altmühlsee",lat:49.1346,lon:10.7191,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/altmuehlsee/",status:"Eine FKK-Stelle ist verzeichnet."},
+  {name:"Großer Alpsee",lat:47.5726,lon:10.1732,label:"Textilfreiheit vorgeschrieben",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/grosser-alpsee/",status:"Mehrere textilfreie Bereiche sind verzeichnet."},
+  {name:"Hohenwarte-Stausee",lat:50.6061,lon:11.5708,label:"FKK erlaubt",type:"Stausee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/hohenwarte-stausee/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Stausee Kelbra",lat:51.4358,lon:10.9940,label:"FKK erlaubt",type:"Stausee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/stausee-kelbra/",status:"Eine FKK-Stelle ist verzeichnet."},
+  {name:"Arendsee",lat:52.8906,lon:11.4765,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/arendsee/",status:"Als FKK-Badesee verzeichnet."},
+
+  // Baden-Württemberg / Bayern / Hessen / Rheinland-Pfalz / NRW / Berlin
+  {name:"Aileswasensee",lat:48.6038,lon:9.2626,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/aileswasensee/",status:"Eine FKK-Stelle ist verzeichnet."},
+  {name:"Opfinger See",lat:48.0051,lon:7.7583,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/opfinger-see/",status:"Eine FKK-Stelle ist verzeichnet."},
+  {name:"Otterstädter Altrhein",lat:49.3888,lon:8.4764,label:"FKK-Bereich ausgewiesen",type:"Altrhein / Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/otterstaedter-altrhein/",status:"Mehrere FKK-Stellen sind verzeichnet."},
+  {name:"Adriaweiher – Blaue Adria",lat:49.4249,lon:8.4619,label:"FKK-Bereich ausgewiesen",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/adriaweiher-blaue-adria/",status:"Als ausgewiesener FKK-Bereich verzeichnet."},
+  {name:"Biggesee",lat:51.0708,lon:7.8615,label:"FKK erlaubt",type:"Stausee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/biggesee/",status:"Ein FKK-Bereich ist am Nordufer verzeichnet."},
+  {name:"Langener Waldsee",lat:50.0139,lon:8.6172,label:"FKK",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/langener-waldsee/",status:"Mehrere textilfreie Stellen sind verzeichnet."},
+  {name:"Walldorfer Badesee",lat:50.0148,lon:8.5981,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/walldorfer-badesee/",status:"Mehrere FKK-Bereiche sind verzeichnet."},
+  {name:"Großer Müggelsee",lat:52.4368,lon:13.6499,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/grosser-mueggelsee/",status:"FKK ist am See verzeichnet."},
+  {name:"Grunewaldsee",lat:52.4705,lon:13.2622,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/grunewaldsee/",status:"Als FKK-Ort verzeichnet."}
 ];
 
 let map;
@@ -228,4 +247,4 @@ placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v14";
+window.FKK_APP_VERSION = "v15";
