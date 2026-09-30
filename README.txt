@@ -1,18 +1,20 @@
-FKK Strand Finder v14
+FKK Strand Finder v16
 
-NEU:
-- Suche kann vom aktuellen GPS-Standort oder von einem eingegebenen Ort/einer Adresse starten.
-- Radius 5–100 km funktioniert unabhängig vom Overpass-Dienst.
-- Jeder Treffer hat Schaltflächen für Apple Karten und Google Maps zur Navigation.
-- Die Ortssuche nutzt OpenStreetMap Nominatim nur nach einem bewussten Klick bzw. Enter.
+Bundesweite lokale FKK-Datenbank mit 109 verzeichneten Orten/Badestellen.
+Die App sucht ohne Overpass-Liveabfrage nach Entfernung und funktioniert daher auch bei 50-100 km zuverlässig.
 
-INSTALLATION:
-1. index.html, style.css und app.js im GitHub-Repository ersetzen.
-2. GitHub Pages kurz aktualisieren lassen.
-3. Beispiel: "Hamburg" eingeben → Suchen → Radius wählen → bei einem Treffer Apple Karten oder Google Maps öffnen.
+Neu in v16:
+- deutlich erweiterte Deutschland-Datenbank
+- FKK-Badeseen, Strände, Uferstellen und FKK-Bereiche aus mehreren aktuellen Verzeichnissen
+- Suche vom GPS-Standort oder von einem eingegebenen Ort
+- Apple-Karten- und Google-Maps-Navigation
+- Quellen/Einordnung pro Treffer
 
-HINWEIS:
-Die FKK-Datenbank ist weiterhin eine kuratierte lokale Datenbasis. Die Ortssuche liefert nur den Ausgangspunkt; sie lädt keine FKK-Orte live aus Overpass.
+Wichtig:
+Die Datenbank ist eine kuratierte Ausbaustufe und keine Garantie auf jeden einzelnen FKK-Platz Deutschlands. Einträge aus Verzeichnissen können sich ändern; insbesondere inoffizielle/geduldete Stellen sollten vor Ort geprüft werden.
 
-
-Version 15: bundesweite Erweiterung der lokalen Datenbasis mit verifizierten FKK-Badestellen/-Stränden aus aktuellen Quellen. Die Suche bleibt lokal und benötigt keine Overpass-Liveabfrage.
+Quellen u.a.:
+- https://badesee-heute.de/fkk/
+- https://www.badesee-suche.de/seen/fkk-seen/
+- https://www.bade-seen.de/FKK-Badeseen.html
+- https://www.openstreetmap.org/

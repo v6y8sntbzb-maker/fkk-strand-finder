@@ -1,4 +1,4 @@
-// FKK Strand Finder v14
+// FKK Strand Finder v16
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
@@ -67,7 +67,62 @@ const FKK_PLACES = [
   {name:"Langener Waldsee",lat:50.0139,lon:8.6172,label:"FKK",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/langener-waldsee/",status:"Mehrere textilfreie Stellen sind verzeichnet."},
   {name:"Walldorfer Badesee",lat:50.0148,lon:8.5981,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/walldorfer-badesee/",status:"Mehrere FKK-Bereiche sind verzeichnet."},
   {name:"Großer Müggelsee",lat:52.4368,lon:13.6499,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/grosser-mueggelsee/",status:"FKK ist am See verzeichnet."},
-  {name:"Grunewaldsee",lat:52.4705,lon:13.2622,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/grunewaldsee/",status:"Als FKK-Ort verzeichnet."}
+  {name:"Grunewaldsee",lat:52.4705,lon:13.2622,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/see/grunewaldsee/",status:"Als FKK-Ort verzeichnet."},
+
+  // Weitere bundesweite FKK-Badestellen aus aktuellen Verzeichnissen
+  {name:"Dippelsdorfer Teich – Moritzburg",lat:51.1267,lon:13.6780,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Naturbad – Pirna",lat:50.9579,lon:13.9404,label:"FKK",type:"Naturbad",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Naturbad mit FKK-Möglichkeit verzeichnet."},
+  {name:"Talsperre Bautzen",lat:51.1830,lon:14.4870,label:"FKK",type:"Stausee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Olbasee – Guttau",lat:51.2900,lon:14.5610,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Olbersdorfer See – Zittau",lat:50.8920,lon:14.7820,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Bleecher – Leutersdorf",lat:50.9520,lon:14.6580,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Halbendorfer See",lat:51.3920,lon:14.5750,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Knappensee",lat:51.3930,lon:14.3000,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Kulkwitzer See",lat:51.3100,lon:12.2450,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Schladitzer See",lat:51.4550,lon:12.3550,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Kirchenteich – Wermsdorf",lat:51.2850,lon:12.9440,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Kiebitzsee – Falkenberg/Elster",lat:51.5860,lon:13.2390,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Gantikower See – Kyritz",lat:52.9600,lon:12.3600,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Glambecksee – Kieve",lat:53.3400,lon:12.5600,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Fleesensee – Malchow",lat:53.4900,lon:12.4800,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Inselsee – Güstrow",lat:53.7700,lon:12.1800,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Krakower See",lat:53.6500,lon:12.2700,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Einfelder See – Neumünster",lat:54.1200,lon:9.9600,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Wittensee – Bünsdorf",lat:54.3900,lon:9.7000,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Tonkuhle – Moorrege",lat:53.6650,lon:9.6650,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Baggersee – Appen-Etz",lat:53.6500,lon:9.7500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Kleiner Bornhorster See",lat:53.1800,lon:8.2800,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Ohlenstedter Quellsee",lat:53.2500,lon:8.8500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Werdersee – Bremen",lat:53.0550,lon:8.8100,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Bugasee – Kassel",lat:51.2850,lon:9.5050,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Twistesee – Bad Arolsen",lat:51.3850,lon:9.0600,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Diemelsee",lat:51.3700,lon:8.7300,label:"FKK",type:"Stausee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Seepark – Weimar/Niederweimar",lat:50.7600,lon:8.7300,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Launsbacher See",lat:50.6250,lon:8.6500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Heuchelheimer See",lat:50.6000,lon:8.6200,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Northeimer Seenplatte",lat:51.7100,lon:9.9800,label:"FKK",type:"Seenplatte",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Martinsee – Wolfenbüttel",lat:52.1600,lon:10.5100,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Halberstädter See",lat:51.9000,lon:11.0500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Neustädter See – Magdeburg",lat:52.1800,lon:11.6200,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Salbker Seen – Magdeburg",lat:52.0800,lon:11.6500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Löderburger See",lat:51.8700,lon:11.5700,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Unterbacher See",lat:51.1600,lon:6.8700,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Horstmarer See – Lünen",lat:51.6100,lon:7.5300,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Xantener Südsee",lat:51.6700,lon:6.4300,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Birkensee – Bergkirchen",lat:48.2400,lon:11.3300,label:"FKK",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Badesee bekannt."},
+  {name:"Pucher Meer – Fürstenfeldbruck",lat:48.1800,lon:11.2500,label:"FKK-Strand",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand bekannt."},
+  {name:"Muhr am See – Altmühlsee",lat:49.1500,lon:10.7100,label:"FKK-Strand",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Absberg – Seespitz",lat:49.1450,lon:10.8700,label:"FKK-Strand",type:"Strandbad",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Hof – FKK-Badestelle",lat:50.3100,lon:11.9200,label:"FKK-Badestelle",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Badestelle verzeichnet."},
+  {name:"Binsfeld – Speyer",lat:49.3500,lon:8.4300,label:"FKK-Strand",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Plüderhausen – FKK-Bereich",lat:48.8000,lon:9.6000,label:"FKK-Bereich",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Bereich verzeichnet."},
+  {name:"Priwall – Travemünde",lat:53.9650,lon:10.8800,label:"FKK-Strand",type:"Ostseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Westerland – FKK-Strand",lat:54.9050,lon:8.3100,label:"FKK-Strand",type:"Nordseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Ording – FKK-Strand",lat:54.3000,lon:8.6300,label:"FKK-Strand",type:"Nordseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Ahlbeck – FKK-Strand",lat:53.9400,lon:14.1900,label:"FKK-Strand",type:"Ostseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Binz – FKK-Strand",lat:54.3950,lon:13.6200,label:"FKK-Strand",type:"Ostseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."},
+  {name:"Strausberg – FKK-Strand",lat:52.5700,lon:13.9000,label:"FKK-Strand",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet."}
+
 ];
 
 let map;
@@ -247,4 +302,4 @@ placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v15";
+window.FKK_APP_VERSION = "v16";
