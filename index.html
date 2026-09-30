@@ -10,14 +10,25 @@
 <body>
   <main>
     <h1>🏖️ FKK Strand Finder</h1>
-    <p class="intro">Zuverlässige Suche mit einer festen, kuratierten FKK-Datenbank – ohne große Live-Abfragen an Overpass.</p>
+    <p class="intro">Suche FKK-Orte in der Nähe deines aktuellen Standorts oder eines frei eingegebenen Ortes.</p>
 
     <button id="locateBtn">📍 Meinen Standort verwenden</button>
+
+    <div class="placeSearch">
+      <label for="placeInput">Oder von einem anderen Ort suchen</label>
+      <div class="searchRow">
+        <input id="placeInput" type="search" placeholder="z. B. Hamburg, Celle Bahnhof" autocomplete="off">
+        <button id="placeSearchBtn" type="button">🔎 Suchen</button>
+      </div>
+      <div class="hint">Zum Beispiel „Hannover“, „Hamburg“ oder eine Adresse.</div>
+    </div>
+
+    <div id="originInfo" class="originInfo hidden"></div>
 
     <label for="radius">Suchradius: <strong><span id="radiusValue">25</span> km</strong></label>
     <input id="radius" type="range" min="5" max="100" value="25" step="5">
 
-    <div id="status">Standort wird noch nicht verwendet.</div>
+    <div id="status">Wähle deinen Standort oder gib einen Ort ein.</div>
     <div id="map"></div>
 
     <section>
@@ -30,6 +41,8 @@
       Die App zeigt dokumentierte FKK-Orte. Bei Einträgen aus Verzeichnissen können sich Regeln oder Öffnungszeiten ändern. Bitte vor der Fahrt die jeweilige Quelle prüfen.
       <br><br>
       <strong>Datenbasis:</strong> 30.09.2026 · 9 kuratierte Orte im Norden Deutschlands.
+      <br><br>
+      <strong>Ortssuche:</strong> Die eingegebene Adresse wird über OpenStreetMap/Nominatim gesucht.
     </div>
   </main>
 

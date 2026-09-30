@@ -4,3 +4,15 @@
 .statusSmall{font-size:12px;color:#666}
 .infoBox{margin:18px 0 30px;padding:14px;border-radius:12px;background:#f3f3f3;font-size:13px;line-height:1.45;color:#444}
 .source a{color:inherit;text-decoration:underline}
+
+.placeSearch{background:#fff;border-radius:14px;padding:13px;margin:0 0 12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.placeSearch label{margin:0 0 7px;font-weight:600}
+.searchRow{display:flex;gap:8px}
+.searchRow input{flex:1;min-width:0;border:1px solid #ccc;border-radius:10px;padding:12px;font-size:16px;background:#fff}
+.searchRow button{width:auto;min-width:105px;margin:0;padding:11px 13px}
+.searchRow button:disabled{opacity:.55}
+.hint{font-size:12px;color:#777;margin-top:6px}
+.originInfo{margin:10px 0;padding:10px 12px;border-radius:12px;background:#eef7ff;font-size:13px;line-height:1.35}
+.originInfo button{float:right;width:auto;margin:0;padding:2px 8px;background:transparent;color:#333;font-size:18px}
+.navButtons{display:flex;gap:8px;margin-top:11px}
+.navBtn{display:inline-block;flex:1;text-align:center;text-decoration:none;background:#111;color:#fff;border-radius:10px;padding:10px 7px;font-size:13px;font-weight:600}
