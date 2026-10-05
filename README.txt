@@ -1,4 +1,4 @@
-FKK Strand Finder v18
+FKK Strand Finder v19
 
 Datenqualitaets-Update:
 - bestehende FKK-Datenbank technisch geprueft

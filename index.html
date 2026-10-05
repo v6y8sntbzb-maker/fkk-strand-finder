@@ -3,52 +3,100 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>FKK Strand Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <h1>🏖️ FKK Strand Finder</h1>
-    <p class="intro">Suche FKK-Orte in der Nähe deines aktuellen Standorts oder eines frei eingegebenen Ortes.</p>
-
-    <button id="locateBtn">📍 Meinen Standort verwenden</button>
-
-    <div class="placeSearch">
-      <label for="placeInput">Oder von einem anderen Ort suchen</label>
-      <div class="searchRow">
-        <input id="placeInput" type="search" placeholder="z. B. Hamburg, Celle Bahnhof" autocomplete="off">
-        <button id="placeSearchBtn" type="button">🔎 Suchen</button>
+  <main class="appShell">
+    <header class="hero">
+      <div class="brandRow">
+        <div class="brandIcon" aria-hidden="true">☀︎</div>
+        <div>
+          <div class="eyebrow">DEUTSCHLANDWEIT</div>
+          <h1>FKK Strand Finder</h1>
+          <p>Natürlich. Frei. Entdecken.</p>
+        </div>
       </div>
-      <div class="hint">Zum Beispiel „Hannover“, „Hamburg“ oder eine Adresse.</div>
-    </div>
+      <div class="heroBadge">🏖️ FKK-Plätze in Deutschland</div>
+    </header>
 
-    <div id="originInfo" class="originInfo hidden"></div>
+    <section class="searchCard">
+      <div class="sectionTitle">
+        <div><span class="tinyLabel">STARTPUNKT</span><h2>Wo möchtest du suchen?</h2></div>
+        <span class="liveDot">●</span>
+      </div>
 
-    <label for="radius">Suchradius: <strong><span id="radiusValue">25</span> km</strong></label>
-    <input id="radius" type="range" min="5" max="100" value="25" step="5">
+      <div class="inputShell">
+        <span class="inputIcon">⌕</span>
+        <input id="placeInput" type="search" placeholder="Ort oder Adresse eingeben …" autocomplete="off">
+        <button id="placeSearchBtn" class="iconButton" type="button" aria-label="Ort suchen">↗</button>
+      </div>
+      <div class="searchExamples">z. B. Hamburg · Hannover · Bodensee</div>
 
-    <div id="status">Wähle deinen Standort oder gib einen Ort ein.</div>
-    <div id="map"></div>
+      <div class="controlGrid">
+        <div class="controlCard">
+          <span class="controlIcon">⌖</span>
+          <div>
+            <span class="controlLabel">Suchradius</span>
+            <strong><span id="radiusValue">25</span> km</strong>
+          </div>
+        </div>
+        <button id="locateBtn" class="locationButton" type="button"><span>📍</span> Aktuellen Standort</button>
+      </div>
 
-    <section>
-      <h2>Gefundene FKK-Orte</h2>
+      <input id="radius" class="range" type="range" min="5" max="100" value="25" step="5" aria-label="Suchradius">
+      <div class="rangeLabels"><span>5 km</span><span>100 km</span></div>
+
+      <div id="originInfo" class="originInfo hidden"></div>
+      <button id="searchAction" class="primaryButton" type="button">⌕&nbsp;&nbsp; FKK-Plätze suchen</button>
+    </section>
+
+    <div id="status" class="statusBar">Wähle deinen Standort oder gib einen Ort ein.</div>
+
+    <section class="mapSection">
+      <div class="mapHeader">
+        <div><span class="tinyLabel">KARTE</span><h2>FKK-Orte in deiner Umgebung</h2></div>
+        <span class="mapPill">🗺️ Live-Karte</span>
+      </div>
+      <div id="map"></div>
+    </section>
+
+    <section class="resultsSection">
+      <div class="resultsHeader">
+        <div><span class="tinyLabel">ERGEBNISSE</span><h2>Gefundene FKK-Orte</h2></div>
+        <span class="resultHint">Nach Entfernung</span>
+      </div>
       <div id="results"></div>
     </section>
 
+    <section class="featureStrip">
+      <div><span>📍</span><strong>Überall in Deutschland</strong><small>Große FKK-Datenbank</small></div>
+      <div><span>🧭</span><strong>Direkte Navigation</strong><small>Apple Karten &amp; Google Maps</small></div>
+      <div><span>✓</span><strong>Mit Quellen</strong><small>Daten transparent eingeordnet</small></div>
+    </section>
+
     <div class="infoBox">
-      <strong>ℹ️ Wichtig</strong><br>
-      Die App zeigt dokumentierte FKK-Orte. Bei Einträgen aus Verzeichnissen können sich Regeln oder Öffnungszeiten ändern. Bitte vor der Fahrt die jeweilige Quelle prüfen.
-      <br><br>
-      <strong>Datenbasis:</strong> 30.09.2026 · 9 kuratierte Orte im Norden Deutschlands.
-      <br><br>
-      <strong>Ortssuche:</strong> Die eingegebene Adresse wird über OpenStreetMap/Nominatim gesucht.
+      <strong>ℹ️ Gut zu wissen</strong>
+      <p>Die App zeigt dokumentierte FKK-Orte. Bei Verzeichniseinträgen können sich Regeln, Zugänge oder Öffnungszeiten ändern. Bitte vor der Fahrt die jeweilige Quelle prüfen.</p>
+      <p><strong>Datenbasis:</strong> 05.10.2026 · bundesweite FKK-Datenbank.</p>
+      <p><strong>Ortssuche:</strong> Der eingegebene Ort wird über OpenStreetMap/Nominatim gesucht.</p>
     </div>
+
+    <footer class="footerNav">
+      <div class="footerItem active"><span>⌂</span><small>Start</small></div>
+      <div class="footerItem"><span>◈</span><small>Karte</small></div>
+      <div class="footerItem"><span>☆</span><small>Favoriten</small></div>
+      <div class="footerItem"><span>•••</span><small>Mehr</small></div>
+    </footer>
   </main>
 
   <div id="modal" class="modal hidden">
     <div class="modalBox">
-      <button id="closeModal" class="close">×</button>
+      <button id="closeModal" class="close" aria-label="Schließen">×</button>
       <h2 id="modalTitle"></h2>
       <p id="modalText"></p>
     </div>

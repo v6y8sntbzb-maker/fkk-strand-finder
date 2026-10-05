@@ -233,7 +233,7 @@ function renderResults(items, radius){
     card.innerHTML=`
       <h3>${escapeHtml(p.name)}</h3>
       <div class="meta">📍 ${p.distance.toFixed(1)} km entfernt<br>
-      <strong>${escapeHtml(p.label)}</strong> · ${escapeHtml(p.type)}<br>
+      <strong>${escapeHtml(p.label)}</strong> <span class="typePill">${escapeHtml(p.type)}</span><br>
       ℹ️ ${escapeHtml(p.status)}</div>
       <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}</div>
       ${navigationLinks(p)}`;
@@ -306,8 +306,9 @@ async function searchFromPlace(){
 }
 
 locateBtn.addEventListener("click",useLocation);
+document.getElementById("searchAction").addEventListener("click",()=>{ if(searchOrigin) searchPlaces(); else searchFromPlace(); });
 placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v18";
+window.FKK_APP_VERSION = "v19";
