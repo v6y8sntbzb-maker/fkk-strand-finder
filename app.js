@@ -1,4 +1,4 @@
-// FKK Strand Finder v28
+// FKK Strand Finder v30
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [

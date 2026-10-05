@@ -1,7 +1,8 @@
-FKK Strand Finder v28
+FKK Strand Finder v30
 
-Die Datenbasis wurde um weitere FKK-Badestellen mit belegten OpenStreetMap-Koordinaten erweitert. Keine geratenen Koordinaten. Vor Ort gelten Beschilderung und Badeordnung.
+Neu in v30:
+- Neuer Strand-Hintergrund im Stil des aktuellen App-Designs.
+- Die bestehende Suche, Karte, Favoriten und Navigation bleiben erhalten.
+- Hintergrundbild liegt lokal unter assets/beach-background.jpg und benötigt keine externe Bild-URL.
 
-Quellen: Badeklar / OpenStreetMap und Badesee-heute.
-
-Datenstand: 2026-10-05
+Hinweis: Beschilderung und Regeln vor Ort sind maßgeblich.
