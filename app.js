@@ -1,4 +1,4 @@
-// FKK Strand Finder v16
+// FKK Strand Finder v17
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
@@ -102,7 +102,7 @@ const FKK_PLACES = [
   {name:"Heuchelheimer See",lat:50.6000,lon:8.6200,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
   {name:"Northeimer Seenplatte",lat:51.7100,lon:9.9800,label:"FKK",type:"Seenplatte",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
   {name:"Martinsee – Wolfenbüttel",lat:52.1600,lon:10.5100,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
-  {name:"Halberstädter See",lat:51.9000,lon:11.0500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
+  {name:"Halberstädter See",lat:51.9091667,lon:11.0852778,label:"FKK-Bereich ausgewiesen",type:"Badesee",evidence:"offizielle Quelle",source:"Land Sachsen-Anhalt / Stadt Halberstadt",sourceUrl:"https://ms.sachsen-anhalt.de/themen/gesundheit-und-pflege/daten-zu-gesundheit/badegewaesser/page/halberstaedter-see",status:"Die amtliche Badegewässer-Seite nennt ausdrücklich einen FKK-Bereich. Koordinaten aus der offiziellen Camping-/Tourismusangabe."},
   {name:"Neustädter See – Magdeburg",lat:52.1800,lon:11.6200,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
   {name:"Salbker Seen – Magdeburg",lat:52.0800,lon:11.6500,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
   {name:"Löderburger See",lat:51.8700,lon:11.5700,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet."},
@@ -302,4 +302,4 @@ placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v16";
+window.FKK_APP_VERSION = "v17";
