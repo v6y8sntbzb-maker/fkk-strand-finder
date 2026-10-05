@@ -141,3 +141,6 @@ body{background:linear-gradient(180deg,#edf7ff 0,#f7fbff 34%,#f2f7fc 100%);color
   .mapLegend{left:8px;right:8px;gap:9px;padding:9px 8px}
 }
 @media(max-width:360px){.controlGrid{grid-template-columns:1fr}.mapLegend{font-size:9px}}
+
+/* v23: Status-/Hinweiszeile unter der Suche komplett ausblenden. */
+.statusBar { display: none !important; }
