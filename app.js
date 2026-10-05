@@ -180,7 +180,17 @@ function clearMarkers(){
 
 function showOrigin(origin){
   if (userMarker) map.removeLayer(userMarker);
-  userMarker=L.marker([origin.lat,origin.lon]).addTo(map).bindPopup(`<strong>Suchort</strong><br>${escapeHtml(origin.label)}`);
+  const iconClass = origin.kind === "gps" ? "originMarker originMarkerGps" : "originMarker originMarkerPlace";
+  const iconText = origin.kind === "gps" ? "⌖" : "●";
+  const originIcon = L.divIcon({
+    className: "originIconWrap",
+    html: `<div class="${iconClass}"><span>${iconText}</span></div>`,
+    iconSize: [46,46],
+    iconAnchor: [23,23],
+    popupAnchor: [0,-24]
+  });
+  userMarker=L.marker([origin.lat,origin.lon],{icon:originIcon,zIndexOffset:1000}).addTo(map)
+    .bindPopup(`<strong>${origin.kind === "gps" ? "Mein Standort" : "Suchort"}</strong><br>${escapeHtml(origin.label)}`);
   originInfoEl.classList.remove("hidden");
   originInfoEl.innerHTML = `🔎 Suche ab <strong>${escapeHtml(origin.label)}</strong> <button id="clearOrigin" type="button">×</button>`;
   document.getElementById("clearOrigin").addEventListener("click", clearOrigin);
@@ -311,4 +321,4 @@ placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v19";
+window.FKK_APP_VERSION = "v20";
