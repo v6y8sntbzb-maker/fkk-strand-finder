@@ -1,11 +1,10 @@
-FKK Strand Finder v19
+FKK Strand Finder – Version 22
 
-Datenqualitaets-Update:
-- bestehende FKK-Datenbank technisch geprueft
-- Halberstaedter See bleibt mit offiziell belegtem Punkt enthalten
-- Oldenstaedter See: Koordinaten verfeinert
-- Bottsand: Koordinaten auf belegten FKK-Strandpunkt verfeinert
-- Salbker Seen: als nicht mehr bestaetigte FKK-Stelle deaktiviert
-- Navigation: bei belegten Punktkoordinaten direkt zum Punkt; bei nur ungefaehren Gewaesserkoordinaten wird nach dem Ort/Gewaesser navigiert, damit kein scheinbar exakter, aber falscher FKK-Punkt vorgetaeuscht wird.
+Neues modernes iPhone-orientiertes Design nach dem gewünschten Mockup.
+- Suchort: blau
+- eigener GPS-Standort: rot
+- FKK-Orte: grün
+- moderne Kartenlegende
+- bestehende lokale FKK-Datenbank und Navigation bleiben erhalten
 
-Bitte index.html, style.css und app.js im GitHub-Repository ersetzen.
+GitHub Pages: index.html, style.css und app.js ersetzen.

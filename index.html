@@ -12,22 +12,21 @@
 </head>
 <body>
   <main class="appShell">
-    <header class="hero">
+    <header class="topHeader">
       <div class="brandRow">
-        <div class="brandIcon" aria-hidden="true">☀︎</div>
-        <div>
-          <div class="eyebrow">DEUTSCHLANDWEIT</div>
+        <div class="brandIcon" aria-hidden="true"><span class="brandSun">☀</span><span class="brandWave">〰</span></div>
+        <div class="brandText">
           <h1>FKK Strand Finder</h1>
-          <p>Natürlich. Frei. Entdecken.</p>
+          <p>Alle FKK-Plätze in Deutschland</p>
         </div>
       </div>
-      <div class="heroBadge">🏖️ FKK-Plätze in Deutschland</div>
+      <button class="menuButton" type="button" aria-label="Menü">☰</button>
     </header>
 
     <section class="searchCard">
       <div class="sectionTitle">
-        <div><span class="tinyLabel">STARTPUNKT</span><h2>Wo möchtest du suchen?</h2></div>
-        <span class="liveDot">●</span>
+        <div><span class="tinyLabel">DEIN SUCHORT</span><h2>Wo möchtest du suchen?</h2></div>
+        <span class="searchStatusDot" aria-hidden="true"></span>
       </div>
 
       <div class="inputShell">
@@ -45,14 +44,14 @@
             <strong><span id="radiusValue">25</span> km</strong>
           </div>
         </div>
-        <button id="locateBtn" class="locationButton" type="button"><span>📍</span> Aktuellen Standort</button>
+        <button id="locateBtn" class="locationButton" type="button"><span class="gpsSmall">◎</span> Aktuellen Standort</button>
       </div>
 
       <input id="radius" class="range" type="range" min="5" max="100" value="25" step="5" aria-label="Suchradius">
       <div class="rangeLabels"><span>5 km</span><span>100 km</span></div>
 
       <div id="originInfo" class="originInfo hidden"></div>
-      <button id="searchAction" class="primaryButton" type="button">⌕&nbsp;&nbsp; FKK-Plätze suchen</button>
+      <button id="searchAction" class="primaryButton" type="button"><span>⌕</span> FKK-Plätze suchen</button>
     </section>
 
     <div id="status" class="statusBar">Wähle deinen Standort oder gib einen Ort ein.</div>
@@ -62,7 +61,14 @@
         <div><span class="tinyLabel">KARTE</span><h2>FKK-Orte in deiner Umgebung</h2></div>
         <span class="mapPill">🗺️ Live-Karte</span>
       </div>
-      <div id="map"></div>
+      <div class="mapWrap">
+        <div id="map"></div>
+        <div class="mapLegend">
+          <span><i class="legendDot searchDot"></i> Suchort</span>
+          <span><i class="legendDot gpsDot"></i> Dein Standort</span>
+          <span><i class="legendPin"></i> FKK-Ort</span>
+        </div>
+      </div>
     </section>
 
     <section class="resultsSection">
@@ -88,7 +94,7 @@
 
     <footer class="footerNav">
       <div class="footerItem active"><span>⌂</span><small>Start</small></div>
-      <div class="footerItem"><span>◈</span><small>Karte</small></div>
+      <div class="footerItem"><span>◇</span><small>Karte</small></div>
       <div class="footerItem"><span>☆</span><small>Favoriten</small></div>
       <div class="footerItem"><span>•••</span><small>Mehr</small></div>
     </footer>

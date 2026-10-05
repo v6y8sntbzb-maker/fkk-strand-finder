@@ -181,7 +181,7 @@ function clearMarkers(){
 function showOrigin(origin){
   if (userMarker) map.removeLayer(userMarker);
   const iconClass = origin.kind === "gps" ? "originMarker originMarkerGps" : "originMarker originMarkerPlace";
-  const iconText = origin.kind === "gps" ? "⌖" : "●";
+  const iconText = origin.kind === "gps" ? "●" : "●";
   const originIcon = L.divIcon({
     className: "originIconWrap",
     html: `<div class="${iconClass}"><span>${iconText}</span></div>`,
@@ -233,7 +233,8 @@ function renderResults(items, radius){
   }
 
   items.forEach((p)=>{
-    const marker=L.marker([p.lat,p.lon]).addTo(map);
+    const fkkIcon=L.divIcon({className:"fkkIconWrap",html:`<div class="fkkMarker"><span>♨</span></div>`,iconSize:[40,48],iconAnchor:[20,46],popupAnchor:[0,-40]});
+    const marker=L.marker([p.lat,p.lon],{icon:fkkIcon}).addTo(map);
     marker.bindPopup(`<strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.label)}<br>${p.distance.toFixed(1)} km`);
     resultMarkers.push(marker);
 
@@ -321,4 +322,4 @@ placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v20";
+window.FKK_APP_VERSION = "v22";

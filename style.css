@@ -46,3 +46,98 @@ button{cursor:pointer}
 .originMarkerPlace{background:linear-gradient(135deg,#167de5,#0b5dcc);border:3px solid #fff;}
 .originMarkerGps{background:linear-gradient(135deg,#12b886,#07866a);border:3px solid #fff;}
 .originMarker span{position:relative;z-index:2;color:#fff;font-size:19px;font-weight:900;line-height:1;}
+
+/* FKK-Treffer: eigener grüner Marker, klar getrennt vom blauen Suchort */
+.fkkIconWrap{background:transparent!important;border:0!important;}
+.fkkMarker{width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:linear-gradient(135deg,#19a974,#087f5b);border:3px solid #fff;box-shadow:0 4px 12px rgba(10,70,50,.32);display:flex;align-items:center;justify-content:center;box-sizing:border-box;}
+.fkkMarker span{transform:rotate(45deg);color:#fff;font-size:18px;font-weight:900;line-height:1;}
+
+/* v22 – modernes iPhone-orientiertes Redesign */
+:root{
+  --blue:#147ee8;
+  --blueDark:#12366d;
+  --sky:#eef7ff;
+  --ink:#102b55;
+  --muted:#71839a;
+  --green:#15945f;
+  --red:#ef3e3e;
+  --surface:#ffffff;
+  --bg:#f3f8fd;
+  --line:#dce8f4;
+  --shadow:0 14px 35px rgba(27,72,117,.09);
+}
+body{background:linear-gradient(180deg,#edf7ff 0,#f7fbff 34%,#f2f7fc 100%);color:var(--ink)}
+.appShell{width:min(760px,100%);padding:12px 12px 28px}
+.topHeader{position:relative;display:flex;align-items:center;justify-content:space-between;padding:8px 6px 16px}
+.brandRow{display:flex;align-items:center;gap:12px}
+.brandIcon{width:58px;height:58px;border-radius:18px;background:linear-gradient(145deg,#1579dd,#35b8ff);border:0;box-shadow:0 8px 20px rgba(20,126,232,.20);position:relative;overflow:hidden}
+.brandSun{position:absolute;top:7px;left:16px;color:#ffd23f;font-size:23px;line-height:1}
+.brandWave{position:absolute;left:10px;bottom:8px;color:#fff;font-size:31px;line-height:1;transform:scaleX(1.35)}
+.brandText h1{font-size:24px;line-height:1.05;margin:0;color:#10366d;letter-spacing:-.035em}
+.brandText p{margin:5px 0 0;font-size:13px;color:#3c68a1;font-weight:600}
+.menuButton{width:48px;height:48px;border:0;border-radius:17px;background:#e8f4ff;color:#0e5fae;font-size:26px;line-height:1;box-shadow:none}
+.hero{display:none}
+.searchCard{border-radius:26px;padding:15px;background:rgba(255,255,255,.95);box-shadow:0 10px 28px rgba(27,72,117,.07);border:1px solid #dceaf6;margin-bottom:12px}
+.sectionTitle h2,.mapHeader h2,.resultsHeader h2{font-size:18px;color:#12366d}
+.tinyLabel{color:#94a8bf;letter-spacing:.18em}
+.searchStatusDot{width:10px;height:10px;border-radius:50%;background:#18b779;box-shadow:0 0 0 5px #e7f8f1}
+.inputShell{margin-top:13px;background:#fff;border:1.5px solid #cfe2f4;border-radius:17px;box-shadow:0 5px 14px rgba(34,90,137,.05);padding-left:13px}
+.inputIcon{font-size:29px;color:#244e83}
+.inputShell input{font-size:16px}
+.iconButton{background:#e9f4ff;color:#116fd2;border-radius:13px}
+.searchExamples{color:#94a2b2;margin-bottom:11px}
+.controlGrid{grid-template-columns:1fr 1fr;gap:8px}
+.controlCard,.locationButton{min-height:56px;background:#fbfdff;border-color:#dbe7f2;border-radius:16px}
+.controlIcon{background:#edf6ff;color:#147ee8}
+.locationButton{color:#126dca}
+.gpsSmall{font-size:21px;font-weight:800;vertical-align:-2px}
+.range{margin-top:12px;height:6px}
+.primaryButton{border-radius:16px;padding:14px;background:linear-gradient(135deg,#1685ec,#2bb6ff);font-size:15px;box-shadow:0 9px 20px rgba(20,126,232,.20)}
+.primaryButton span{font-size:20px;vertical-align:-2px}
+.statusBar{border-radius:16px;background:#eef7ff;border-color:#d8eafa;color:#315b87;margin:10px 2px 12px}
+.mapSection,.resultsSection{border-radius:26px;box-shadow:var(--shadow);border-color:#dce8f4}
+.mapHeader{padding:16px 16px 12px}
+.mapPill{background:#eaf5ff;color:#2b74b3;padding:8px 11px;font-size:10px}
+.mapWrap{position:relative}
+#map{height:58vh;min-height:410px;max-height:640px}
+.mapLegend{position:absolute;left:12px;right:12px;bottom:12px;z-index:450;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:10px 12px;border-radius:17px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);box-shadow:0 8px 20px rgba(18,54,109,.12);font-size:10px;color:#31527a}
+.mapLegend span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.legendDot{width:14px;height:14px;border-radius:50%;display:inline-block;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.searchDot{background:#147ee8;box-shadow:0 0 0 2px #bfe1ff}
+.gpsDot{background:#ef3e3e;box-shadow:0 0 0 3px rgba(239,62,62,.18)}
+.legendPin{width:13px;height:13px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#15945f;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.22);display:inline-block}
+.resultsSection{padding:16px 12px}
+.resultsHeader{padding:0 4px 11px}
+.card{border-radius:21px;border-color:#dce8f4;box-shadow:0 8px 24px rgba(27,72,117,.07);padding:15px 14px}
+.card h3{font-size:17px;color:#173d73}
+.meta{font-size:12px;color:#4f6480}
+.meta strong{background:#e7f8f0;color:#14805a}
+.typePill{background:#edf3f8;color:#6a7c90}
+.navBtn{border-radius:13px}
+.featureStrip{gap:8px}
+.featureStrip>div{border-radius:18px}
+.footerNav{border-radius:24px;margin-top:14px;padding:9px 7px;box-shadow:0 12px 35px rgba(18,54,109,.15)}
+.footerItem span{font-size:21px}
+.footerItem small{font-size:10px}
+
+/* Suchort blau, GPS bewusst rot, FKK grün */
+.originMarkerPlace{background:linear-gradient(145deg,#1a8af0,#0769d3)!important;border:3px solid #fff!important}
+.originMarkerGps{background:linear-gradient(145deg,#ff5757,#df2626)!important;border:3px solid #fff!important}
+.originMarkerGps::after{border-color:rgba(239,62,62,.28)!important}
+.originMarkerGps::before{border-color:#fff!important}
+.originMarker{box-shadow:0 5px 16px rgba(20,54,90,.28)}
+.fkkMarker{background:linear-gradient(145deg,#1aae72,#087d57);box-shadow:0 5px 14px rgba(8,80,55,.28)}
+
+@media(max-width:430px){
+  .appShell{padding:8px 10px 24px}
+  .topHeader{padding:7px 4px 13px}
+  .brandIcon{width:52px;height:52px;border-radius:16px}
+  .brandText h1{font-size:22px}
+  .brandText p{font-size:12px}
+  .menuButton{width:45px;height:45px;border-radius:16px}
+  .searchCard{padding:14px;border-radius:24px}
+  .controlGrid{grid-template-columns:1fr 1fr}
+  #map{height:60vh;min-height:430px}
+  .mapLegend{left:8px;right:8px;gap:9px;padding:9px 8px}
+}
+@media(max-width:360px){.controlGrid{grid-template-columns:1fr}.mapLegend{font-size:9px}}
