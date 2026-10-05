@@ -2,6 +2,14 @@
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
+  // v27 – weitere FKK-Badestellen mit überprüfbaren OSM/Quellen-Koordinaten
+  {name:"Niklassee FKK – Bad Schussenried",lat:48.01066,lon:9.69657,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Schwimmbereichs geprüft.",active:true},
+  {name:"FKK-Strand Baiersdorf",lat:49.66563,lon:11.02236,label:"FKK-Strand",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; Koordinate des OSM-Strandobjekts geprüft.",active:true},
+  {name:"Klostersee Triefenstein – FKK",lat:49.80309,lon:9.61428,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle am Klostersee verzeichnet; Gewässerkoordinate und benachbarter FKK-Strand in OSM geprüft.",active:true},
+  {name:"FKK-Badestelle Arkenberger Baggersee",lat:52.63675,lon:13.41536,label:"FKK-Badestelle",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Strandobjekts geprüft.",active:true},
+  {name:"Baggersee Diez",lat:50.37018,lon:7.99191,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Gewässers geprüft.",active:true},
+  {name:"Geiseltalsee – FKK-Strand Stöbnitz",lat:51.31672,lon:11.82097,label:"FKK-Strand",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand am Stöbnitzer Ufer verzeichnet; Koordinate des OSM-Strandbads geprüft.",active:true},
+
   // v25 – weitere FKK-Badestellen mit belegten Koordinaten
   {name:"Badesee Westrittrum",lat:52.9705,lon:8.3171,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/niedersachsen/",status:"Zwei textilfreie Stellen verzeichnet.",active:true},
   {name:"Großer Heidesee – Bad Laer",lat:52.0970,lon:8.0478,label:"FKK erlaubt",type:"Badesee",evidence:"FKK-Verzeichnis + OSM-Koordinate",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/fkk/niedersachsen/",status:"Als FKK-Ort in Niedersachsen verzeichnet.",active:true},

@@ -1,16 +1,15 @@
-FKK Strand Finder v25
+FKK Strand Finder v27
 
-Die Datenbasis wurde erneut um belegte FKK-Badestellen erweitert.
-Stand dieser Version: 170 Einträge mit Koordinaten.
+Die Datenbasis wurde erneut um sechs FKK-Badestellen mit überprüfbaren Koordinaten erweitert. Es werden bewusst keine erfundenen Koordinaten verwendet.
 
-Neue Einträge stammen aus:
-- Badesee-heute / OpenStreetMap (FKK-Kennzeichnung)
-- Niedersächsischer Badegewässer-Atlas für einzelne amtliche Koordinaten
-- Badeklar / OpenStreetMap-Routenpositionen für weitere FKK-Badestellen
+Datenbasis: 176 Einträge mit Koordinaten.
 
-Es werden bewusst keine frei geratenen Koordinaten verwendet. Bei der letzten Erweiterung wurden nur Stellen aufgenommen, für die eine belastbare Koordinate vorliegt.
+Neue Stellen in v27:
+- Niklassee FKK – Bad Schussenried
+- FKK-Strand Baiersdorf
+- Klostersee Triefenstein – FKK
+- FKK-Badestelle Arkenberger Baggersee
+- Baggersee Diez
+- Geiseltalsee – FKK-Strand Stöbnitz
 
-Wichtig: OSM-basierte FKK-Angaben können unvollständig oder veraltet sein. Vor Ort gelten Beschilderung, Badeordnung und Hinweise der Betreiber.
-
-
-Weitere Ergänzungen in v26: drei getrennte FKK-Strände am Binsfeld bei Otterstadt, FKK-Strand am Nachtallmendsee bei Kenzingen und FKK-Strand am Filzteich bei Schneeberg. Die Koordinaten wurden aus OpenStreetMap-basierten Karteneinträgen geprüft.
+Quellenbasis: Badeklar / OpenStreetMap sowie ergänzende OSM-Kartendaten. Hinweise und Beschilderung vor Ort sind maßgeblich.
