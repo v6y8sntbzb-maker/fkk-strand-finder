@@ -1,7 +1,13 @@
-// FKK Strand Finder v26
+// FKK Strand Finder v28
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
+  // v28 – weitere verifizierte FKK-Strände (OSM/Badeklar)
+  {name:"FKK Strand Falckenstein – Kiel",lat:54.41369,lon:10.18598,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet"},
+  {name:"FKK Strand Avendorf – Fehmarn",lat:54.40235,lon:11.12220,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet"},
+  {name:"FKK Strand Wulfener Hals – Fehmarn",lat:54.40768,lon:11.18514,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet"},
+  {name:"FKK Strand Niedamm / Golsmaas – Pommerby",lat:54.76033,lon:9.97403,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet"},
+
   // v27 – weitere FKK-Badestellen mit überprüfbaren OSM/Quellen-Koordinaten
   {name:"Niklassee FKK – Bad Schussenried",lat:48.01066,lon:9.69657,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Schwimmbereichs geprüft.",active:true},
   {name:"FKK-Strand Baiersdorf",lat:49.66563,lon:11.02236,label:"FKK-Strand",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; Koordinate des OSM-Strandobjekts geprüft.",active:true},

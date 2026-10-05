@@ -1,15 +1,7 @@
-FKK Strand Finder v27
+FKK Strand Finder v28
 
-Die Datenbasis wurde erneut um sechs FKK-Badestellen mit überprüfbaren Koordinaten erweitert. Es werden bewusst keine erfundenen Koordinaten verwendet.
+Die Datenbasis wurde um weitere FKK-Badestellen mit belegten OpenStreetMap-Koordinaten erweitert. Keine geratenen Koordinaten. Vor Ort gelten Beschilderung und Badeordnung.
 
-Datenbasis: 176 Einträge mit Koordinaten.
+Quellen: Badeklar / OpenStreetMap und Badesee-heute.
 
-Neue Stellen in v27:
-- Niklassee FKK – Bad Schussenried
-- FKK-Strand Baiersdorf
-- Klostersee Triefenstein – FKK
-- FKK-Badestelle Arkenberger Baggersee
-- Baggersee Diez
-- Geiseltalsee – FKK-Strand Stöbnitz
-
-Quellenbasis: Badeklar / OpenStreetMap sowie ergänzende OSM-Kartendaten. Hinweise und Beschilderung vor Ort sind maßgeblich.
+Datenstand: 2026-10-05
