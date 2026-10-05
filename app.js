@@ -1,4 +1,4 @@
-// FKK Strand Finder v24
+// FKK Strand Finder v26
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
@@ -180,7 +180,12 @@ const FKK_PLACES = [
   {name:"Useriner See",lat:53.3398,lon:12.97,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Stelle verzeichnet.",active:true},
   {name:"Luckower See",lat:53.7163,lon:11.8098,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Stelle verzeichnet.",active:true},
   {name:"Leppinsee",lat:53.3446,lon:12.8212,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Stelle verzeichnet.",active:true},
-  {name:"Langhäger See",lat:53.3894,lon:12.9557,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Stelle verzeichnet.",active:true},] ;
+  {name:"Langhäger See",lat:53.3894,lon:12.9557,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Stelle verzeichnet.",active:true},  {name:"FKK Binsfeld I – Otterstadt",lat:49.3619,lon:8.46365,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Binsfeld verzeichnet; Koordinate direkt aus OSM geprüft.",active:true},
+  {name:"FKK Binsfeld II – Otterstadt",lat:49.3609,lon:8.46279,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Binsfeld verzeichnet; Koordinate direkt aus OSM geprüft.",active:true},
+  {name:"FKK Binsfeld III – Otterstadt",lat:49.36016,lon:8.46221,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Binsfeld verzeichnet; Koordinate direkt aus OSM geprüft.",active:true},
+  {name:"FKK-Strand Kenzingen – Nachtallmendsee",lat:48.2082,lon:7.75606,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand am Nachtallmendsee; Koordinate direkt aus OSM geprüft.",active:true},
+  {name:"FKK-Strand Filzteich – Schneeberg",lat:50.57195,lon:12.61218,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand am Filzteich; FKK ist am Strandbad möglich; Koordinate aus OSM-Objektumfeld geprüft.",active:true},
+] ;
 
 let map;
 let userMarker = null;
