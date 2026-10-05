@@ -206,6 +206,7 @@ let userMarker = null;
 let resultMarkers = [];
 let searchOrigin = null; // {lat, lon, label, kind}
 let searchTimer = null;
+let favorites = new Set(JSON.parse(localStorage.getItem("fkkFavorites") || "[]"));
 
 const radiusEl = document.getElementById("radius");
 const radiusValueEl = document.getElementById("radiusValue");
@@ -320,12 +321,23 @@ function renderResults(items, radius){
     const card=document.createElement("div");
     card.className="card";
     card.innerHTML=`
-      <h3>${escapeHtml(p.name)}</h3>
+      <button class="favoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${favorites.has(p.name)?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen"}" title="${favorites.has(p.name)?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen"}">${favorites.has(p.name)?"★":"☆"}</button>
+      <h3 class="favoriteTitle">${escapeHtml(p.name)}</h3>
       <div class="meta">📍 ${p.distance.toFixed(1)} km entfernt<br>
       <strong>${escapeHtml(p.label)}</strong> <span class="typePill">${escapeHtml(p.type)}</span><br>
       ℹ️ ${escapeHtml(p.status)}</div>
       <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}</div>
       ${navigationLinks(p)}`;
+    const favoriteButton = card.querySelector(".favoriteButton");
+    favoriteButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (favorites.has(p.name)) favorites.delete(p.name); else favorites.add(p.name);
+      localStorage.setItem("fkkFavorites", JSON.stringify([...favorites]));
+      favoriteButton.classList.toggle("isFavorite", favorites.has(p.name));
+      favoriteButton.textContent = favorites.has(p.name) ? "★" : "☆";
+      favoriteButton.setAttribute("aria-label", favorites.has(p.name) ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
+      favoriteButton.title = favoriteButton.getAttribute("aria-label");
+    });
     card.addEventListener("click",(event)=>{
       if(event.target.closest("a")) return;
       map.setView([p.lat,p.lon],14);
@@ -399,5 +411,42 @@ document.getElementById("searchAction").addEventListener("click",()=>{ if(search
 placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
+function setFooterActive(id){
+  document.querySelectorAll(".footerItem").forEach(el=>el.classList.remove("active"));
+  const el=document.getElementById(id); if(el) el.classList.add("active");
+}
+function scrollToId(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function showFavorites(){
+  setFooterActive("footerFavorites");
+  const favItems=FKK_PLACES.filter(p=>p.active!==false && favorites.has(p.name));
+  document.getElementById("resultsSection").scrollIntoView({behavior:"smooth",block:"start"});
+  if(!favItems.length){
+    resultsEl.innerHTML='<div class="card"><h3>⭐ Noch keine Favoriten</h3><div class="meta">Tippe bei einem FKK-Ort auf ☆, um ihn hier zu speichern.</div></div>';
+    return;
+  }
+  const origin=searchOrigin;
+  const items=favItems.map(p=>({...p,distance:origin?haversineKm(origin.lat,origin.lon,p.lat,p.lon):0}));
+  renderResults(items, origin ? Number(radiusEl.value) : 0);
+  statusEl.innerHTML=`⭐ ${favItems.length} Favorit${favItems.length===1?"":"en"}`;
+}
+function showMore(){
+  setFooterActive("footerMore");
+  const modal=document.getElementById("modal");
+  document.getElementById("modalTitle").textContent="Mehr";
+  document.getElementById("modalText").innerHTML=`<div>FKK Strand Finder v29</div><div class="modalActions"><button class="modalAction" id="moreAbout" type="button">ℹ️ Über die App</button><button class="modalAction" id="moreReset" type="button">☆ Favoriten zurücksetzen</button></div>`;
+  modal.classList.remove("hidden");
+  document.getElementById("moreAbout").onclick=()=>{document.getElementById("modalText").innerHTML='<div><strong>FKK Strand Finder</strong><br>Suche FKK-Badestellen nach Entfernung. Die Daten sind dokumentiert und können sich ändern; vor Ort gelten Beschilderung und Badeordnung.</div>';};
+  document.getElementById("moreReset").onclick=()=>{favorites.clear();localStorage.removeItem("fkkFavorites");modal.classList.add("hidden"); if(searchOrigin) searchPlaces();};
+}
+document.getElementById("footerStart").addEventListener("click",()=>{setFooterActive("footerStart");scrollToId("startSection");});
+document.getElementById("footerMap").addEventListener("click",()=>{setFooterActive("footerMap");scrollToId("mapSection"); if(map) setTimeout(()=>map.invalidateSize(),350);});
+document.getElementById("footerFavorites").addEventListener("click",showFavorites);
+document.getElementById("footerMore").addEventListener("click",showMore);
+document.querySelector(".menuButton").addEventListener("click",showMore);
+document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
+
 initMap();
-window.FKK_APP_VERSION = "v22";
+window.FKK_APP_VERSION = "v29";

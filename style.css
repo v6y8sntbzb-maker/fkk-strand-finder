@@ -144,3 +144,16 @@ body{background:linear-gradient(180deg,#edf7ff 0,#f7fbff 34%,#f2f7fc 100%);color
 
 /* v23: Status-/Hinweiszeile unter der Suche komplett ausblenden. */
 .statusBar { display: none !important; }
+
+/* v29 – funktionale untere Navigation */
+.footerItem{border:0;background:transparent;font:inherit;cursor:pointer;padding:4px 2px;color:#8392a3;}
+.footerItem:active{transform:scale(.96)}
+.footerItem.active{color:var(--blue);}
+.favoriteButton{position:absolute;right:13px;top:13px;width:34px;height:34px;border:1px solid #dbe7f2;border-radius:50%;background:#f7fbff;color:#7b8da2;font-size:19px;line-height:1;cursor:pointer;}
+.favoriteButton.isFavorite{color:#f3b400;background:#fff8df;border-color:#f4df9d;}
+.card{position:relative;}
+.favoriteTitle{padding-right:45px;}
+#modal .modalBox p{color:#5e6d7e;line-height:1.5;}
+.modalActions{display:grid;gap:8px;margin-top:14px;}
+.modalAction{border:0;border-radius:14px;padding:12px;background:#eef7ff;color:#126dca;font-weight:700;font-size:14px;}
+@media(max-width:430px){.footerNav{position:sticky;bottom:6px;} .favoriteButton{right:10px;top:10px;}}
