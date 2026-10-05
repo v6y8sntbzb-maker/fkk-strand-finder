@@ -169,3 +169,49 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;back
 .featureStrip>div{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);}
 .footerNav{background:rgba(255,255,255,.88);}
 @media(max-width:430px){.topHeader{padding:7px 5px 12px;border-radius:21px;}}
+
+/* v31 – Strand-Hintergrund deutlich sichtbar, im Stil des neuen Designs */
+html,body{min-height:100%;}
+body{
+  background-color:#dceff9;
+  background-image:linear-gradient(180deg,rgba(236,248,255,.10),rgba(255,255,255,.04)),url("assets/beach-background.jpg");
+  background-size:cover;
+  background-position:center center;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+body::before,body::after{display:none;}
+.appShell{position:relative;z-index:1;}
+.topHeader{
+  background:rgba(255,255,255,.28);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:0 10px 30px rgba(24,70,105,.08);
+  backdrop-filter:blur(5px);
+}
+.brandIcon{
+  background:rgba(255,255,255,.48);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 8px 20px rgba(20,75,110,.14);
+}
+.searchCard,.mapSection,.resultsSection,.infoBox{
+  background:rgba(255,255,255,.82);
+  border-color:rgba(255,255,255,.72);
+  backdrop-filter:blur(14px);
+  box-shadow:0 14px 34px rgba(24,70,105,.12);
+}
+.inputShell,.controlCard,.locationButton{
+  background:rgba(248,252,255,.78);
+}
+.featureStrip>div{
+  background:rgba(255,255,255,.78);
+  border-color:rgba(255,255,255,.72);
+  backdrop-filter:blur(12px);
+}
+.footerNav{
+  background:rgba(255,255,255,.82);
+  border-color:rgba(255,255,255,.75);
+}
+@media(max-width:430px){
+  body{background-position:center center;background-attachment:fixed;}
+  .searchCard,.mapSection,.resultsSection,.infoBox{background:rgba(255,255,255,.80);}
+}
