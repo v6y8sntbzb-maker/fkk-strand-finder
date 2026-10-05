@@ -1,10 +1,13 @@
-FKK Strand Finder – Version 22
+FKK Strand Finder v25
 
-Neues modernes iPhone-orientiertes Design nach dem gewünschten Mockup.
-- Suchort: blau
-- eigener GPS-Standort: rot
-- FKK-Orte: grün
-- moderne Kartenlegende
-- bestehende lokale FKK-Datenbank und Navigation bleiben erhalten
+Die Datenbasis wurde erneut um belegte FKK-Badestellen erweitert.
+Stand dieser Version: 165 Einträge mit Koordinaten.
 
-GitHub Pages: index.html, style.css und app.js ersetzen.
+Neue Einträge stammen aus:
+- Badesee-heute / OpenStreetMap (FKK-Kennzeichnung)
+- Niedersächsischer Badegewässer-Atlas für einzelne amtliche Koordinaten
+- Badeklar / OpenStreetMap-Routenpositionen für weitere FKK-Badestellen
+
+Es werden bewusst keine frei geratenen Koordinaten verwendet. Bei der letzten Erweiterung wurden nur Stellen aufgenommen, für die eine belastbare Koordinate vorliegt.
+
+Wichtig: OSM-basierte FKK-Angaben können unvollständig oder veraltet sein. Vor Ort gelten Beschilderung, Badeordnung und Hinweise der Betreiber.
