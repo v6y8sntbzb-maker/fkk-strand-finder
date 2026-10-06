@@ -232,3 +232,38 @@ body::before,body::after{content:none!important;display:none!important;}
 .searchCard,.mapSection,.resultsSection,.infoBox{background:rgba(255,255,255,.78)!important;backdrop-filter:blur(12px);}
 .featureStrip>div{background:rgba(255,255,255,.72)!important;backdrop-filter:blur(10px);}
 .footerNav{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(14px);}
+
+
+/* v32 – Strandhintergrund technisch robust: eigenes fixes Hintergrund-Element */
+html, body { min-height: 100%; }
+body { background: #dff1fb !important; overflow-x: hidden; }
+.beachBackground {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("assets/beach-background.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+.appShell { position: relative; z-index: 1; background: transparent !important; }
+.topHeader {
+  background: rgba(255,255,255,.22) !important;
+  border: 1px solid rgba(255,255,255,.55) !important;
+  backdrop-filter: blur(4px);
+}
+.searchCard, .mapSection, .resultsSection, .infoBox {
+  background: rgba(255,255,255,.70) !important;
+  border-color: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(14px);
+}
+.inputShell, .controlCard, .locationButton {
+  background: rgba(248,252,255,.72) !important;
+}
+.featureStrip > div { background: rgba(255,255,255,.68) !important; }
+.footerNav { background: rgba(255,255,255,.78) !important; }
+.beachNavIcon { font-size: 22px !important; line-height: 22px; }
+@media (max-width:430px) {
+  .searchCard, .mapSection, .resultsSection, .infoBox { background: rgba(255,255,255,.68) !important; }
+}
