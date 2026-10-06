@@ -1,4 +1,4 @@
-FKK Strand Finder v40
+FKK Strand Finder v41
 
 Live-Karte: Die grünen FKK-Marker wurden kleiner und filigraner gestaltet, passend zum Referenzdesign.
 - Marker ca. 25 % kleiner
@@ -10,7 +10,13 @@ Live-Karte: Die grünen FKK-Marker wurden kleiner und filigraner gestaltet, pass
 Die Datenbank und übrigen Funktionen bleiben unverändert.
 
 
-v40: 7 weitere FKK-Badestellen mit überprüften OSM-Koordinaten ergänzt. Keine geratenen Koordinaten. Quellen: Badeklar/OpenStreetMap. Vor Ort gelten Beschilderung und Badeordnung.
+v41: 7 weitere FKK-Badestellen mit überprüften OSM-Koordinaten ergänzt. Keine geratenen Koordinaten. Quellen: Badeklar/OpenStreetMap. Vor Ort gelten Beschilderung und Badeordnung.
 
 
-v40: 5 weitere verifizierte FKK-Orte ergänzt und 2 doppelte Koordinateneinträge bereinigt.
+v41: 5 weitere verifizierte FKK-Orte ergänzt und 2 doppelte Koordinateneinträge bereinigt.
+
+
+V41 – 06.10.2026
+- 4 neue, gezielt verifizierte FKK-Stellen ergänzt: Hennersdorf, Wangels, Felixsee und Walldorfer Badesee/FKK-Nordufer.
+- Koordinaten von Absberg – Seespitz auf den tatsächlichen FKK-Strandpunkt korrigiert.
+- Quellen und Hinweise zu lokalen Regeln bei den neuen Einträgen ergänzt.
