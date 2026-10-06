@@ -522,3 +522,9 @@ document.getElementById("closeModal").addEventListener("click",()=>document.getE
 
 initMap();
 window.FKK_APP_VERSION = "v53";
+  // v54 – Bayern, erneut einzeln anhand konkreter Quellen geprüft
+  {name:"FKK-Strand Bürgstadt – Bürgstadter See",lat:49.73928,lon:9.29047,label:"FKK-Strand",type:"Badesee",evidence:"Stadtgui",source:"Stadtgui",sourceUrl:"https://www.stadtgui.de/nacktbaden/deutschland/bayern/buergstadt_am_main_buergstaedter_see.php"},
+  {name:"FKK Freising – Großer Pullinger See",lat:48.35038,lon:11.71247,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap / Mapcarta",source:"OpenStreetMap",sourceUrl:"https://mapcarta.com/de/W712521492"},
+  {name:"FKK-Wiese – Kempten/Allgäu",lat:47.6977,lon:10.18962,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap / Mapcarta",source:"OpenStreetMap",sourceUrl:"https://mapcarta.com/de/N4652771814"},
+  {name:"FKK-Gelände Haldenmühle – Kempten/Allgäu",lat:47.825178,lon:10.223286,label:"FKK-Gelände",type:"Badesee",evidence:"OpenStreetMap / karte.bayern",source:"OpenStreetMap",sourceUrl:"https://karte.bayern/poi/ort/fkk-gelaende-haldenmuehle-way-144976823"},
+
