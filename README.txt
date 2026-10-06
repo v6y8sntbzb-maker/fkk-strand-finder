@@ -1,4 +1,4 @@
-FKK Strand Finder v39
+FKK Strand Finder v40
 
 Live-Karte: Die grünen FKK-Marker wurden kleiner und filigraner gestaltet, passend zum Referenzdesign.
 - Marker ca. 25 % kleiner
@@ -10,4 +10,7 @@ Live-Karte: Die grünen FKK-Marker wurden kleiner und filigraner gestaltet, pass
 Die Datenbank und übrigen Funktionen bleiben unverändert.
 
 
-v39: 7 weitere FKK-Badestellen mit überprüften OSM-Koordinaten ergänzt. Keine geratenen Koordinaten. Quellen: Badeklar/OpenStreetMap. Vor Ort gelten Beschilderung und Badeordnung.
+v40: 7 weitere FKK-Badestellen mit überprüften OSM-Koordinaten ergänzt. Keine geratenen Koordinaten. Quellen: Badeklar/OpenStreetMap. Vor Ort gelten Beschilderung und Badeordnung.
+
+
+v40: 5 weitere verifizierte FKK-Orte ergänzt und 2 doppelte Koordinateneinträge bereinigt.

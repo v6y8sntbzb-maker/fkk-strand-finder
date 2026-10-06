@@ -2,6 +2,13 @@
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
+  // v40 – weitere verifizierte FKK-Orte aus OSM/Badeklar und ergänzenden Ortsquellen
+  {name:"Malge – FKK Strand",lat:52.37268,lon:12.48060,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Strand Parkstetten – Weiher 12",lat:48.93790,lon:12.56660,label:"FKK-Strand",type:"Badesee",evidence:"Ortsquelle + FKK-Verzeichnis",source:"Sehenswerter Bayerischer Wald / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Badeplatz am Weiher 12; Koordinate aus Ortsbeschreibung.",active:true},
+  {name:"FKK-Badeplatz Halblech",lat:47.61837,lon:10.75841,label:"FKK-Badeplatz",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badeplatz verzeichnet; OSM-Badeobjekt geprüft.",active:true},
+  {name:"FKK-Strand Herrenwieser Weiher – Kempten",lat:47.71500,lon:10.25200,label:"FKK-Strand",type:"Badesee",evidence:"Ortsquelle + FKK-Verzeichnis",source:"ClothingOptional / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Kempten verzeichnet; Koordinate der FKK-Stelle.",active:true},
+  {name:"FKK-Strand Biggesee – Attendorn",lat:51.09470,lon:7.86170,label:"FKK-Strand",type:"Stausee",evidence:"Ortsquelle + FKK-Verzeichnis",source:"ClothingOptional / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand am Biggesee; Koordinate der verzeichneten FKK-Stelle.",active:true},
+
   // v39 – weitere verifizierte FKK-Strände aus OSM/Badeklar
   {name:"FKK-Strand Surendorf",lat:54.48119,lon:10.09070,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; OSM-Strandobjekt geprüft.",active:true},
   {name:"FKK Strand Wallnau – Fehmarn",lat:54.48893,lon:11.01425,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; OSM-Strandobjekt geprüft.",active:true},
@@ -62,7 +69,6 @@ const FKK_PLACES = [
   {name:"Fümmelsee – Wolfenbüttel",lat:52.1679,lon:10.5017,label:"FKK",type:"Naturbad",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet." ,active:true},
   {name:"Inselsee – FKK-Strand",lat:53.30388,lon:10.48878,label:"FKK-Strand",type:"Badesee",evidence:"offizielle Quelle",source:"Gemeinde Scharnebeck",sourceUrl:"https://gemeinde-scharnebeck.de/kultur-und-tourismus/inselsee/",status:"Die Gemeinde nennt ausdrücklich einen FKK-Strand am Inselsee." ,active:true},
   {name:"Pulvermühlenteich – Seevetal",lat:53.41451,lon:10.03654,label:"FKK",type:"See",evidence:"FKK-Verzeichnis",source:"Badesee-Suche",sourceUrl:"https://www.badesee-suche.de/seen/fkk-seen/niedersachsen/",status:"Als Badesee mit FKK-Möglichkeit verzeichnet." ,active:true},
-  {name:"Kiefhölzer Teich – Oberharz",lat:51.8303,lon:10.3686,label:"FKK",type:"Badesee",evidence:"FKK-Verzeichnis",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/niedersachsen/",status:"Als FKK-Badesee verzeichnet." ,active:true},
 
   // Schleswig-Holstein / Nordsee
   {name:"Bottsand",lat:54.42833,lon:10.29180,label:"FKK erlaubt",type:"Strand",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/strand/bottsand/",status:"Eine FKK-Stelle ist in OpenStreetMap als textilfrei verzeichnet." ,active:true},
@@ -170,7 +176,6 @@ const FKK_PLACES = [
   {name:"Priwall – Travemünde",lat:53.9650,lon:10.8800,label:"FKK-Strand",type:"Ostseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet." ,active:true},
   {name:"Westerland – FKK-Strand",lat:54.9050,lon:8.3100,label:"FKK-Strand",type:"Nordseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet." ,active:true},
   {name:"Ording – FKK-Strand",lat:54.3000,lon:8.6300,label:"FKK-Strand",type:"Nordseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet." ,active:true},
-  {name:"Ahlbeck – FKK-Strand",lat:53.9400,lon:14.1900,label:"FKK-Strand",type:"Ostseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet." ,active:true},
   {name:"Binz – FKK-Strand",lat:54.3950,lon:13.6200,label:"FKK-Strand",type:"Ostseestrand",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet." ,active:true},
   {name:"Strausberg – FKK-Strand",lat:52.5700,lon:13.9000,label:"FKK-Strand",type:"Badesee",evidence:"Lokale Quelle",source:"Kartendaten",sourceUrl:"https://www.openstreetmap.org/",status:"Als FKK-Strand verzeichnet." ,active:true},
   {name:"Badesee Teningen-Nimburg",lat:48.1153,lon:7.7834,label:"FKK erlaubt",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"Badesee-heute",sourceUrl:"https://badesee-heute.de/fkk/",status:"Als FKK-Stelle verzeichnet.",active:true},
