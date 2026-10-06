@@ -215,3 +215,20 @@ body::before,body::after{display:none;}
   body{background-position:center center;background-attachment:fixed;}
   .searchCard,.mapSection,.resultsSection,.infoBox{background:rgba(255,255,255,.80);}
 }
+
+/* v31 final – echter vollflächiger Strandhintergrund */
+html,body{min-height:100%;}
+body{
+  background-color:#dff1fb;
+  background-image:url("assets/beach-background.jpg");
+  background-repeat:no-repeat;
+  background-position:center top;
+  background-size:100% 100%;
+  background-attachment:fixed;
+}
+body::before,body::after{content:none!important;display:none!important;}
+.appShell{position:relative;z-index:1;}
+.topHeader{background:rgba(255,255,255,.22)!important;backdrop-filter:blur(4px);}
+.searchCard,.mapSection,.resultsSection,.infoBox{background:rgba(255,255,255,.78)!important;backdrop-filter:blur(12px);}
+.featureStrip>div{background:rgba(255,255,255,.72)!important;backdrop-filter:blur(10px);}
+.footerNav{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(14px);}
