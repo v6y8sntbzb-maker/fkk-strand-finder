@@ -337,3 +337,32 @@ img.beachBackground {
   transform: none !important;
 }
 .appShell { position: relative !important; z-index: 1 !important; background: transparent !important; }
+
+
+/* v36 – natürliches Seitenverhältnis des Strandfotos: niemals strecken */
+html, body {
+  min-height: 100%;
+  background: #dff1fb !important;
+  overflow-x: hidden;
+}
+.beachBackground {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+.appShell {
+  position: relative !important;
+  z-index: 1 !important;
+  background: transparent !important;
+}
+.topHeader { background: rgba(255,255,255,.20) !important; backdrop-filter: blur(4px); }
+.searchCard, .mapSection, .resultsSection, .infoBox { background: rgba(255,255,255,.68) !important; backdrop-filter: blur(10px); }
+.featureStrip > div { background: rgba(255,255,255,.65) !important; backdrop-filter: blur(10px); }
+.footerNav { background: rgba(255,255,255,.80) !important; backdrop-filter: blur(14px); }
