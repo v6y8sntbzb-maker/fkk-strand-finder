@@ -1,6 +1,5 @@
-FKK Strand Finder v33
+FKK Strand Finder v34
 
-Wichtig: Das Strand-Hintergrundbild liegt absichtlich direkt neben index.html.
-Dadurch funktioniert der Hintergrund auch beim einfachen Hochladen der Dateien auf GitHub Pages und hängt nicht von einem assets-Unterordner ab.
+Der Strand-Hintergrund wurde korrigiert: Das Originalbild wird proportional mit object-fit: cover dargestellt. Es wird nicht mehr auf die Bildschirmhoehe/-breite gestreckt.
 
-Bitte beim Upload alle Dateien aus diesem Ordner hochladen, einschließlich beach-background.jpg.
+Alle Funktionen und die Datenbank aus v33 bleiben erhalten.
