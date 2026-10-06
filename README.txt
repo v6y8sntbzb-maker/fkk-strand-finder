@@ -22,4 +22,4 @@ V41 – 06.10.2026
 - Quellen und Hinweise zu lokalen Regeln bei den neuen Einträgen ergänzt.
 
 
-v42 – Brandenburg/Sachsen erweitert: 5 neue, verifizierte FKK-Strandabschnitte (Prenzlau, Hohennauen/Rathenow, Niemtzsch, Bärwalder See Boxberg und Uhyst). Zusätzlich wurde die bestehende Kiebitzsee-Position auf die dokumentierte See-Koordinate 51.6010 / 13.2570 korrigiert.
+v43 – Brandenburg/Sachsen erweitert: 5 neue, verifizierte FKK-Strandabschnitte (Prenzlau, Hohennauen/Rathenow, Niemtzsch, Bärwalder See Boxberg und Uhyst). Zusätzlich wurde die bestehende Kiebitzsee-Position auf die dokumentierte See-Koordinate 51.6010 / 13.2570 korrigiert.

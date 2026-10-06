@@ -1,7 +1,13 @@
-// FKK Strand Finder v30
+// FKK Strand Finder v43
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
+  // v43 – Brandenburg: weitere einzeln geprüfte FKK-Strandobjekte
+  {name:"FKK-Strand Cottbus – Klein Gaglow",lat:51.72946,lon:14.2899,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + Badeklar",source:"OpenStreetMap / Mapcarta / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Kolkwitz/Klein Gaglow bei Cottbus verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Strand Buchwalde – Senftenberger See",lat:51.51149,lon:14.02942,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + Badeklar",source:"OpenStreetMap / Mapcarta / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand Buchwalde am Senftenberger See; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Strand Caputh – Schwielowsee",lat:52.35896,lon:13.02104,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Mapcarta",sourceUrl:"https://mapcarta.com/de/W1299815903",status:"Als FKK-Strand bei Caputh am Schwielowsee verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Strand Limsdorf – Melangsee",lat:52.15388,lon:13.99949,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap",source:"OpenStreetMap / Mapcarta",sourceUrl:"https://mapcarta.com/de/W498083358",status:"Als FKK Strand am Melangsee bei Limsdorf verzeichnet; OSM-Objekt geprüft. Vor Ort auf aktuelle Kennzeichnung achten.",active:true},
+
   // v42 – Brandenburg/Sachsen: weitere verifizierte FKK-Strandabschnitte
   {name:"FKK-Strand Prenzlau",lat:53.28843,lon:13.87771,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + Badeklar",source:"OpenStreetMap / Mapcarta / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand bei Prenzlau verzeichnet; OSM-Strandobjekt geprüft.",active:true},
   {name:"FKK-Strand Hohennauen – Rathenow",lat:52.66349,lon:12.36544,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + Badeklar + Stadt Rathenow",source:"OpenStreetMap / Badeklar / Stadt Rathenow",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand am Hohennauener-Ferchesarer See; örtliche Hinweise beachten.",active:true},
@@ -475,4 +481,4 @@ document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v29";
+window.FKK_APP_VERSION = "v43";
