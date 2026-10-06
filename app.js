@@ -454,9 +454,7 @@ function scrollToId(id){
   const el=document.getElementById(id);
   if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
 }
-function showFavorites(){
-  setFooterActive("footerFavorites");
-  const modal=document.getElementById("modal");
+function renderFavorites(){
   const favItems=FKK_PLACES.filter(p=>p.active!==false && favorites.has(p.name));
   document.getElementById("modalTitle").textContent="Favoriten";
   if(!favItems.length){
@@ -470,10 +468,21 @@ function showFavorites(){
     document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{
       favorites.delete(btn.dataset.fav);
       localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
-      showFavorites();
+      renderFavorites();
       if(searchOrigin) searchPlaces();
     }));
   }
+}
+function showFavorites(){
+  const modal=document.getElementById("modal");
+  // Zweiter Klick auf das Favoriten-Icon schließt die bereits geöffnete Favoritenliste.
+  if(!modal.classList.contains("hidden") && document.getElementById("modalTitle").textContent === "Favoriten"){
+    modal.classList.add("hidden");
+    setFooterActive("footerStart");
+    return;
+  }
+  setFooterActive("footerFavorites");
+  renderFavorites();
   modal.classList.remove("hidden");
 }
 function showMore(){
@@ -493,4 +502,4 @@ document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v45";
+window.FKK_APP_VERSION = "v46";

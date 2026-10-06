@@ -28,4 +28,7 @@ v43 – Brandenburg/Sachsen erweitert: 5 neue, verifizierte FKK-Strandabschnitte
 v44: Brandenburg weiter ergänzt. Zwei neue, einzeln geprüfte FKK-Strände: Branitzer See (Cottbus) und Talsperre Spremberg. Koordinaten aus aktuellen Orts-/FKK-Quellen geprüft.
 
 
-v45: Favoritenliste ist nicht mehr dauerhaft im Hauptbereich sichtbar. Sie öffnet sich ausschließlich über das Favoriten-Icon in der unteren Navigation als eigenes Fenster.
+v46: Favoritenliste ist nicht mehr dauerhaft im Hauptbereich sichtbar. Sie öffnet sich ausschließlich über das Favoriten-Icon in der unteren Navigation als eigenes Fenster.
+
+
+v46: Das Favoriten-Icon funktioniert jetzt als echter Toggle: erster Klick öffnet die Favoritenliste, zweiter Klick schließt sie wieder.
