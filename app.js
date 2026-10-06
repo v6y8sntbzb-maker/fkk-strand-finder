@@ -496,10 +496,10 @@ function showMore(){
 }
 document.getElementById("footerStart").addEventListener("click",()=>{setFooterActive("footerStart");scrollToId("startSection");});
 document.getElementById("footerMap").addEventListener("click",()=>{setFooterActive("footerMap");scrollToId("mapSection"); if(map) setTimeout(()=>map.invalidateSize(),350);});
-document.getElementById("footerFavorites").addEventListener("click",showFavorites);
+document.getElementById("footerFavorites").addEventListener("click",(event)=>{ event.preventDefault(); event.stopPropagation(); showFavorites(); });
 document.getElementById("footerMore").addEventListener("click",showMore);
 document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v46";
+window.FKK_APP_VERSION = "v47";
