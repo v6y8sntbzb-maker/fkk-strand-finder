@@ -1,7 +1,10 @@
-FKK Strand Finder v37
+FKK Strand Finder v38
 
-Änderungen gegenüber v36:
-- Strand-Symbole der unteren Navigation an das Referenzbild angepasst:
-  Start = Sonnenschirm/Strand, Karte = Wellen, Favoriten = Muschel, Mehr = Sonne.
-- FKK-Kartenmarker verwendet jetzt ebenfalls ein Strand-Sonnenschirm-Symbol statt des alten Heißwasser-Symbols.
-- Sonstige Funktionen und Datenbasis bleiben unverändert.
+Live-Karte: Die grünen FKK-Marker wurden kleiner und filigraner gestaltet, passend zum Referenzdesign.
+- Marker ca. 25 % kleiner
+- dünnerer weißer Rand
+- feinere Sonnenschirm-Linie
+- geringerer Schatten
+- Positionierung der Marker auf der Karte angepasst
+
+Die Datenbank und übrigen Funktionen bleiben unverändert.
