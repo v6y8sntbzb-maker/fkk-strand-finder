@@ -1,3 +1,7 @@
+FKK Strand Finder v49
+
+Änderung: Favorisierte FKK-Orte werden auf der Karte als Stern-Symbol dargestellt. Beim Hinzufügen/Entfernen eines Favoriten wird das Karten-Symbol sofort aktualisiert.
+
 FKK Strand Finder v48
 
 Änderung: Die dreiteilige Info-Leiste „Überall in Deutschland / Direkte Navigation / Mit Quellen“ wurde vollständig aus der Startansicht entfernt.

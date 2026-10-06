@@ -376,6 +376,10 @@ html, body {
 .fkkMarker{width:40px;height:48px;border-radius:22px 22px 22px 4px;transform:rotate(-45deg);background:#0d9b74;border:3px solid #fff;box-shadow:0 5px 13px rgba(0,0,0,.2);display:grid;place-items:center;}
 .markerUmbrella{transform:rotate(45deg);display:block;width:27px;height:27px;}
 .markerUmbrella svg{width:27px;height:27px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+/* v49 – Favoriten werden auf der Karte als Stern dargestellt */
+.favoriteMapMarker{background:#0d9b74;}
+.markerStar{transform:rotate(45deg);display:block;width:27px;height:27px;}
+.markerStar svg{width:27px;height:27px;fill:#ffd45a;stroke:#fff;stroke-width:2.2;stroke-linejoin:round;}
 
 
 /* v45 – Favoriten nur als eigenes Fenster über das untere Favoriten-Icon */

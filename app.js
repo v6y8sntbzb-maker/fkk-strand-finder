@@ -1,4 +1,4 @@
-// FKK Strand Finder v43
+// FKK Strand Finder v49
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
@@ -347,8 +347,14 @@ function renderResults(items, radius){
   }
 
   items.forEach((p)=>{
-    const fkkIcon=L.divIcon({className:"fkkIconWrap",html:`<div class="fkkMarker"><span class="markerUmbrella" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 23c3-10 11-15 16-15s13 5 16 15H8Z"/><path d="M24 23v15c0 3 2 5 5 5"/><path d="M18 43h12"/></svg></span></div>`,iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-30]});
-    const marker=L.marker([p.lat,p.lon],{icon:fkkIcon}).addTo(map);
+    const makeFkkIcon = (isFavorite) => L.divIcon({
+      className:"fkkIconWrap",
+      html: isFavorite
+        ? `<div class="fkkMarker favoriteMapMarker"><span class="markerStar" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 6.5l5.3 10.8 11.9 1.7-8.6 8.4 2 11.8L24 33.6l-10.6 5.6 2-11.8-8.6-8.4 11.9-1.7L24 6.5Z"/></svg></span></div>`
+        : `<div class="fkkMarker"><span class="markerUmbrella" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 23c3-10 11-15 16-15s13 5 16 15H8Z"/><path d="M24 23v15c0 3 2 5 5 5"/><path d="M18 43h12"/></svg></span></div>`,
+      iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-30]
+    });
+    const marker=L.marker([p.lat,p.lon],{icon:makeFkkIcon(favorites.has(p.name))}).addTo(map);
     marker.bindPopup(`<strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.label)}<br>${p.distance.toFixed(1)} km`);
     resultMarkers.push(marker);
 
@@ -368,9 +374,12 @@ function renderResults(items, radius){
       event.stopPropagation();
       if (favorites.has(p.name)) favorites.delete(p.name); else favorites.add(p.name);
       localStorage.setItem("fkkFavorites", JSON.stringify([...favorites]));
-      favoriteButton.classList.toggle("isFavorite", favorites.has(p.name));
-      favoriteButton.textContent = favorites.has(p.name) ? "★" : "☆";
-      favoriteButton.setAttribute("aria-label", favorites.has(p.name) ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
+      const isFavorite = favorites.has(p.name);
+      favoriteButton.classList.toggle("isFavorite", isFavorite);
+      favoriteButton.textContent = isFavorite ? "★" : "☆";
+      favoriteButton.setAttribute("aria-label", isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
+      favoriteButton.title = favoriteButton.getAttribute("aria-label");
+      marker.setIcon(makeFkkIcon(isFavorite));
       favoriteButton.title = favoriteButton.getAttribute("aria-label");
     });
     card.addEventListener("click",(event)=>{
