@@ -376,3 +376,22 @@ html, body {
 .fkkMarker{width:40px;height:48px;border-radius:22px 22px 22px 4px;transform:rotate(-45deg);background:#0d9b74;border:3px solid #fff;box-shadow:0 5px 13px rgba(0,0,0,.2);display:grid;place-items:center;}
 .markerUmbrella{transform:rotate(45deg);display:block;width:27px;height:27px;}
 .markerUmbrella svg{width:27px;height:27px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+
+
+/* v45 – Favoriten nur als eigenes Fenster über das untere Favoriten-Icon */
+.modalBox{max-height:82vh;overflow:auto;}
+.favoriteCount{font-size:12px;color:#71839a;margin:0 0 10px;}
+.favoriteList{display:grid;gap:10px;}
+.favoriteModalCard{background:#f8fbfe;border:1px solid #dce8f4;border-radius:16px;padding:12px;}
+.favoriteModalTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.favoriteModalTop strong{font-size:14px;line-height:1.25;color:#12366d;}
+.favoriteRemove{flex:0 0 auto;border:0;background:#fff0c7;color:#e19b00;border-radius:10px;padding:5px 8px;font-size:18px;line-height:1;}
+.favoriteModalMeta{font-size:11px;color:#15945f;font-weight:700;margin-top:5px;}
+.favoriteModalStatus{font-size:10px;line-height:1.4;color:#65758a;margin-top:5px;}
+.favoriteModalActions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px;}
+.favoriteModalActions .navButtons{margin-top:0;flex:1;min-width:100%;}
+.favoriteModalActions>a{font-size:10px;color:#55718b;}
+.favoriteEmpty{text-align:center;padding:20px 8px;color:#66788d;}
+.favoriteEmptyIcon{font-size:42px;color:#e1a400;margin-bottom:5px;}
+.favoriteEmpty strong{display:block;color:#12366d;font-size:16px;}
+.favoriteEmpty p{font-size:12px;line-height:1.45;margin:7px 0 0;}

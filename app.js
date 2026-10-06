@@ -231,6 +231,9 @@ const FKK_PLACES = [
   {name:"FKK Binsfeld III – Otterstadt",lat:49.36016,lon:8.46221,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Binsfeld verzeichnet; Koordinate direkt aus OSM geprüft.",active:true},
   {name:"FKK-Strand Kenzingen – Nachtallmendsee",lat:48.2082,lon:7.75606,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand am Nachtallmendsee; Koordinate direkt aus OSM geprüft.",active:true},
   {name:"FKK-Strand Filzteich – Schneeberg",lat:50.57195,lon:12.61218,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand am Filzteich; FKK ist am Strandbad möglich; Koordinate aus OSM-Objektumfeld geprüft.",active:true},
+  // v44 – Brandenburg: zwei weitere verifizierte FKK-Strände
+  {name:"FKK-Strand Branitzer See – Cottbus",lat:51.7286,lon:14.3713,label:"FKK-Strand",type:"Badesee",evidence:"ClothingOptional + lokale FKK-Quelle",source:"ClothingOptional / FKK-Freunde",sourceUrl:"https://clothingoptional.org/locations/germany/brandenburg/fkk-strand-branitzer-see-brandenburg/",status:"FKK-Strand am Branitzer See; Koordinate aus aktueller Ortsquelle geprüft. Vor Ort Beschilderung beachten.",active:true},
+  {name:"FKK-Strand Talsperre Spremberg",lat:51.6465,lon:14.4122,label:"FKK-Strand",type:"Badesee",evidence:"ClothingOptional + Badeklar",source:"ClothingOptional / Badeklar",sourceUrl:"https://clothingoptional.org/locations/germany/brandenburg/fkk-strand-talsperre-spremberg-brandenburg/",status:"FKK-Strand an der Talsperre Spremberg; Koordinate aus aktueller Ortsquelle geprüft.",active:true},
 ] ;
 
 let map;
@@ -453,16 +456,25 @@ function scrollToId(id){
 }
 function showFavorites(){
   setFooterActive("footerFavorites");
+  const modal=document.getElementById("modal");
   const favItems=FKK_PLACES.filter(p=>p.active!==false && favorites.has(p.name));
-  document.getElementById("resultsSection").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("modalTitle").textContent="Favoriten";
   if(!favItems.length){
-    resultsEl.innerHTML='<div class="card"><h3>⭐ Noch keine Favoriten</h3><div class="meta">Tippe bei einem FKK-Ort auf ☆, um ihn hier zu speichern.</div></div>';
-    return;
+    document.getElementById("modalText").innerHTML='<div class="favoriteEmpty"><div class="favoriteEmptyIcon">☆</div><strong>Noch keine Favoriten</strong><p>Tippe bei einem FKK-Ort auf ☆, um ihn hier zu speichern.</p></div>';
+  } else {
+    const cards=favItems.map(p=>{
+      const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
+      return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions">${navigationLinks(p)}${sourceLink}</div></div>`;
+    }).join("");
+    document.getElementById("modalText").innerHTML=`<div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><div class="favoriteList">${cards}</div>`;
+    document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{
+      favorites.delete(btn.dataset.fav);
+      localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
+      showFavorites();
+      if(searchOrigin) searchPlaces();
+    }));
   }
-  const origin=searchOrigin;
-  const items=favItems.map(p=>({...p,distance:origin?haversineKm(origin.lat,origin.lon,p.lat,p.lon):0}));
-  renderResults(items, origin ? Number(radiusEl.value) : 0);
-  statusEl.innerHTML=`⭐ ${favItems.length} Favorit${favItems.length===1?"":"en"}`;
+  modal.classList.remove("hidden");
 }
 function showMore(){
   setFooterActive("footerMore");
@@ -481,4 +493,4 @@ document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v43";
+window.FKK_APP_VERSION = "v45";

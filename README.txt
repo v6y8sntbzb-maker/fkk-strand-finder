@@ -23,3 +23,9 @@ V41 – 06.10.2026
 
 
 v43 – Brandenburg/Sachsen erweitert: 5 neue, verifizierte FKK-Strandabschnitte (Prenzlau, Hohennauen/Rathenow, Niemtzsch, Bärwalder See Boxberg und Uhyst). Zusätzlich wurde die bestehende Kiebitzsee-Position auf die dokumentierte See-Koordinate 51.6010 / 13.2570 korrigiert.
+
+
+v44: Brandenburg weiter ergänzt. Zwei neue, einzeln geprüfte FKK-Strände: Branitzer See (Cottbus) und Talsperre Spremberg. Koordinaten aus aktuellen Orts-/FKK-Quellen geprüft.
+
+
+v45: Favoritenliste ist nicht mehr dauerhaft im Hauptbereich sichtbar. Sie öffnet sich ausschließlich über das Favoriten-Icon in der unteren Navigation als eigenes Fenster.
