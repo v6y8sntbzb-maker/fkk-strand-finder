@@ -366,3 +366,13 @@ html, body {
 .searchCard, .mapSection, .resultsSection, .infoBox { background: rgba(255,255,255,.68) !important; backdrop-filter: blur(10px); }
 .featureStrip > div { background: rgba(255,255,255,.65) !important; backdrop-filter: blur(10px); }
 .footerNav { background: rgba(255,255,255,.80) !important; backdrop-filter: blur(14px); }
+
+
+/* v37 – Strand-Symbole wie im Referenzbild */
+.beachNavIcon{display:grid!important;place-items:center;width:34px;height:30px;margin:0 auto 3px;}
+.beachNavIcon svg{width:31px;height:31px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+.footerItem small{font-size:10px;line-height:1.1;}
+.footerItem.active .beachNavIcon{color:var(--blue);}
+.fkkMarker{width:40px;height:48px;border-radius:22px 22px 22px 4px;transform:rotate(-45deg);background:#0d9b74;border:3px solid #fff;box-shadow:0 5px 13px rgba(0,0,0,.2);display:grid;place-items:center;}
+.markerUmbrella{transform:rotate(45deg);display:block;width:27px;height:27px;}
+.markerUmbrella svg{width:27px;height:27px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}

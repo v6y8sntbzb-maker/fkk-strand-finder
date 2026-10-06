@@ -312,7 +312,7 @@ function renderResults(items, radius){
   }
 
   items.forEach((p)=>{
-    const fkkIcon=L.divIcon({className:"fkkIconWrap",html:`<div class="fkkMarker"><span>♨</span></div>`,iconSize:[40,48],iconAnchor:[20,46],popupAnchor:[0,-40]});
+    const fkkIcon=L.divIcon({className:"fkkIconWrap",html:`<div class="fkkMarker"><span class="markerUmbrella" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 23c3-10 11-15 16-15s13 5 16 15H8Z"/><path d="M24 23v15c0 3 2 5 5 5"/><path d="M18 43h12"/></svg></span></div>`,iconSize:[40,48],iconAnchor:[20,46],popupAnchor:[0,-40]});
     const marker=L.marker([p.lat,p.lon],{icon:fkkIcon}).addTo(map);
     marker.bindPopup(`<strong>${escapeHtml(p.name)}</strong><br>${escapeHtml(p.label)}<br>${p.distance.toFixed(1)} km`);
     resultMarkers.push(marker);
