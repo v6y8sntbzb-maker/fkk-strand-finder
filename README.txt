@@ -53,3 +53,6 @@ Version 51: Untere Navigation bleibt dauerhaft sichtbar und ist am Viewport fixi
 
 
 v52: 3 weitere einzeln geprüfte FKK-Stellen ergänzt (Bötzsee, Almer Weiher, Birkensee Nürnberg). Koordinaten aus dokumentierten FKK-Quellen übernommen.
+
+
+v53: Bayern erweitert um 5 einzeln geprüfte FKK-Stellen (Langfurth, Herrenweiher Tanzenhaid, Wildes FKK Kreuzwertheim, Sindersbachsee, FKK Badestelle Rieneck). Koordinaten aus OSM/Mapcarta bzw. ergänzenden FKK-Quellen.

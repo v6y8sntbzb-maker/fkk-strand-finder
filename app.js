@@ -1,4 +1,4 @@
-// FKK Strand Finder v52
+// FKK Strand Finder v53
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
@@ -238,6 +238,12 @@ const FKK_PLACES = [
   // v44 – Brandenburg: zwei weitere verifizierte FKK-Strände
   {name:"FKK-Strand Branitzer See – Cottbus",lat:51.7286,lon:14.3713,label:"FKK-Strand",type:"Badesee",evidence:"ClothingOptional + lokale FKK-Quelle",source:"ClothingOptional / FKK-Freunde",sourceUrl:"https://clothingoptional.org/locations/germany/brandenburg/fkk-strand-branitzer-see-brandenburg/",status:"FKK-Strand am Branitzer See; Koordinate aus aktueller Ortsquelle geprüft. Vor Ort Beschilderung beachten.",active:true},
   {name:"FKK-Strand Talsperre Spremberg",lat:51.6465,lon:14.4122,label:"FKK-Strand",type:"Badesee",evidence:"ClothingOptional + Badeklar",source:"ClothingOptional / Badeklar",sourceUrl:"https://clothingoptional.org/locations/germany/brandenburg/fkk-strand-talsperre-spremberg-brandenburg/",status:"FKK-Strand an der Talsperre Spremberg; Koordinate aus aktueller Ortsquelle geprüft.",active:true},
+  // v53 – Bayern: weitere einzeln geprüfte FKK-Stellen
+  {name:"Badeeinstieg FKK – Langfurth",lat:49.11515,lon:10.43158,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle",source:"OpenStreetMap / Mapcarta",sourceUrl:"https://mapcarta.com/de/W1216582877",status:"Als eigener FKK-Badeeinstieg am Walkweiher bei Langfurth/Dentlein kartiert.",active:true},
+  {name:"Badeweiher Herrenweiher Tanzenhaid – Emskirchen",lat:49.59684,lon:10.74180,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://mapcarta.com/de/W23171119",status:"Badeweiher mit verzeichnetem FKK-Bereich; Koordinate des kartierten Schwimmbereichs.",active:true},
+  {name:"Wildes FKK – Kreuzwertheim",lat:49.74518,lon:9.56057,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://mapcarta.com/de/W1177496580",status:"Als natürlicher Strand mit FKK-Vermerk bei Kreuzwertheim kartiert.",active:true},
+  {name:"FKK Sindersbachsee – Gemünden am Main",lat:50.06002,lon:9.61154,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap + Stadtgui + FKK-Freunde",source:"OpenStreetMap / Stadtgui / FKK-Freunde",sourceUrl:"https://mapcarta.com/de/W289680858",status:"Separater FKK-Bereich am Sindersbachsee; der FKK-Punkt ist als eigene OSM-Fläche kartiert.",active:true},
+  {name:"FKK Badestelle Rieneck – Gemünden",lat:50.08955,lon:9.67075,label:"FKK-Badestelle",type:"Badestelle",evidence:"OpenStreetMap-basierte Quelle",source:"OpenStreetMap / Mapcarta",sourceUrl:"https://mapcarta.com/de/W1164234254",status:"Eigene FKK-Badestelle westlich von Rieneck; separat vom allgemeinen Badeplatz kartiert.",active:true},
 ] ;
 
 let map;
@@ -515,4 +521,4 @@ document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v50";
+window.FKK_APP_VERSION = "v53";
