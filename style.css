@@ -431,3 +431,34 @@ html, body {
     bottom: auto !important;
   }
 }
+
+/* v51 – Untere Navigation bleibt immer sichtbar und ist am Viewport fixiert. */
+.appShell {
+  padding-bottom: 112px !important;
+}
+.footerNav {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+  top: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(760px, calc(100vw - 20px)) !important;
+  margin: 0 !important;
+  z-index: 10001 !important;
+}
+@media (max-width: 430px) {
+  .appShell {
+    padding-bottom: 116px !important;
+  }
+  .footerNav {
+    bottom: calc(6px + env(safe-area-inset-bottom)) !important;
+    width: calc(100vw - 20px) !important;
+  }
+  .modal {
+    padding-bottom: 104px !important;
+  }
+  .modalBox {
+    max-height: calc(82vh - 104px) !important;
+  }
+}

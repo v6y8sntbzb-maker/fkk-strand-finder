@@ -45,4 +45,7 @@ v47: Das Favoriten-Icon funktioniert jetzt als echter Toggle: erster Klick öffn
 v47: Fehlerbehebung Favoriten-Toggle. Das Favoriten-Icon bleibt bei geöffneter Liste erreichbar; erneutes Antippen schließt die Liste wieder.
 
 
-v50: Untere Navigationsleiste läuft beim Scrollen mit dem Seiteninhalt mit und bleibt nicht sticky am Bildschirmrand.
+v51: Untere Navigationsleiste läuft beim Scrollen mit dem Seiteninhalt mit und bleibt nicht sticky am Bildschirmrand.
+
+
+Version 51: Untere Navigation bleibt dauerhaft sichtbar und ist am Viewport fixiert; Safe-Area für iPhone berücksichtigt.
