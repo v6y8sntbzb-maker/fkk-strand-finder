@@ -1,12 +1,6 @@
-FKK Strand Finder v32
+FKK Strand Finder v33
 
-Änderung gegenüber v30:
-- Der Strand-/Dünen-Hintergrund ist jetzt deutlich sichtbar über die gesamte App gelegt.
-- Die weißen Bereiche sind als halbtransparente Glasflächen gestaltet, sodass der Strand im Hintergrund sichtbar bleibt.
-- Suchfeld, Karte, Ergebnisse, Favoriten und untere Navigation bleiben funktional.
-- Das Hintergrundbild liegt lokal unter assets/beach-background.jpg und benötigt keine externe Bild-URL.
+Wichtig: Das Strand-Hintergrundbild liegt absichtlich direkt neben index.html.
+Dadurch funktioniert der Hintergrund auch beim einfachen Hochladen der Dateien auf GitHub Pages und hängt nicht von einem assets-Unterordner ab.
 
-Datenbasis und Funktionen aus v30 bleiben erhalten.
-
-
-v32: Strand-Hintergrund als eigenes fixes Hintergrund-Element umgesetzt; untere Navigation mit Strand-Symbolen.
+Bitte beim Upload alle Dateien aus diesem Ordner hochladen, einschließlich beach-background.jpg.
