@@ -511,4 +511,4 @@ document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v47";
+window.FKK_APP_VERSION = "v50";

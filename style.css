@@ -417,3 +417,17 @@ html, body {
   .modal{padding-bottom:88px;}
   .modalBox{max-height:calc(82vh - 88px);}
 }
+
+
+/* v50 – Untere Navigation läuft beim Scrollen normal mit dem Seiteninhalt mit. */
+.footerNav {
+  position: relative !important;
+  bottom: auto !important;
+  top: auto !important;
+}
+@media(max-width:430px){
+  .footerNav {
+    position: relative !important;
+    bottom: auto !important;
+  }
+}
