@@ -1,3 +1,7 @@
+FKK Strand Finder v48
+
+Änderung: Die dreiteilige Info-Leiste „Überall in Deutschland / Direkte Navigation / Mit Quellen“ wurde vollständig aus der Startansicht entfernt.
+
 FKK Strand Finder v41
 
 Live-Karte: Die grünen FKK-Marker wurden kleiner und filigraner gestaltet, passend zum Referenzdesign.
