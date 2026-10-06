@@ -1,7 +1,11 @@
-// FKK Strand Finder v49
+// FKK Strand Finder v52
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
+  // v52 – weitere einzeln geprüfte FKK-Stellen
+  {name:"FKK-Strand Bötzsee – Petershagen/Eggersdorf",lat:52.55814,lon:13.83014,label:"FKK-Strand",type:"Badesee",evidence:"Stadtgui + OpenStreetMap-Kontext",source:"Stadtgui",sourceUrl:"https://www.stadtgui.de/nacktbaden/deutschland/brandenburg/eggersdorf_boetzsee.php",status:"Separater FKK-Strand am Bötzsee; GPS-Punkt aus der dokumentierten FKK-Stelle geprüft.",active:true},
+  {name:"Almer Weiher – Mintraching",lat:48.96472,lon:12.29128,label:"FKK",type:"Badesee",evidence:"Stadtgui + Naturist Compass",source:"Stadtgui / Naturist Compass",sourceUrl:"https://www.stadtgui.de/nacktbaden/deutschland/bayern/regensburg_mintraching_almer_weiher.php",status:"FKK wird rund um den See geduldet; Haupt-FKK-Bereich auf der Halbinsel. Koordinate auf den dokumentierten FKK-Punkt gesetzt.",active:true},
+  {name:"FKK Birkensee – Röthenbach an der Pegnitz",lat:49.45586,lon:11.25958,label:"FKK",type:"Badesee",evidence:"Stadtgui + Naturist Compass",source:"Stadtgui / Naturist Compass",sourceUrl:"https://www.stadtgui.de/nacktbaden/deutschland/bayern/nuernberg_birkensee.html",status:"Etablierte FKK-Stelle am Birkensee bei Nürnberg; GPS-Punkt auf den dokumentierten FKK-Bereich gesetzt.",active:true},
   // v43 – Brandenburg: weitere einzeln geprüfte FKK-Strandobjekte
   {name:"FKK-Strand Cottbus – Klein Gaglow",lat:51.72946,lon:14.2899,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + Badeklar",source:"OpenStreetMap / Mapcarta / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand in Kolkwitz/Klein Gaglow bei Cottbus verzeichnet; OSM-Strandobjekt geprüft.",active:true},
   {name:"FKK-Strand Buchwalde – Senftenberger See",lat:51.51149,lon:14.02942,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap + Badeklar",source:"OpenStreetMap / Mapcarta / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Strand Buchwalde am Senftenberger See; OSM-Strandobjekt geprüft.",active:true},

@@ -1,3 +1,4 @@
+FKK Strand Finder v52
 FKK Strand Finder v49
 
 Änderung: Favorisierte FKK-Orte werden auf der Karte als Stern-Symbol dargestellt. Beim Hinzufügen/Entfernen eines Favoriten wird das Karten-Symbol sofort aktualisiert.
@@ -49,3 +50,6 @@ v51: Untere Navigationsleiste läuft beim Scrollen mit dem Seiteninhalt mit und 
 
 
 Version 51: Untere Navigation bleibt dauerhaft sichtbar und ist am Viewport fixiert; Safe-Area für iPhone berücksichtigt.
+
+
+v52: 3 weitere einzeln geprüfte FKK-Stellen ergänzt (Bötzsee, Almer Weiher, Birkensee Nürnberg). Koordinaten aus dokumentierten FKK-Quellen übernommen.
