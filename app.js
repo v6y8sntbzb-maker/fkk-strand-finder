@@ -2,6 +2,15 @@
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 const FKK_PLACES = [
+  // v39 – weitere verifizierte FKK-Strände aus OSM/Badeklar
+  {name:"FKK-Strand Surendorf",lat:54.48119,lon:10.09070,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK Strand Wallnau – Fehmarn",lat:54.48893,lon:11.01425,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Strand Kappeln – Olpenitz",lat:54.65529,lon:10.03272,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Badestrand Grömitz",lat:54.16818,lon:11.02396,label:"FKK-Badestrand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestrand verzeichnet; Koordinate des OSM-Punkts geprüft.",active:true},
+  {name:"FKK-Bereich Timmendorfer Strand",lat:54.00901,lon:10.77273,label:"FKK-Bereich",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Bereich verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK-Bereich Großsander",lat:53.29224,lon:7.82050,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Bereich verzeichnet; OSM-Strandobjekt geprüft.",active:true},
+  {name:"FKK Chiemsee – Übersee",lat:47.83943,lon:12.46584,label:"FKK-Badeplatz",type:"Badesee",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badeplatz verzeichnet; ausgewiesener FKK-Bereich am Chiemsee.",active:true},
+
   // v28 – weitere verifizierte FKK-Strände (OSM/Badeklar)
   {name:"FKK Strand Falckenstein – Kiel",lat:54.41369,lon:10.18598,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet"},
   {name:"FKK Strand Avendorf – Fehmarn",lat:54.40235,lon:11.12220,label:"FKK-Strand",type:"Ostseestrand",evidence:"OpenStreetMap-Koordinate + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet"},
