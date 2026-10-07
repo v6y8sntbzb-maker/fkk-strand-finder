@@ -433,14 +433,46 @@ function renderResults(items, radius){
     });
     const marker=L.marker([p.lat,p.lon],{icon:makeFkkIcon(favorites.has(p.name))}).addTo(map);
     const popupNav = navigationLinks(p);
+    const popupFavoriteLabel = favorites.has(p.name) ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
     marker.bindPopup(`
       <div class="mapPlacePopup">
         <div class="mapPlacePopupTitle">${escapeHtml(p.name)}</div>
         <div class="mapPlacePopupDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>
         <div class="mapPlacePopupMeta"><strong>${escapeHtml(p.label)}</strong> · ${escapeHtml(p.type)}</div>
         <div class="mapPlacePopupStatus">${escapeHtml(p.status)}</div>
-        <div class="mapPlacePopupActions">${popupNav}</div>
+        <div class="mapPlacePopupActions">
+          <button class="mapFavoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${popupFavoriteLabel}" title="${popupFavoriteLabel}">${favorites.has(p.name)?"★":"☆"} ${popupFavoriteLabel}</button>
+          ${popupNav}
+        </div>
       </div>`, {maxWidth:300, className:"fkkMapPopup"});
+    marker.on("popupopen", () => {
+      const popup = marker.getPopup();
+      const button = popup && popup.getElement() ? popup.getElement().querySelector(".mapFavoriteButton") : null;
+      if (!button) return;
+      button.onclick = (event) => {
+        event.stopPropagation();
+        if (favorites.has(p.name)) favorites.delete(p.name); else favorites.add(p.name);
+        localStorage.setItem("fkkFavorites", JSON.stringify([...favorites]));
+        const isFavorite = favorites.has(p.name);
+        button.classList.toggle("isFavorite", isFavorite);
+        button.textContent = isFavorite ? "★ Aus Favoriten entfernen" : "☆ Zu Favoriten hinzufügen";
+        button.setAttribute("aria-label", isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
+        button.title = button.getAttribute("aria-label");
+        marker.setIcon(makeFkkIcon(isFavorite));
+        // Auch die Favoriten-Schaltfläche der zugehörigen Ergebnis-Karte aktualisieren.
+        const cards = resultsEl.querySelectorAll(".card");
+        cards.forEach(card => {
+          const title = card.querySelector(".favoriteTitle");
+          const cardButton = card.querySelector(".favoriteButton");
+          if (title && cardButton && title.textContent.trim() === p.name) {
+            cardButton.classList.toggle("isFavorite", isFavorite);
+            cardButton.textContent = isFavorite ? "★" : "☆";
+            cardButton.setAttribute("aria-label", isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen");
+            cardButton.title = cardButton.getAttribute("aria-label");
+          }
+        });
+      };
+    });
     resultMarkers.push(marker);
 
     const sourceLink = p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(p.source)}</a>` : escapeHtml(p.source||"");
