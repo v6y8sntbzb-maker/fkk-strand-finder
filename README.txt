@@ -10,3 +10,5 @@ Neu in v57:
 - Ergebnis-Karten zeigen Entfernung und Ortsdetails übersichtlicher
 
 Alle bisherigen Funktionen bleiben erhalten, einschließlich Radiuskreis, sanftem Kartenzoom, Favoriten und unterer Navigation.
+
+Hinweis v57.1: Martinsee bei Wolfenbüttel wurde nach Gegenprüfung nicht mehr als aktiver FKK-Badeplatz geführt. FKK wird zwar in Verzeichnissen genannt, zugleich wird fehlende Badefreigabe bzw. fehlende aktuelle Zugangsinformation angegeben.
