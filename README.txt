@@ -12,3 +12,6 @@ Neu in v57:
 Alle bisherigen Funktionen bleiben erhalten, einschließlich Radiuskreis, sanftem Kartenzoom, Favoriten und unterer Navigation.
 
 Hinweis v57.1: Martinsee bei Wolfenbüttel wurde nach Gegenprüfung nicht mehr als aktiver FKK-Badeplatz geführt. FKK wird zwar in Verzeichnissen genannt, zugleich wird fehlende Badefreigabe bzw. fehlende aktuelle Zugangsinformation angegeben.
+
+
+Audit v57.2: Mehrere zuvor auf die Seemitte gesetzte Koordinaten wurden auf verifizierte FKK-Strand-/FKK-Bereichspunkte korrigiert: Aileswasensee, Arendsee, Talsperre Pöhl/Helmsgrün, Langener Waldsee, Talsperre Bautzen, Großer Müggelsee und Altmühlsee. Nicht eindeutig verifizierte FKK-Punkte wurden bewusst nicht geraten.
