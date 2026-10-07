@@ -244,12 +244,17 @@ const FKK_PLACES = [
   {name:"Wildes FKK – Kreuzwertheim",lat:49.74518,lon:9.56057,label:"FKK-Strand",type:"Badesee",evidence:"OpenStreetMap-basierte Quelle + FKK-Verzeichnis",source:"OpenStreetMap / Badeklar",sourceUrl:"https://mapcarta.com/de/W1177496580",status:"Als natürlicher Strand mit FKK-Vermerk bei Kreuzwertheim kartiert.",active:true},
   {name:"FKK Sindersbachsee – Gemünden am Main",lat:50.06002,lon:9.61154,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap + Stadtgui + FKK-Freunde",source:"OpenStreetMap / Stadtgui / FKK-Freunde",sourceUrl:"https://mapcarta.com/de/W289680858",status:"Separater FKK-Bereich am Sindersbachsee; der FKK-Punkt ist als eigene OSM-Fläche kartiert.",active:true},
   {name:"FKK Badestelle Rieneck – Gemünden",lat:50.08955,lon:9.67075,label:"FKK-Badestelle",type:"Badestelle",evidence:"OpenStreetMap-basierte Quelle",source:"OpenStreetMap / Mapcarta",sourceUrl:"https://mapcarta.com/de/W1164234254",status:"Eigene FKK-Badestelle westlich von Rieneck; separat vom allgemeinen Badeplatz kartiert.",active:true},
+  // v54 – Bayern, einzeln anhand konkreter Quellen geprüft
+  {name:"FKK-Strand Bürgstadt – Bürgstadter See",lat:49.73928,lon:9.29047,label:"FKK-Strand",type:"Badesee",evidence:"Stadtgui",source:"Stadtgui",sourceUrl:"https://www.stadtgui.de/nacktbaden/deutschland/bayern/buergstadt_am_main_buergstaedter_see.php",status:"FKK-Strand am Bürgstadter See.",active:true},
+  {name:"FKK Freising – Großer Pullinger See",lat:48.35038,lon:11.71247,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap / Mapcarta",source:"OpenStreetMap",sourceUrl:"https://mapcarta.com/de/W712521492",status:"Als FKK-Bereich am Großen Pullinger See kartiert.",active:true},
+  {name:"FKK-Wiese – Kempten/Allgäu",lat:47.6977,lon:10.18962,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap / Mapcarta",source:"OpenStreetMap",sourceUrl:"https://mapcarta.com/de/N4652771814",status:"Als FKK-Wiese kartiert.",active:true},
+  {name:"FKK-Gelände Haldenmühle – Kempten/Allgäu",lat:47.825178,lon:10.223286,label:"FKK-Gelände",type:"Badesee",evidence:"OpenStreetMap / karte.bayern",source:"OpenStreetMap",sourceUrl:"https://karte.bayern/poi/ort/fkk-gelaende-haldenmuehle-way-144976823",status:"Als FKK-Gelände Haldenmühle kartiert.",active:true},
 ] ;
 
 let map;
 let userMarker = null;
-let resultMarkers = [];
 let radiusCircle = null;
+let resultMarkers = [];
 let searchOrigin = null; // {lat, lon, label, kind}
 let searchTimer = null;
 let favorites = new Set(JSON.parse(localStorage.getItem("fkkFavorites") || "[]"));
@@ -266,8 +271,9 @@ const originInfoEl = document.getElementById("originInfo");
 radiusEl.addEventListener("input", () => {
   radiusValueEl.textContent = radiusEl.value;
   if (searchOrigin) {
+    updateRadiusCircle(true);
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => searchPlaces(), 120);
+    searchTimer = setTimeout(() => searchPlaces(), 180);
   }
 });
 
@@ -303,22 +309,41 @@ function clearMarkers(){
   resultMarkers=[];
 }
 
-function updateRadiusCircle(fitMap=true){
-  if(!map || !searchOrigin) return;
-  const radiusKm=Number(radiusEl.value);
-  if(radiusCircle) map.removeLayer(radiusCircle);
-  radiusCircle=L.circle([searchOrigin.lat,searchOrigin.lon],{
-    radius: radiusKm*1000,
-    color: "#2f80ed",
-    weight: 2,
-    opacity: 0.8,
-    fillColor: "#2f80ed",
-    fillOpacity: 0.08,
-    interactive: false
-  }).addTo(map);
-  if(fitMap){
-    map.fitBounds(radiusCircle.getBounds(), {padding:[18,18], maxZoom:14, animate:true});
+function radiusBounds(lat, lon, radiusKm){
+  const latDelta = radiusKm / 111.32;
+  const lonScale = Math.max(Math.cos(lat * Math.PI / 180), 0.15);
+  const lonDelta = radiusKm / (111.32 * lonScale);
+  return L.latLngBounds([lat - latDelta, lon - lonDelta], [lat + latDelta, lon + lonDelta]);
+}
+
+function updateRadiusCircle(shouldFit=true){
+  if (!map || !searchOrigin) return;
+  const radiusKm = Math.max(1, Number(radiusEl.value) || 25);
+  const center = [searchOrigin.lat, searchOrigin.lon];
+  if (!radiusCircle) {
+    radiusCircle = L.circle(center, {
+      radius: radiusKm * 1000,
+      color: "#1685ec", weight: 2, opacity: 0.9,
+      fillColor: "#1685ec", fillOpacity: 0.08, interactive: false
+    }).addTo(map);
+  } else {
+    radiusCircle.setLatLng(center);
+    radiusCircle.setRadius(radiusKm * 1000);
   }
+  if (shouldFit) {
+    setTimeout(() => {
+      if (!map || !searchOrigin || !radiusCircle) return;
+      map.invalidateSize({animate:false});
+      map.fitBounds(radiusBounds(searchOrigin.lat, searchOrigin.lon, radiusKm), {
+        paddingTopLeft: [22, 22], paddingBottomRight: [22, 90], maxZoom: 14, animate: false
+      });
+    }, 40);
+  }
+}
+
+function clearRadiusCircle(){
+  if (radiusCircle && map) map.removeLayer(radiusCircle);
+  radiusCircle = null;
 }
 
 function showOrigin(origin){
@@ -341,12 +366,12 @@ function showOrigin(origin){
 
 function clearOrigin(){
   searchOrigin=null;
+  clearRadiusCircle();
   if (userMarker) { map.removeLayer(userMarker); userMarker=null; }
   originInfoEl.classList.add("hidden");
   statusEl.textContent="Wähle deinen Standort oder gib einen Ort ein.";
   resultsEl.innerHTML="";
   clearMarkers();
-  if(radiusCircle){ map.removeLayer(radiusCircle); radiusCircle=null; }
 }
 
 function navMode(p){
@@ -367,7 +392,6 @@ function navigationLinks(p){
 
 function renderResults(items, radius){
   clearMarkers();
-  updateRadiusCircle(true);
   resultsEl.innerHTML="";
   items.sort((a,b)=>a.distance-b.distance);
 
@@ -427,6 +451,7 @@ function renderResults(items, radius){
 
 function searchPlaces(){
   if(!searchOrigin) return;
+  updateRadiusCircle(true);
   const {lat,lon}=searchOrigin;
   const radiusKm=Number(radiusEl.value);
   statusEl.textContent="🔎 Suche in der lokalen FKK-Datenbank …";
@@ -447,6 +472,8 @@ function useLocation(){
       searchOrigin={lat:pos.coords.latitude,lon:pos.coords.longitude,label:"Mein aktueller Standort",kind:"gps"};
       placeInput.value="";
       showOrigin(searchOrigin);
+      map.setView([searchOrigin.lat,searchOrigin.lon],10);
+      updateRadiusCircle(true);
       searchPlaces();
     },
     ()=>{ statusEl.textContent="❌ Standort konnte nicht ermittelt werden. Bitte Standortfreigabe für diese Website erlauben."; },
@@ -471,6 +498,8 @@ async function searchFromPlace(){
     const r=data[0];
     searchOrigin={lat:Number(r.lat),lon:Number(r.lon),label:r.display_name,kind:"place"};
     showOrigin(searchOrigin);
+    map.setView([searchOrigin.lat,searchOrigin.lon],10);
+    updateRadiusCircle(true);
     searchPlaces();
   }catch(e){
     statusEl.textContent="❌ Die Ortssuche ist gerade nicht erreichbar. Bitte später noch einmal versuchen.";
@@ -540,10 +569,4 @@ document.querySelector(".menuButton").addEventListener("click",showMore);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
 initMap();
-window.FKK_APP_VERSION = "v53";
-  // v54 – Bayern, erneut einzeln anhand konkreter Quellen geprüft
-  {name:"FKK-Strand Bürgstadt – Bürgstadter See",lat:49.73928,lon:9.29047,label:"FKK-Strand",type:"Badesee",evidence:"Stadtgui",source:"Stadtgui",sourceUrl:"https://www.stadtgui.de/nacktbaden/deutschland/bayern/buergstadt_am_main_buergstaedter_see.php"},
-  {name:"FKK Freising – Großer Pullinger See",lat:48.35038,lon:11.71247,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap / Mapcarta",source:"OpenStreetMap",sourceUrl:"https://mapcarta.com/de/W712521492"},
-  {name:"FKK-Wiese – Kempten/Allgäu",lat:47.6977,lon:10.18962,label:"FKK-Bereich",type:"Badesee",evidence:"OpenStreetMap / Mapcarta",source:"OpenStreetMap",sourceUrl:"https://mapcarta.com/de/N4652771814"},
-  {name:"FKK-Gelände Haldenmühle – Kempten/Allgäu",lat:47.825178,lon:10.223286,label:"FKK-Gelände",type:"Badesee",evidence:"OpenStreetMap / karte.bayern",source:"OpenStreetMap",sourceUrl:"https://karte.bayern/poi/ort/fkk-gelaende-haldenmuehle-way-144976823"},
-
+window.FKK_APP_VERSION = "v55.2";
