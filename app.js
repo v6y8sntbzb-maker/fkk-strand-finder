@@ -249,6 +249,7 @@ const FKK_PLACES = [
 let map;
 let userMarker = null;
 let resultMarkers = [];
+let radiusCircle = null;
 let searchOrigin = null; // {lat, lon, label, kind}
 let searchTimer = null;
 let favorites = new Set(JSON.parse(localStorage.getItem("fkkFavorites") || "[]"));
@@ -302,6 +303,24 @@ function clearMarkers(){
   resultMarkers=[];
 }
 
+function updateRadiusCircle(fitMap=true){
+  if(!map || !searchOrigin) return;
+  const radiusKm=Number(radiusEl.value);
+  if(radiusCircle) map.removeLayer(radiusCircle);
+  radiusCircle=L.circle([searchOrigin.lat,searchOrigin.lon],{
+    radius: radiusKm*1000,
+    color: "#2f80ed",
+    weight: 2,
+    opacity: 0.8,
+    fillColor: "#2f80ed",
+    fillOpacity: 0.08,
+    interactive: false
+  }).addTo(map);
+  if(fitMap){
+    map.fitBounds(radiusCircle.getBounds(), {padding:[18,18], maxZoom:14, animate:true});
+  }
+}
+
 function showOrigin(origin){
   if (userMarker) map.removeLayer(userMarker);
   const iconClass = origin.kind === "gps" ? "originMarker originMarkerGps" : "originMarker originMarkerPlace";
@@ -327,6 +346,7 @@ function clearOrigin(){
   statusEl.textContent="Wähle deinen Standort oder gib einen Ort ein.";
   resultsEl.innerHTML="";
   clearMarkers();
+  if(radiusCircle){ map.removeLayer(radiusCircle); radiusCircle=null; }
 }
 
 function navMode(p){
@@ -347,6 +367,7 @@ function navigationLinks(p){
 
 function renderResults(items, radius){
   clearMarkers();
+  updateRadiusCircle(true);
   resultsEl.innerHTML="";
   items.sort((a,b)=>a.distance-b.distance);
 
@@ -426,7 +447,6 @@ function useLocation(){
       searchOrigin={lat:pos.coords.latitude,lon:pos.coords.longitude,label:"Mein aktueller Standort",kind:"gps"};
       placeInput.value="";
       showOrigin(searchOrigin);
-      map.setView([searchOrigin.lat,searchOrigin.lon],10);
       searchPlaces();
     },
     ()=>{ statusEl.textContent="❌ Standort konnte nicht ermittelt werden. Bitte Standortfreigabe für diese Website erlauben."; },
@@ -451,7 +471,6 @@ async function searchFromPlace(){
     const r=data[0];
     searchOrigin={lat:Number(r.lat),lon:Number(r.lon),label:r.display_name,kind:"place"};
     showOrigin(searchOrigin);
-    map.setView([searchOrigin.lat,searchOrigin.lon],10);
     searchPlaces();
   }catch(e){
     statusEl.textContent="❌ Die Ortssuche ist gerade nicht erreichbar. Bitte später noch einmal versuchen.";
