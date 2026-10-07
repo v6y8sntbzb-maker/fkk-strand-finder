@@ -8,3 +8,6 @@ Neu:
 - Karte zoomt automatisch auf den kompletten Radius.
 - Robuste geografische Bounds statt Circle#getBounds für die Zoom-Berechnung.
 - FKK-Marker, Favoriten, Suchort/GPS und Navigation bleiben erhalten.
+
+
+v56.3: weichere Karten-Zoomanimationen und sanftere Übergänge bei Karten-Sprüngen.
