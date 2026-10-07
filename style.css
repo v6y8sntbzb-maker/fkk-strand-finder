@@ -465,3 +465,18 @@ html, body {
 
 /* v56.5 – gleicher Abstand zwischen Kopfbereich und Suchkarte wie zwischen Suchkarte und Karte */
 .topHeader{margin-bottom:12px!important;}
+
+/* v57 – Ortsdetails und gut sichtbare Entfernungen */
+.resultMeta{display:grid;gap:6px;margin-top:8px}
+.distanceLine{font-size:15px;color:#12366d;font-weight:700}
+.detailLine{line-height:1.45}
+.fkkMapPopup .leaflet-popup-content-wrapper{border-radius:16px}
+.fkkMapPopup .leaflet-popup-content{margin:13px 14px;font-size:12px;line-height:1.4}
+.mapPlacePopupTitle{font-size:16px;line-height:1.2;font-weight:800;color:#12366d;padding-right:4px}
+.mapPlacePopupDistance{margin-top:5px;font-size:13px;font-weight:800;color:#15945f}
+.mapPlacePopupMeta{margin-top:5px;color:#4d647d}
+.mapPlacePopupStatus{margin-top:7px;color:#65758a;font-size:11px}
+.mapPlacePopupActions{margin-top:9px}
+.mapPlacePopupActions .navButtons{margin-top:0;display:flex;gap:6px}
+.mapPlacePopupActions .navBtn{font-size:10px;padding:8px 9px}
+.mapPlacePopupActions .navHint{display:none}
