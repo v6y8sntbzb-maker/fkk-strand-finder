@@ -462,3 +462,6 @@ html, body {
     max-height: calc(82vh - 104px) !important;
   }
 }
+
+/* v56.5 – gleicher Abstand zwischen Kopfbereich und Suchkarte wie zwischen Suchkarte und Karte */
+.topHeader{margin-bottom:12px!important;}
