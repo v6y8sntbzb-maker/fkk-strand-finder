@@ -282,15 +282,42 @@ const typeFilterEl = document.getElementById("typeFilter");
 const placeInput = document.getElementById("placeInput");
 const placeSearchBtn = document.getElementById("placeSearchBtn");
 const originInfoEl = document.getElementById("originInfo");
+const searchHereBtn = document.getElementById("searchHereBtn");
+const mapRadiusButtons = [...document.querySelectorAll("[data-map-radius]")];
+let mapDragging = false;
 
 radiusEl.addEventListener("input", () => {
   radiusValueEl.textContent = radiusEl.value;
+  mapRadiusButtons.forEach(b => b.classList.toggle("active", Number(b.dataset.mapRadius) === Number(radiusEl.value)));
   if (searchOrigin) {
     updateRadiusCircle(true);
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => searchPlaces(), 180);
   }
 });
+
+mapRadiusButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const value = Number(btn.dataset.mapRadius);
+    radiusEl.value = value;
+    radiusValueEl.textContent = value;
+    mapRadiusButtons.forEach(b => b.classList.toggle("active", b === btn));
+    if (searchOrigin) searchPlaces();
+  });
+});
+
+if (searchHereBtn) {
+  searchHereBtn.addEventListener("click", () => {
+    if (!map) return;
+    const c = map.getCenter();
+    searchOrigin = {lat:c.lat, lon:c.lng, label:"Kartenzentrum", kind:"place"};
+    placeInput.value = "";
+    showOrigin(searchOrigin);
+    searchHereBtn.classList.remove("isReady");
+    searchPlaces();
+    setFooterActive("footerMap");
+  });
+}
 
 placeInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") searchFromPlace();
@@ -315,6 +342,11 @@ function initMap(){
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom:19, attribution:"© OpenStreetMap-Mitwirkende"
   }).addTo(map);
+  map.on("dragstart", () => { mapDragging = true; });
+  map.on("dragend", () => {
+    mapDragging = false;
+    if (searchHereBtn) searchHereBtn.classList.add("isReady");
+  });
 }
 
 function haversineKm(aLat,aLon,bLat,bLon){

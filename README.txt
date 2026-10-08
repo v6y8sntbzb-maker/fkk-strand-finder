@@ -24,3 +24,6 @@ v57.8: Favoriten erweitert – Favoriten werden bei vorhandenem Suchstandort nac
 
 
 v57.9: Bei jedem FKK-Ort gibt es jetzt „⚠️ Fehler melden“. Der Button öffnet ein vorbereitetes GitHub-Issue mit Ort, Koordinaten, Status und Quelle, damit falsche Positionen oder veraltete FKK-Angaben direkt gemeldet werden können.
+
+
+v58.1: Kartenansicht erweitert mit Schnellwahl für 10/25/50/100 km und „Hier suchen“ nach Verschieben der Karte.

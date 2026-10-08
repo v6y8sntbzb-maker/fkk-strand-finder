@@ -63,6 +63,16 @@
         <span class="mapPill">🗺️ Live-Karte</span>
       </div>
       <div class="mapWrap">
+        <div class="mapControlsTop">
+          <div class="mapRadiusQuick" aria-label="Kartensuchradius">
+            <span>Radius</span>
+            <button type="button" data-map-radius="10">10</button>
+            <button type="button" data-map-radius="25" class="active">25</button>
+            <button type="button" data-map-radius="50">50</button>
+            <button type="button" data-map-radius="100">100</button>
+          </div>
+          <button id="searchHereBtn" class="searchHereButton" type="button">⌖ Hier suchen</button>
+        </div>
         <div id="map"></div>
         <div class="mapLegend">
           <span><i class="legendDot searchDot"></i> Suchort</span>

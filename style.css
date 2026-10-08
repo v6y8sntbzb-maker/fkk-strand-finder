@@ -513,3 +513,17 @@ html, body {
 .reportBtn:hover{filter:brightness(.98)}
 .mapPlacePopupActions .reportBtn{width:100%;box-sizing:border-box}
 .resultActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+
+/* v58.1 professionelle Kartensteuerung */
+.mapWrap{overflow:hidden;border-radius:22px}
+.mapControlsTop{position:absolute;left:10px;right:10px;top:10px;z-index:700;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
+.mapRadiusQuick,.searchHereButton{pointer-events:auto;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border:1px solid rgba(210,226,241,.95);box-shadow:0 7px 18px rgba(18,54,109,.14);border-radius:14px}
+.mapRadiusQuick{display:flex;align-items:center;gap:4px;padding:5px 6px;color:#5b7188;font-size:10px;font-weight:800}
+.mapRadiusQuick span{padding:0 4px}
+.mapRadiusQuick button{border:0;background:transparent;color:#4d6781;border-radius:9px;padding:7px 8px;font:800 10px/1 inherit;cursor:pointer}
+.mapRadiusQuick button.active{background:#1685ec;color:#fff;box-shadow:0 3px 9px rgba(22,133,236,.22)}
+.searchHereButton{border:1px solid #cfe4f8;color:#126dca;padding:9px 11px;font:800 11px/1 inherit;cursor:pointer;white-space:nowrap}
+.searchHereButton.isReady{background:#1685ec;color:#fff;border-color:#1685ec;box-shadow:0 5px 15px rgba(22,133,236,.28);animation:searchHerePulse 1.8s ease-in-out infinite}
+@keyframes searchHerePulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+@media(max-width:430px){.mapControlsTop{left:8px;right:8px;top:8px}.mapRadiusQuick{max-width:62%;overflow:hidden}.mapRadiusQuick span{display:none}.mapRadiusQuick button{padding:7px 7px}.searchHereButton{padding:9px 9px;font-size:10px}}
