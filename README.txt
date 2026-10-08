@@ -15,3 +15,6 @@ Hinweis v57.1: Martinsee bei Wolfenbüttel wurde nach Gegenprüfung nicht mehr a
 
 
 Audit v57.2: Mehrere zuvor auf die Seemitte gesetzte Koordinaten wurden auf verifizierte FKK-Strand-/FKK-Bereichspunkte korrigiert: Aileswasensee, Arendsee, Talsperre Pöhl/Helmsgrün, Langener Waldsee, Talsperre Bautzen, Großer Müggelsee und Altmühlsee. Nicht eindeutig verifizierte FKK-Punkte wurden bewusst nicht geraten.
+
+
+v57.7: „In meiner Nähe“ führt direkt zur sortierten Trefferliste; Ergebnis-Karten zeigen Zielpunkt-Typ, Datenstand, Zugangshinweise und eine eigene „Auf Karte zeigen“-Aktion.

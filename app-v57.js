@@ -406,6 +406,21 @@ function verificationInfo(p){
   return {kind:"directory",label:"FKK-Quelle vorhanden",icon:"i"};
 }
 
+function accessHint(p){
+  const status=String(p.status||"");
+  const lower=status.toLowerCase();
+  const terms=["zugang","gesperrt","eintritt","parkplatz","parken","nur mit","permission","erlaubnis","badfreigabe","badefreigabe","öffnungszeit","öffnung","saison"];
+  if(!terms.some(t=>lower.includes(t))) return "";
+  return status;
+}
+
+function destinationInfo(p){
+  const evidence=String(p.evidence||"").toLowerCase();
+  const status=String(p.status||"").toLowerCase();
+  const direct=/koordinate.*fkk|fkk.*koordinate|eigene fkk|separater fkk|direkt aus osm|osm.*fkk|strandobjekt|badeeinstieg|fkks?\s*punkt/.test(evidence+" "+status);
+  return direct ? {label:"Direkter FKK-Zielpunkt",kind:"direct"} : {label:"FKK-Ort / Bereich",kind:"area"};
+}
+
 function navMode(p){
   // Source-backed exact points are preferred. Approximate lake/area points
   // navigate by place name so the user is not sent to a misleading pin.
@@ -450,8 +465,10 @@ function renderResults(items, radius){
         <div class="mapPlacePopupTitle">${escapeHtml(p.name)}</div>
         <div class="mapPlacePopupDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>
         <div class="mapPlacePopupMeta"><strong>${escapeHtml(p.label)}</strong> · ${escapeHtml(p.type)}</div>
+        <div class="destinationBadge destination-${destinationInfo(p).kind}">📍 ${destinationInfo(p).label}</div>
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
         <div class="mapPlacePopupStatus">${escapeHtml(p.status)}</div>
+        ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
         <div class="mapPlacePopupActions">
           <button class="mapFavoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${popupFavoriteLabel}" title="${popupFavoriteLabel}">${favorites.has(p.name)?"★":"☆"} ${popupFavoriteLabel}</button>
           ${popupNav}
@@ -496,10 +513,13 @@ function renderResults(items, radius){
       <div class="meta resultMeta">
         <div class="distanceLine">📍 <strong>${p.distance.toFixed(1)} km</strong> entfernt</div>
         <div class="detailLine"><strong>${escapeHtml(p.label)}</strong> <span class="typePill">${escapeHtml(p.type)}</span></div>
+        <div class="destinationBadge destination-${destinationInfo(p).kind}">📍 ${destinationInfo(p).label}</div>
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
         <div class="detailLine">ℹ️ ${escapeHtml(p.status)}</div>
+        ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
-      <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}</div>
+      <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand: 05.10.2026</div>
+      <div class="resultActions"><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button></div>
       ${navigationLinks(p)}`;
     const favoriteButton = card.querySelector(".favoriteButton");
     favoriteButton.addEventListener("click", (event) => {
@@ -514,10 +534,18 @@ function renderResults(items, radius){
       marker.setIcon(makeFkkIcon(isFavorite));
       favoriteButton.title = favoriteButton.getAttribute("aria-label");
     });
+    const mapResultButton=card.querySelector(".mapResultButton");
+    mapResultButton.addEventListener("click",(event)=>{
+      event.stopPropagation();
+      setFooterActive("footerMap");
+      scrollToId("mapSection");
+      setTimeout(()=>{ map.invalidateSize(); map.flyTo([p.lat,p.lon],15,{duration:1.15,easeLinearity:0.12}); marker.openPopup(); },220);
+    });
     card.addEventListener("click",(event)=>{
-      if(event.target.closest("a")) return;
-      map.flyTo([p.lat,p.lon],14,{duration:1.05,easeLinearity:0.12});
-      marker.openPopup();
+      if(event.target.closest("a,button")) return;
+      setFooterActive("footerMap");
+      scrollToId("mapSection");
+      setTimeout(()=>{ map.invalidateSize(); map.flyTo([p.lat,p.lon],15,{duration:1.15,easeLinearity:0.12}); marker.openPopup(); },220);
     });
     resultsEl.appendChild(card);
   });
@@ -561,9 +589,11 @@ function useLocation(){
       searchOrigin={lat:pos.coords.latitude,lon:pos.coords.longitude,label:"Mein aktueller Standort",kind:"gps"};
       placeInput.value="";
       showOrigin(searchOrigin);
-      map.flyTo([searchOrigin.lat,searchOrigin.lon],10,{duration:1.05,easeLinearity:0.12});
+      map.flyTo([searchOrigin.lat,searchOrigin.lon],12,{duration:1.15,easeLinearity:0.12});
       updateRadiusCircle(true);
       searchPlaces();
+      setFooterActive("footerMap");
+      setTimeout(()=>scrollToId("resultsSection"),450);
     },
     ()=>{ statusEl.textContent="❌ Standort konnte nicht ermittelt werden. Bitte Standortfreigabe für diese Website erlauben."; },
     {enableHighAccuracy:true,timeout:15000,maximumAge:60000}
@@ -668,4 +698,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v55.2";
+window.FKK_APP_VERSION = "v57.7";

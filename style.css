@@ -489,3 +489,12 @@ html, body {
 @media(max-width:380px){.filterRow{align-items:stretch;flex-direction:column}.filterRow select{max-width:none;width:100%}}
 
 .verificationBadge{display:inline-flex;align-items:center;gap:4px;width:max-content;margin:5px 0;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.1px}.verification-official{background:#e9f8ef;color:#177245;border:1px solid #bfe8cf}.verification-directory{background:#eef6ff;color:#2168a8;border:1px solid #cfe3f7}.verification-uncertain{background:#fff6df;color:#8a6500;border:1px solid #eed59a}.mapPlacePopup .verificationBadge{margin:5px 0 7px}.mapPlacePopupStatus{font-size:11px;line-height:1.35;color:#536b83}.statusSmall{font-size:10px}
+
+
+/* v57.7 – Ortsdetails, Zielpunkt und Kartenaktion */
+.destinationBadge{display:inline-flex;align-items:center;width:max-content;margin:5px 0;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}
+.destination-direct{background:#eaf9f3;color:#147553;border:1px solid #bfe8d7}
+.destination-area{background:#f3f7fb;color:#526a82;border:1px solid #dbe7f2}
+.accessHint{margin-top:7px;padding:8px 9px;border-radius:11px;background:#fff8e7;border:1px solid #f0dfae;color:#765b16;font-size:10px;line-height:1.4}
+.resultActions{margin-top:9px}.mapResultButton{width:100%;border:1px solid #d4e8ff;border-radius:12px;background:#eef7ff;color:#126dca;font:800 11px/1.2 inherit;padding:9px 10px;cursor:pointer}.mapResultButton:active{transform:scale(.985)}
+.mapPlacePopup .destinationBadge{margin:4px 0 2px}.mapPlacePopup .accessHint{font-size:10px}
