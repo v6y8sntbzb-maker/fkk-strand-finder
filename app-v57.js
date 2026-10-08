@@ -3,11 +3,13 @@
 
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
+const DATA_AUDIT_DATE = "08.10.2026";
+
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
   {name:"Aileswasensee – FKK-Strand",lat:48.60199,lon:9.25984,label:"FKK",type:"Badesee",evidence:"Badesee-heute FKK + OpenStreetMap/Mapcarta",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/fkk/",status:"FKK-Strand am Aileswasensee; Koordinate des Sees geprüft.",active:true},
   {name:"Kleiner Ersinger Badesee – FKK-Bereich",lat:48.29344,lon:9.86377,label:"FKK",type:"Badesee",evidence:"Badesee-heute FKK + OpenStreetMap/Mapcarta",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/see/kleiner-ersinger-badesee/",status:"FKK-Bereich rund 300 m südlich des Kleinen Ersinger Badesees; Koordinate des Sees geprüft.",active:true},
-  {name:"Kleiner Opfinger See – FKK-Strand",lat:47.99660,lon:7.74225,label:"FKK",type:"Badesee",evidence:"Badesee-heute FKK + OpenStreetMap/Mapcarta",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/fkk/",status:"FKK-Strand am Kleinen Opfinger See; Koordinate des Sees geprüft.",active:true},
+  {name:"Kleiner Opfinger See – FKK-Strand",lat:47.99625,lon:7.74329,label:"FKK-Strand",type:"Badesee",evidence:"Badesee-heute FKK + OpenStreetMap/Mapcarta",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/fkk/",status:"Direkter FKK-Strand am Kleinen Opfinger Baggersee; Koordinate des kartierten FKK-Strandobjekts geprüft.",active:true},
   {name:"Baggersee Greffern – FKK-Bereich",lat:48.75310,lon:7.99120,label:"FKK",type:"Badesee",evidence:"Badeklar FKK + OpenStreetMap/Mapcarta",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"FKK-Bereich am Baggersee Greffern; Koordinate des Sees geprüft.",active:true},
   {name:"Baggersee Streitköpfle – FKK",lat:49.11772,lon:8.38260,label:"FKK",type:"Badesee",evidence:"Badesee-heute FKK + OpenStreetMap",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/fkk/",status:"FKK ist am Baggersee Streitköpfle verzeichnet; Koordinate des Badebereichs geprüft.",active:true},
   {name:"Baggersee Staffort – FKK",lat:49.08240,lon:8.50120,label:"FKK",type:"Badesee",evidence:"Badesee-heute FKK + OpenStreetMap",source:"Badesee-heute / OpenStreetMap",sourceUrl:"https://badesee-heute.de/fkk/",status:"FKK ist am Baggersee Staffort verzeichnet; Koordinate des Sees geprüft.",active:true},
@@ -60,7 +62,7 @@ const FKK_PLACES = [
   // v27 – weitere FKK-Badestellen mit überprüfbaren OSM/Quellen-Koordinaten
   {name:"Niklassee FKK – Bad Schussenried",lat:48.01066,lon:9.69657,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Schwimmbereichs geprüft.",active:true},
   {name:"FKK-Strand Baiersdorf",lat:49.66563,lon:11.02236,label:"FKK-Strand",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand verzeichnet; Koordinate des OSM-Strandobjekts geprüft.",active:true},
-  {name:"Klostersee Triefenstein – FKK",lat:49.80309,lon:9.61428,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle am Klostersee verzeichnet; Gewässerkoordinate und benachbarter FKK-Strand in OSM geprüft.",active:true},
+  {name:"Klostersee Triefenstein – FKK",lat:49.80225,lon:9.61784,label:"FKK-Strand",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Direkter FKK-Strand am Klostersee; separates OSM-Strandobjekt geprüft.",active:true},
   {name:"FKK-Badestelle Arkenberger Baggersee",lat:52.63675,lon:13.41536,label:"FKK-Badestelle",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Strandobjekts geprüft.",active:true},
   {name:"Baggersee Diez",lat:50.37018,lon:7.99191,label:"FKK-Bereich",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Badestelle verzeichnet; Koordinate des OSM-Gewässers geprüft.",active:true},
   {name:"Geiseltalsee – FKK-Strand Stöbnitz",lat:51.31672,lon:11.82097,label:"FKK-Strand",type:"Badesee",evidence:"FKK-Verzeichnis + OpenStreetMap-Koordinate",source:"Badeklar / OpenStreetMap",sourceUrl:"https://badeklar.de/fkk-badestellen",status:"Als FKK-Strand am Stöbnitzer Ufer verzeichnet; Koordinate des OSM-Strandbads geprüft.",active:true},
@@ -533,7 +535,7 @@ function renderResults(items, radius){
         <div class="detailLine">ℹ️ ${escapeHtml(p.status)}</div>
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
-      <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand: 05.10.2026</div>
+      <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand: ${DATA_AUDIT_DATE}</div>
       <div class="resultActions"><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button>${reportIssueLink(p)}</div>
       ${navigationLinks(p)}`;
     const favoriteButton = card.querySelector(".favoriteButton");
@@ -567,7 +569,7 @@ function renderResults(items, radius){
 
   const official=items.filter(p=>verificationInfo(p).kind==="official").length;
   const directory=items.filter(p=>verificationInfo(p).kind==="directory").length;
-  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} offiziell bestätigt · ${directory} aus FKK-Verzeichnissen/Kartenquellen.</span>`;
+  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} offiziell bestätigt · ${directory} aus FKK-Verzeichnissen/Kartenquellen · Datenprüfung ${DATA_AUDIT_DATE}.</span>`;
 }
 
 function searchPlaces(){
