@@ -754,18 +754,33 @@ function scrollToId(id){
 }
 function renderFavorites(){
   let favItems=FKK_PLACES.filter(p=>p.active!==false && favorites.has(p.name));
+  const favoriteSort = localStorage.getItem("fkkFavoriteSort") || (searchOrigin ? "distance" : "name");
   document.getElementById("modalTitle").textContent="Favoriten";
   if(!favItems.length){
     document.getElementById("modalText").innerHTML='<div class="favoriteEmpty"><div class="favoriteEmptyIcon">☆</div><strong>Noch keine Favoriten</strong><p>Tippe bei einem FKK-Ort auf ☆, um ihn hier zu speichern.</p></div>';
     return;
   }
-  if(searchOrigin){ favItems=favItems.map(p=>({...p,distance:haversineKm(searchOrigin.lat,searchOrigin.lon,p.lat,p.lon)})).sort((a,b)=>a.distance-b.distance); }
+  if(searchOrigin){ favItems=favItems.map(p=>({...p,distance:haversineKm(searchOrigin.lat,searchOrigin.lon,p.lat,p.lon)})); }
+  if(favoriteSort === "distance" && searchOrigin) favItems.sort((a,b)=>a.distance-b.distance);
+  if(favoriteSort === "name") favItems.sort((a,b)=>a.name.localeCompare(b.name,"de"));
   const cards=favItems.map(p=>{
     const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
     const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>` : "";
     return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
   }).join("");
-  document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button></div><div class="favoriteList">${cards}</div>`;
+  document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div><div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><div class="favoriteSortRow"><label for="favoriteSort">Sortieren</label><select id="favoriteSort"><option value="distance" ${favoriteSort==="distance"?"selected":""} ${searchOrigin?"":"disabled"}>📍 Entfernung</option><option value="name" ${favoriteSort==="name"?"selected":""}>🔤 Name</option></select></div></div><div class="favoriteToolbarButtons"><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button><button class="favoriteShare" id="favoriteShare" type="button">↗️ Teilen</button></div></div><div class="favoriteList">${cards}</div>`;
+  document.getElementById("favoriteSort").addEventListener("change",(event)=>{
+    localStorage.setItem("fkkFavoriteSort",event.target.value);
+    renderFavorites();
+  });
+  document.getElementById("favoriteShare").addEventListener("click",async()=>{
+    const shareText = "Meine FKK-Favoriten\n\n" + favItems.map((p,i)=>`${i+1}. ${p.name}${searchOrigin && Number.isFinite(p.distance)?` – ${p.distance.toFixed(1)} km`:""}`).join("\n");
+    try{
+      if(navigator.share){ await navigator.share({title:"Meine FKK-Favoriten",text:shareText}); }
+      else if(navigator.clipboard){ await navigator.clipboard.writeText(shareText); alert("Favoriten wurden in die Zwischenablage kopiert."); }
+      else { alert(shareText); }
+    }catch(e){ if(e && e.name !== "AbortError") console.warn(e); }
+  });
   document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{
     favorites.delete(btn.dataset.fav);
     localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
