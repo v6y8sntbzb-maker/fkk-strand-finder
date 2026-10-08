@@ -27,3 +27,5 @@ v57.9: Bei jedem FKK-Ort gibt es jetzt „⚠️ Fehler melden“. Der Button ö
 
 
 v58.1: Kartenansicht erweitert mit Schnellwahl für 10/25/50/100 km und „Hier suchen“ nach Verschieben der Karte.
+
+v58.2: Vollständige Ortsprofile ergänzt. Ergebnis-Karten und Karten-Popups bieten jetzt Ortsdetails mit FKK-Status, Zielpunkt, Typ, Hinweisen, Quelle, Datenstand, Favorit, Kartenansicht, Navigation und Fehler melden.

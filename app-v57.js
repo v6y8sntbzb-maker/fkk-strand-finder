@@ -285,6 +285,64 @@ const originInfoEl = document.getElementById("originInfo");
 const searchHereBtn = document.getElementById("searchHereBtn");
 const mapRadiusButtons = [...document.querySelectorAll("[data-map-radius]")];
 let mapDragging = false;
+const modalEl = document.getElementById("modal");
+const modalTitleEl = document.getElementById("modalTitle");
+const modalTextEl = document.getElementById("modalText");
+const closeModalEl = document.getElementById("closeModal");
+
+function openPlaceProfile(p){
+  if(!modalEl) return;
+  const v=verificationInfo(p);
+  const d=destinationInfo(p);
+  const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(p.source||"Quelle öffnen")}</a>` : escapeHtml(p.source||"Keine Quelle hinterlegt");
+  modalTitleEl.textContent=p.name;
+  modalTextEl.innerHTML=`
+    <div class="profileHero">
+      <div class="profileDistance">📍 ${p.distance!=null ? p.distance.toFixed(1)+" km entfernt" : "Entfernung nicht berechnet"}</div>
+      <div class="profileBadges"><span class="destinationBadge destination-${d.kind}">📍 ${d.label}</span><span class="verificationBadge verification-${v.kind}">${v.icon} ${v.label}</span></div>
+    </div>
+    <div class="profileGrid">
+      <div><span>Art</span><strong>${escapeHtml(p.label||"FKK-Ort")}</strong></div>
+      <div><span>Typ</span><strong>${escapeHtml(p.type||"–")}</strong></div>
+    </div>
+    <div class="profileSection"><h3>ℹ️ Informationen</h3><p>${escapeHtml(p.status||"Keine zusätzlichen Angaben hinterlegt.")}</p></div>
+    ${accessHint(p) ? `<div class="profileSection"><h3>⚠️ Zugang & Hinweise</h3><p>${escapeHtml(accessHint(p))}</p></div>` : ""}
+    <div class="profileSection"><h3>📚 Quelle</h3><p>${sourceLink}</p><p class="profileMuted">${escapeHtml(p.evidence||"Keine weitere Einordnung hinterlegt.")}</p><p class="profileMuted">Datenstand: ${DATA_AUDIT_DATE}</p></div>
+    <div class="profileActions">
+      <button id="profileFavoriteBtn" class="modalAction" type="button">${favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen"}</button>
+      <button id="profileMapBtn" class="modalAction" type="button">🗺️ Auf Karte zeigen</button>
+      ${navigationLinks(p)}
+      ${reportIssueLink(p)}
+    </div>`;
+  modalEl.classList.remove("hidden");
+  document.body.classList.add("modalOpen");
+  const favBtn=document.getElementById("profileFavoriteBtn");
+  favBtn.onclick=()=>{
+    if(favorites.has(p.name)) favorites.delete(p.name); else favorites.add(p.name);
+    localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
+    favBtn.textContent=favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen";
+    renderFavorites();
+  };
+  document.getElementById("profileMapBtn").onclick=()=>{
+    modalEl.classList.add("hidden");
+    document.body.classList.remove("modalOpen");
+    setFooterActive("footerMap");
+    scrollToId("mapSection");
+    setTimeout(()=>{
+      map.invalidateSize();
+      map.flyTo([p.lat,p.lon],15,{duration:1.15,easeLinearity:0.12});
+      const marker=resultMarkers.find(m=>m.__fkkName===p.name);
+      if(marker) marker.openPopup();
+    },220);
+  };
+}
+
+function closePlaceProfile(){
+  if(modalEl){ modalEl.classList.add("hidden"); document.body.classList.remove("modalOpen"); }
+}
+if(closeModalEl) closeModalEl.addEventListener("click",closePlaceProfile);
+if(modalEl) modalEl.addEventListener("click",e=>{if(e.target===modalEl) closePlaceProfile();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape") closePlaceProfile();});
 
 radiusEl.addEventListener("input", () => {
   radiusValueEl.textContent = radiusEl.value;
@@ -525,7 +583,10 @@ function renderResults(items, radius){
       </div>`, {maxWidth:300, className:"fkkMapPopup"});
     marker.on("popupopen", () => {
       const popup = marker.getPopup();
-      const button = popup && popup.getElement() ? popup.getElement().querySelector(".mapFavoriteButton") : null;
+      const popupEl = popup && popup.getElement ? popup.getElement() : null;
+      const button = popupEl ? popupEl.querySelector(".mapFavoriteButton") : null;
+      const detailsButton = popupEl ? popupEl.querySelector(".mapDetailsButton") : null;
+      if (detailsButton) detailsButton.onclick = (event) => { event.stopPropagation(); openPlaceProfile(p); };
       if (!button) return;
       button.onclick = (event) => {
         event.stopPropagation();
@@ -568,7 +629,7 @@ function renderResults(items, radius){
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
       <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand: ${DATA_AUDIT_DATE}</div>
-      <div class="resultActions"><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button>${reportIssueLink(p)}</div>
+      <div class="resultActions"><button class="profileButton" type="button">🏖️ Ortsdetails</button><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button>${reportIssueLink(p)}</div>
       ${navigationLinks(p)}`;
     const favoriteButton = card.querySelector(".favoriteButton");
     favoriteButton.addEventListener("click", (event) => {
@@ -583,6 +644,8 @@ function renderResults(items, radius){
       marker.setIcon(makeFkkIcon(isFavorite));
       favoriteButton.title = favoriteButton.getAttribute("aria-label");
     });
+    const profileButton=card.querySelector(".profileButton");
+    profileButton.addEventListener("click",(event)=>{ event.stopPropagation(); openPlaceProfile(p); });
     const mapResultButton=card.querySelector(".mapResultButton");
     mapResultButton.addEventListener("click",(event)=>{
       event.stopPropagation();
