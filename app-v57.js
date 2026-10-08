@@ -1,4 +1,17 @@
-document.addEventListener("DOMContentLoaded",()=>{ const saved=localStorage.getItem("fkkDarkMode"); if(saved==="1"){document.body.classList.add("darkMode"); document.querySelector('meta[name="theme-color"]')?.setAttribute("content","#0b1724");} });
+document.addEventListener("DOMContentLoaded",()=>{
+  const saved=localStorage.getItem("fkkDarkMode");
+  const dark=saved==="1";
+  document.body.classList.toggle("darkMode",dark);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content",dark?"#0b1724":"#0d6efd");
+});
+function setDarkMode(enabled){
+  document.body.classList.toggle("darkMode",enabled);
+  localStorage.setItem("fkkDarkMode",enabled?"1":"0");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content",enabled?"#0b1724":"#0d6efd");
+  const b=document.getElementById("moreTheme");
+  if(b) b.textContent=enabled?"☀️ Heller Modus":"🌙 Dunkler Modus";
+  if(typeof map!=="undefined" && map) setTimeout(()=>map.invalidateSize(),80);
+}
 // FKK Strand Finder v56
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
@@ -861,10 +874,10 @@ function showMore(){
   const modal=document.getElementById("modal");
   document.getElementById("modalTitle").textContent="Mehr";
   const darkMode=localStorage.getItem("fkkDarkMode")==="1";
-  document.getElementById("modalText").innerHTML=`<div>FKK Strand Finder v58.7</div><div class="modalActions"><button class="modalAction" id="moreAbout" type="button">ℹ️ Über die App</button><button class="modalAction" id="morePrivacy" type="button">🔒 Datenschutz</button><button class="modalAction" id="moreTheme" type="button">${darkMode?"☀️ Heller Modus":"🌙 Dunkler Modus"}</button><button class="modalAction" id="moreReset" type="button">☆ Favoriten zurücksetzen</button></div>`;
+  document.getElementById("modalText").innerHTML=`<div>FKK Strand Finder v58.9</div><div class="modalActions"><button class="modalAction" id="moreAbout" type="button">ℹ️ Über die App</button><button class="modalAction" id="morePrivacy" type="button">🔒 Datenschutz</button><button class="modalAction" id="moreTheme" type="button">${darkMode?"☀️ Heller Modus":"🌙 Dunkler Modus"}</button><button class="modalAction" id="moreReset" type="button">☆ Favoriten zurücksetzen</button></div>`;
   modal.classList.remove("hidden");
   document.getElementById("moreAbout").onclick=()=>{document.getElementById("modalText").innerHTML='<div><strong>FKK Strand Finder</strong><br>Suche FKK-Badestellen nach Entfernung. Die Daten sind dokumentiert und können sich ändern; vor Ort gelten Beschilderung und Badeordnung.</div>';};
-  document.getElementById("moreTheme").onclick=()=>{ const next=!document.body.classList.contains("darkMode"); document.body.classList.toggle("darkMode",next); localStorage.setItem("fkkDarkMode",next?"1":"0"); document.querySelector('meta[name="theme-color"]')?.setAttribute("content",next?"#0b1724":"#0d6efd"); document.getElementById("moreTheme").textContent=next?"☀️ Heller Modus":"🌙 Dunkler Modus"; if(map) setTimeout(()=>map.invalidateSize(),50); };
+  document.getElementById("moreTheme").onclick=()=>setDarkMode(!document.body.classList.contains("darkMode"));
   document.getElementById("morePrivacy").onclick=()=>{document.getElementById("modalText").innerHTML='<div class="privacyCard"><h3>🔒 Datenschutz</h3><p><strong>Dein Standort wird nicht von der App gespeichert.</strong> GPS-Koordinaten werden nur während der aktuellen Suche im Arbeitsspeicher verwendet.</p><p>Deine Favoriten und deine gewählte Favoriten-Sortierung werden ausschließlich lokal in deinem Browser gespeichert. Es gibt dafür kein Benutzerkonto.</p><p>Wenn du einen Ort suchst, wird die eingegebene Ortsbezeichnung an <strong>OpenStreetMap/Nominatim</strong> zur Geocodierung gesendet. Für Navigation öffnet die App Apple Karten oder Google Maps erst nach deiner Auswahl.</p><p>Die Standortfreigabe wird vom Browser/iPhone gesteuert. Du kannst sie jederzeit in den Website-Einstellungen widerrufen.</p><p class="privacySmall">Die App verwendet keine eigene Nutzeranalyse und übermittelt den GPS-Standort nicht an einen eigenen Server.</p></div>';};
   document.getElementById("moreReset").onclick=()=>{favorites.clear();localStorage.removeItem("fkkFavorites");modal.classList.add("hidden"); if(searchOrigin) searchPlaces();};
 }
@@ -884,4 +897,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.8";
+window.FKK_APP_VERSION = "v58.9";
