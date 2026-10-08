@@ -611,3 +611,19 @@ body.darkMode .quality-good{background:#103a2a;color:#9be5bd;border-color:#256a4
 /* v58.12 – Wetter und ungefähre Fahrzeit in Ortsprofilen */
 .profileLiveGrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}.profileLiveCard{padding:12px;border:1px solid #dfe9f2;border-radius:16px;background:rgba(248,251,254,.9)}.profileLiveCard h3{margin:0 0 8px;font-size:14px}.liveWeather,.driveTime{display:grid;gap:6px}.weatherMain{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.weatherMain strong{font-size:20px}.weatherIcon{font-size:25px}.weatherMeta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#536b80}.profileLiveCard small,.driveTime small,.liveWeather small{font-size:10px;color:#7a8d9f}.driveTime strong{font-size:16px}.driveTime span{font-size:12px;color:#536b80}.liveDataLoading,.liveDataMuted{font-size:12px;color:#6f8497;padding:4px 0}.liveDataLoading{animation:livePulse 1.4s ease-in-out infinite}@keyframes livePulse{50%{opacity:.55}}
 body.darkMode .profileLiveCard{background:#102334;border-color:#294458}.body.darkMode .weatherMeta,.body.darkMode .driveTime span{color:#a9bdca}body.darkMode .profileLiveCard small,body.darkMode .driveTime small,body.darkMode .liveDataLoading,body.darkMode .liveDataMuted{color:#8fa6b8}
+
+/* v58.13 – gefundene FKK-Orte transparenter */
+#results .card{
+  background:rgba(255,255,255,.50);
+  border-color:rgba(255,255,255,.62);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 8px 24px rgba(27,72,117,.055);
+}
+#results .card:hover{background:rgba(255,255,255,.58)}
+body.darkMode #results .card{
+  background:rgba(14,29,43,.58);
+  border-color:rgba(176,205,226,.16);
+  box-shadow:0 8px 24px rgba(0,0,0,.16);
+}
+body.darkMode #results .card:hover{background:rgba(14,29,43,.66)}

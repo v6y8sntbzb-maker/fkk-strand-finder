@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_AUDIT_DATE = "08.10.2026";
-const APP_VERSION = "v58.12";
+const APP_VERSION = "v58.13";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -978,4 +978,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.12";
+window.FKK_APP_VERSION = "v58.13";

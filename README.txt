@@ -42,4 +42,4 @@ v58.7 Datenschutz: GPS-Koordinaten werden nur während der aktuellen Suche im Ar
 v58.11: Ortsprofile erweitert um Datenqualität, belegte Hinweise und klarere Prüfkennzeichnung.
 
 
-Hinweis v58.12: Ortsprofile zeigen online aktuelle Wetterdaten über Open-Meteo und – wenn ein Suchort festgelegt ist – eine ungefähre Fahrzeit über OSRM. Diese Live-Dienste benötigen eine Internetverbindung.
+Hinweis v58.13: Ortsprofile zeigen online aktuelle Wetterdaten über Open-Meteo und – wenn ein Suchort festgelegt ist – eine ungefähre Fahrzeit über OSRM. Diese Live-Dienste benötigen eine Internetverbindung.
