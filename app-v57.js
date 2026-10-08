@@ -427,6 +427,20 @@ function navMode(p){
   return (p.evidence==="offizielle Quelle" || p.evidence==="OpenStreetMap-basierte Quelle") ? "coords" : "place";
 }
 
+function reportIssueLink(p){
+  const title = `FKK-Ort prüfen: ${p.name}`;
+  const body = [
+    `Bitte diesen FKK-Ort prüfen: ${p.name}`,
+    `Koordinaten: ${p.lat}, ${p.lon}`,
+    `Status: ${p.status || ""}`,
+    `Quelle: ${p.source || ""}`,
+    `Quelle-Link: ${p.sourceUrl || ""}`,
+    `Meldung: `
+  ].join("\n");
+  const url = `https://github.com/v6y8sntbzb-maker/fkk-strand-finder/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+  return `<a class="reportBtn" href="${url}" target="_blank" rel="noopener">⚠️ Fehler melden</a>`;
+}
+
 function navigationLinks(p){
   const mode=navMode(p);
   const query=`${p.name}, Deutschland`;
@@ -472,6 +486,7 @@ function renderResults(items, radius){
         <div class="mapPlacePopupActions">
           <button class="mapFavoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${popupFavoriteLabel}" title="${popupFavoriteLabel}">${favorites.has(p.name)?"★":"☆"} ${popupFavoriteLabel}</button>
           ${popupNav}
+          ${reportIssueLink(p)}
         </div>
       </div>`, {maxWidth:300, className:"fkkMapPopup"});
     marker.on("popupopen", () => {
@@ -519,7 +534,7 @@ function renderResults(items, radius){
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
       <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand: 05.10.2026</div>
-      <div class="resultActions"><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button></div>
+      <div class="resultActions"><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button>${reportIssueLink(p)}</div>
       ${navigationLinks(p)}`;
     const favoriteButton = card.querySelector(".favoriteButton");
     favoriteButton.addEventListener("click", (event) => {
@@ -651,7 +666,7 @@ function renderFavorites(){
   const cards=favItems.map(p=>{
     const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
     const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>` : "";
-    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${sourceLink}</div></div>`;
+    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
   }).join("");
   document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button></div><div class="favoriteList">${cards}</div>`;
   document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{

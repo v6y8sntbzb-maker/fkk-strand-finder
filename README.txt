@@ -21,3 +21,6 @@ v57.7: „In meiner Nähe“ führt direkt zur sortierten Trefferliste; Ergebnis
 
 
 v57.8: Favoriten erweitert – Favoriten werden bei vorhandenem Suchstandort nach Entfernung sortiert. Die Favoritenansicht enthält jetzt „Alle auf Karte“ und die Verifizierungskennzeichnung.
+
+
+v57.9: Bei jedem FKK-Ort gibt es jetzt „⚠️ Fehler melden“. Der Button öffnet ein vorbereitetes GitHub-Issue mit Ort, Koordinaten, Status und Quelle, damit falsche Positionen oder veraltete FKK-Angaben direkt gemeldet werden können.

@@ -506,3 +506,10 @@ html, body {
 .favoriteMapAll{border:1px solid #d4e8ff;border-radius:11px;background:#eef7ff;color:#126dca;font:800 10px/1.2 inherit;padding:8px 10px;cursor:pointer;white-space:nowrap}
 .favoriteMapAll:active{transform:scale(.98)}
 .favoriteModalCard .verificationBadge{margin:7px 0 2px}
+
+
+/* v57.9 – Datenqualität / Fehler melden */
+.reportBtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border-radius:12px;border:1px solid rgba(220,90,70,.25);background:rgba(255,245,242,.9);color:#8d3f32;text-decoration:none;font-weight:700;font-size:13px;margin-top:8px}
+.reportBtn:hover{filter:brightness(.98)}
+.mapPlacePopupActions .reportBtn{width:100%;box-sizing:border-box}
+.resultActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
