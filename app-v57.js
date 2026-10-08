@@ -18,6 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_AUDIT_DATE = "08.10.2026";
+const APP_VERSION = "v58.12";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -304,6 +305,53 @@ const modalTitleEl = document.getElementById("modalTitle");
 const modalTextEl = document.getElementById("modalText");
 const closeModalEl = document.getElementById("closeModal");
 
+
+function weatherDescription(code){
+  const map={0:"Klar",1:"Überwiegend klar",2:"Teilweise bewölkt",3:"Bedeckt",45:"Nebel",48:"Reifnebel",51:"Leichter Nieselregen",53:"Nieselregen",55:"Starker Nieselregen",61:"Leichter Regen",63:"Regen",65:"Starker Regen",71:"Leichter Schneefall",73:"Schneefall",75:"Starker Schneefall",80:"Regenschauer",81:"Regenschauer",82:"Starke Regenschauer",95:"Gewitter",96:"Gewitter mit Hagel",99:"Gewitter mit Hagel"};
+  return map[code] || "Wetterdaten verfügbar";
+}
+function weatherIcon(code){
+  if(code===0) return "☀️";
+  if([1,2].includes(code)) return "🌤️";
+  if([3,45,48].includes(code)) return "☁️";
+  if([51,53,55,61,63,65,80,81,82].includes(code)) return "🌧️";
+  if([71,73,75].includes(code)) return "❄️";
+  if([95,96,99].includes(code)) return "⛈️";
+  return "🌤️";
+}
+async function loadPlaceWeather(p){
+  const el=document.getElementById("profileWeather");
+  if(!el) return;
+  if(!navigator.onLine){ el.innerHTML='<div class="liveDataMuted">📡 Wetter ist offline nicht verfügbar.</div>'; return; }
+  el.innerHTML='<div class="liveDataLoading">🌤️ Wetter wird geladen …</div>';
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(p.lat)}&longitude=${encodeURIComponent(p.lon)}&current=temperature_2m,weather_code,wind_speed_10m,precipitation&timezone=auto`;
+    const r=await fetch(url,{cache:"no-store"});
+    if(!r.ok) throw new Error("weather");
+    const d=await r.json(); const c=d.current||{};
+    el.innerHTML=`<div class="liveWeather"><div class="weatherMain"><span class="weatherIcon">${weatherIcon(c.weather_code)}</span><strong>${Number.isFinite(c.temperature_2m)?Math.round(c.temperature_2m):"–"} °C</strong><span>${escapeHtml(weatherDescription(c.weather_code))}</span></div><div class="weatherMeta"><span>💨 ${Number.isFinite(c.wind_speed_10m)?Math.round(c.wind_speed_10m):"–"} km/h</span><span>🌧️ ${Number.isFinite(c.precipitation)?c.precipitation.toFixed(1):"–"} mm</span></div><small>Aktuelle Wetterdaten · Open-Meteo</small></div>`;
+  }catch(e){ el.innerHTML='<div class="liveDataMuted">⚠️ Wetterdaten konnten gerade nicht geladen werden.</div>'; }
+}
+async function loadDriveTime(p){
+  const el=document.getElementById("profileDrive");
+  if(!el) return;
+  if(!searchOrigin){ el.innerHTML='<div class="liveDataMuted">📍 Suchort festlegen, um die ungefähre Fahrzeit zu berechnen.</div>'; return; }
+  if(!navigator.onLine){ el.innerHTML='<div class="liveDataMuted">📡 Fahrzeit ist offline nicht verfügbar.</div>'; return; }
+  el.innerHTML='<div class="liveDataLoading">🧭 Fahrzeit wird berechnet …</div>';
+  try{
+    const coords=`${searchOrigin.lon},${searchOrigin.lat};${p.lon},${p.lat}`;
+    const url=`https://router.project-osrm.org/route/v1/driving/${coords}?overview=false&alternatives=false&steps=false`;
+    const r=await fetch(url,{cache:"no-store"});
+    if(!r.ok) throw new Error("route");
+    const d=await r.json(); const sec=d.routes?.[0]?.duration;
+    if(!Number.isFinite(sec)) throw new Error("route");
+    const mins=Math.max(1,Math.round(sec/60));
+    const h=Math.floor(mins/60), m=mins%60;
+    const text=h?`${h} Std. ${m} Min.`:`${m} Min.`;
+    el.innerHTML=`<div class="driveTime"><strong>🧭 ca. ${text}</strong><span>Fahrzeit ab ${escapeHtml(searchOrigin.label||"deinem Suchort")}</span><small>Routenberechnung · OpenStreetMap/OSRM</small></div>`;
+  }catch(e){ el.innerHTML='<div class="liveDataMuted">⚠️ Fahrzeit konnte gerade nicht berechnet werden.</div>'; }
+}
+
 function openPlaceProfile(p){
   if(!modalEl) return;
   const v=verificationInfo(p);
@@ -313,15 +361,18 @@ function openPlaceProfile(p){
   modalTextEl.innerHTML=`
     <div class="profileHero">
       <div class="profileDistance">📍 ${p.distance!=null ? p.distance.toFixed(1)+" km entfernt" : "Entfernung nicht berechnet"}</div>
-      <div class="profileBadges"><span class="destinationBadge destination-${d.kind}">📍 ${d.label}</span><span class="verificationBadge verification-${v.kind}">${v.icon} ${v.label}</span></div>
+      <div class="profileBadges"><span class="destinationBadge destination-${d.kind}">📍 ${d.label}</span><span class="verificationBadge verification-${v.kind}">${v.icon} ${v.label}</span><span class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</span></div>
     </div>
     <div class="profileGrid">
       <div><span>Art</span><strong>${escapeHtml(p.label||"FKK-Ort")}</strong></div>
       <div><span>Typ</span><strong>${escapeHtml(p.type||"–")}</strong></div>
     </div>
+    <div class="profileLiveGrid"><div class="profileLiveCard"><h3>🌤️ Wetter vor Ort</h3><div id="profileWeather"></div></div><div class="profileLiveCard"><h3>🧭 Fahrzeit</h3><div id="profileDrive"></div></div></div>
     <div class="profileSection"><h3>ℹ️ Informationen</h3><p>${escapeHtml(p.status||"Keine zusätzlichen Angaben hinterlegt.")}</p></div>
+    <div class="profileSection"><h3>🧾 Belegte Hinweise</h3>${amenityHints(p).length ? `<div class="amenityList">${amenityHints(p).map(x=>`<span>${x}</span>`).join("")}</div>` : `<p class="profileMuted">Für diesen Ort sind aktuell keine zusätzlichen Ausstattungsangaben hinterlegt.</p>`}</div>
     ${accessHint(p) ? `<div class="profileSection"><h3>⚠️ Zugang & Hinweise</h3><p>${escapeHtml(accessHint(p))}</p></div>` : ""}
-    <div class="profileSection"><h3>📚 Quelle</h3><p>${sourceLink}</p><p class="profileMuted">${escapeHtml(p.evidence||"Keine weitere Einordnung hinterlegt.")}</p><p class="profileMuted">Datenstand: ${DATA_AUDIT_DATE}</p></div>
+    <div class="profileSection"><h3>🔎 Datenqualität</h3><p><strong>${qualityInfo(p).icon} ${qualityInfo(p).label}</strong></p><p class="profileMuted">FKK-Status: ${escapeHtml(v.label)} · Zielpunkt: ${escapeHtml(d.label)}</p><p class="profileMuted">Geprüft: ${DATA_AUDIT_DATE}</p></div>
+    <div class="profileSection"><h3>📚 Quelle</h3><p>${sourceLink}</p><p class="profileMuted">${escapeHtml(p.evidence||"Keine weitere Einordnung hinterlegt.")}</p></div>
     <div class="profileActions">
       <button id="profileFavoriteBtn" class="modalAction" type="button">${favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen"}</button>
       <button id="profileMapBtn" class="modalAction" type="button">🗺️ Auf Karte zeigen</button>
@@ -330,6 +381,8 @@ function openPlaceProfile(p){
     </div>`;
   modalEl.classList.remove("hidden");
   document.body.classList.add("modalOpen");
+  loadPlaceWeather(p);
+  loadDriveTime(p);
   const favBtn=document.getElementById("profileFavoriteBtn");
   favBtn.onclick=()=>{
     if(favorites.has(p.name)) favorites.delete(p.name); else favorites.add(p.name);
@@ -521,6 +574,31 @@ function accessHint(p){
   return status;
 }
 
+function qualityInfo(p){
+  const v=verificationInfo(p);
+  const d=destinationInfo(p);
+  const source=String(p.source||"").toLowerCase();
+  const evidence=String(p.evidence||"").toLowerCase();
+  let score=0;
+  if(v.kind==="official") score+=2; else if(v.kind==="directory") score+=1;
+  if(d.kind==="direct") score+=2;
+  if(p.sourceUrl) score+=1;
+  if(p.status) score+=1;
+  if(score>=5) return {label:"Sehr gut belegt",kind:"good",icon:"✓"};
+  if(score>=3) return {label:"Geprüfte Angaben",kind:"checked",icon:"●"};
+  return {label:"Weitere Prüfung empfohlen",kind:"review",icon:"!"};
+}
+
+function amenityHints(p){
+  const text=String(p.status||"").toLowerCase();
+  const out=[];
+  if(/parkplatz|parken/.test(text)) out.push("🚗 Parkplatz-Hinweis");
+  if(/wc|toilette|sanitär/.test(text)) out.push("🚻 WC/Sanitär erwähnt");
+  if(/eintritt|gebühr|kostenpflicht/.test(text)) out.push("💶 Eintritt/Gebühr erwähnt");
+  if(/saison|mai|juni|juli|august|september/.test(text)) out.push("🗓️ Saison-/Öffnungshinweis");
+  return out;
+}
+
 function destinationInfo(p){
   const evidence=String(p.evidence||"").toLowerCase();
   const status=String(p.status||"").toLowerCase();
@@ -621,6 +699,7 @@ function renderResults(items, radius){
         <div class="mapPlacePopupMeta"><strong>${escapeHtml(p.label)}</strong> · ${escapeHtml(p.type)}</div>
         <div class="destinationBadge destination-${destinationInfo(p).kind}">📍 ${destinationInfo(p).label}</div>
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
+        <div class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</div>
         <div class="mapPlacePopupStatus">${escapeHtml(p.status)}</div>
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
         <div class="mapPlacePopupActions">
@@ -678,6 +757,7 @@ function renderResults(items, radius){
         <div class="detailLine"><strong>${escapeHtml(p.label)}</strong> <span class="typePill">${escapeHtml(p.type)}</span></div>
         <div class="destinationBadge destination-${destinationInfo(p).kind}">📍 ${destinationInfo(p).label}</div>
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
+        <div class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</div>
         <div class="detailLine">ℹ️ ${escapeHtml(p.status)}</div>
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
@@ -879,7 +959,7 @@ function showMore(){
   modal.classList.remove("hidden");
   document.getElementById("moreAbout").onclick=()=>{document.getElementById("modalText").innerHTML='<div><strong>FKK Strand Finder</strong><br>Suche FKK-Badestellen nach Entfernung. Die Daten sind dokumentiert und können sich ändern; vor Ort gelten Beschilderung und Badeordnung.</div>';};
   document.getElementById("moreTheme").onclick=()=>setDarkMode(!document.body.classList.contains("darkMode"));
-  document.getElementById("morePrivacy").onclick=()=>{document.getElementById("modalText").innerHTML='<div class="privacyCard"><h3>🔒 Datenschutz</h3><p><strong>Dein Standort wird nicht von der App gespeichert.</strong> GPS-Koordinaten werden nur während der aktuellen Suche im Arbeitsspeicher verwendet.</p><p>Deine Favoriten und deine gewählte Favoriten-Sortierung werden ausschließlich lokal in deinem Browser gespeichert. Es gibt dafür kein Benutzerkonto.</p><p>Wenn du einen Ort suchst, wird die eingegebene Ortsbezeichnung an <strong>OpenStreetMap/Nominatim</strong> zur Geocodierung gesendet. Für Navigation öffnet die App Apple Karten oder Google Maps erst nach deiner Auswahl.</p><p>Die Standortfreigabe wird vom Browser/iPhone gesteuert. Du kannst sie jederzeit in den Website-Einstellungen widerrufen.</p><p class="privacySmall">Die App verwendet keine eigene Nutzeranalyse und übermittelt den GPS-Standort nicht an einen eigenen Server.</p></div>';};
+  document.getElementById("morePrivacy").onclick=()=>{document.getElementById("modalText").innerHTML='<div class="privacyCard"><h3>🔒 Datenschutz</h3><p><strong>Dein Standort wird nicht von der App gespeichert.</strong> GPS-Koordinaten werden nur während der aktuellen Suche im Arbeitsspeicher verwendet.</p><p>Deine Favoriten und deine gewählte Favoriten-Sortierung werden ausschließlich lokal in deinem Browser gespeichert. Es gibt dafür kein Benutzerkonto.</p><p>Wenn du einen Ort suchst, wird die eingegebene Ortsbezeichnung an <strong>OpenStreetMap/Nominatim</strong> zur Geocodierung gesendet. Für Navigation öffnet die App Apple Karten oder Google Maps erst nach deiner Auswahl.</p><p>Für Wetterdaten werden die Koordinaten des ausgewählten FKK-Ortes an <strong>Open-Meteo</strong> abgefragt. Für die ungefähre Fahrzeit werden Suchort und Ziel an <strong>OSRM/OpenStreetMap</strong> übermittelt. Diese Live-Funktionen sind optional und benötigen Internet.</p><p>Die Standortfreigabe wird vom Browser/iPhone gesteuert. Du kannst sie jederzeit in den Website-Einstellungen widerrufen.</p><p class="privacySmall">Die App verwendet keine eigene Nutzeranalyse und übermittelt den GPS-Standort nicht an einen eigenen Server.</p></div>';};
   document.getElementById("moreReset").onclick=()=>{favorites.clear();localStorage.removeItem("fkkFavorites");modal.classList.add("hidden"); if(searchOrigin) searchPlaces();};
 }
 document.getElementById("footerStart").addEventListener("click",()=>{setFooterActive("footerStart");scrollToId("startSection");});
@@ -898,4 +978,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.10";
+window.FKK_APP_VERSION = "v58.12";
