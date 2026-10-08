@@ -401,6 +401,7 @@ function initMap(){
     return;
   }
   map = L.map("map", {
+    zoomControl: false,
     zoomAnimation: true,
     fadeAnimation: true,
     markerZoomAnimation: true,
@@ -874,7 +875,7 @@ function showMore(){
   const modal=document.getElementById("modal");
   document.getElementById("modalTitle").textContent="Mehr";
   const darkMode=localStorage.getItem("fkkDarkMode")==="1";
-  document.getElementById("modalText").innerHTML=`<div>FKK Strand Finder v58.9</div><div class="modalActions"><button class="modalAction" id="moreAbout" type="button">ℹ️ Über die App</button><button class="modalAction" id="morePrivacy" type="button">🔒 Datenschutz</button><button class="modalAction" id="moreTheme" type="button">${darkMode?"☀️ Heller Modus":"🌙 Dunkler Modus"}</button><button class="modalAction" id="moreReset" type="button">☆ Favoriten zurücksetzen</button></div>`;
+  document.getElementById("modalText").innerHTML=`<div>FKK Strand Finder v58.10</div><div class="modalActions"><button class="modalAction" id="moreAbout" type="button">ℹ️ Über die App</button><button class="modalAction" id="morePrivacy" type="button">🔒 Datenschutz</button><button class="modalAction" id="moreTheme" type="button">${darkMode?"☀️ Heller Modus":"🌙 Dunkler Modus"}</button><button class="modalAction" id="moreReset" type="button">☆ Favoriten zurücksetzen</button></div>`;
   modal.classList.remove("hidden");
   document.getElementById("moreAbout").onclick=()=>{document.getElementById("modalText").innerHTML='<div><strong>FKK Strand Finder</strong><br>Suche FKK-Badestellen nach Entfernung. Die Daten sind dokumentiert und können sich ändern; vor Ort gelten Beschilderung und Badeordnung.</div>';};
   document.getElementById("moreTheme").onclick=()=>setDarkMode(!document.body.classList.contains("darkMode"));
@@ -897,4 +898,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.9";
+window.FKK_APP_VERSION = "v58.10";

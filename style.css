@@ -599,3 +599,6 @@ body.darkMode .footerNav{background:rgba(9,24,37,.94);border-color:#294458}
 body.darkMode .footerNav small{color:#9fb4c5}
 body.darkMode .footerNav .active small{color:#73c4ff}
 @media(prefers-reduced-motion:reduce){body.darkMode *{transition:none!important}}
+
+/* v58.10: Leaflet +/− zoom buttons removed; zoom remains via gestures. */
+#map .leaflet-control-zoom{display:none!important}
