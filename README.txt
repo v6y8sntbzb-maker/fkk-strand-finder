@@ -35,3 +35,5 @@ v58.3: Offline-Grundmodus ergänzt. Die App, FKK-Datenbank und Favoriten können
 
 
 Hinweis v58.5: Fehler melden wurde zu einem strukturierten Formular erweitert. Die Meldung wird mit Ort, Koordinaten, Status und Quelle als GitHub-Issue vorbereitet; der Nutzer sendet sie selbst ab.
+
+v58.6 Datenschutz: GPS-Koordinaten werden nur während der aktuellen Suche im Arbeitsspeicher verwendet. Favoriten und Favoriten-Sortierung werden lokal im Browser gespeichert. Die eingegebene Ortsbezeichnung kann zur Geocodierung an OpenStreetMap/Nominatim gesendet werden.

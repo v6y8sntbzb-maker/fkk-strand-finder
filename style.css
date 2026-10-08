@@ -550,3 +550,9 @@ html, body {
 .reportActions{display:grid;grid-template-columns:1fr 1.3fr;gap:8px;margin-top:13px;}
 .reportActions .reportSubmit{background:#126dca;color:#fff;}
 .reportPrivacy{font-size:10px!important;color:#8794a1!important;line-height:1.4!important;margin-top:10px!important;}
+
+/* v58.6 – Datenschutz */
+.privacyCard{color:#52667a;line-height:1.5;font-size:13px}
+.privacyCard h3{margin:0 0 9px;color:#173452;font-size:17px}
+.privacyCard p{margin:0 0 10px}
+.privacyCard .privacySmall{font-size:11px;color:#8794a1;border-top:1px solid #e8eef3;padding-top:10px}
