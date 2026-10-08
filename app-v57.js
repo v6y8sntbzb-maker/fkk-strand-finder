@@ -520,17 +520,50 @@ function navMode(p){
 }
 
 function reportIssueLink(p){
-  const title = `FKK-Ort prüfen: ${p.name}`;
-  const body = [
-    `Bitte diesen FKK-Ort prüfen: ${p.name}`,
-    `Koordinaten: ${p.lat}, ${p.lon}`,
-    `Status: ${p.status || ""}`,
-    `Quelle: ${p.source || ""}`,
-    `Quelle-Link: ${p.sourceUrl || ""}`,
-    `Meldung: `
-  ].join("\n");
-  const url = `https://github.com/v6y8sntbzb-maker/fkk-strand-finder/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-  return `<a class="reportBtn" href="${url}" target="_blank" rel="noopener">⚠️ Fehler melden</a>`;
+  return `<button class="reportBtn reportButton" type="button" data-report-name="${escapeHtml(p.name)}">⚠️ Fehler melden</button>`;
+}
+
+function openReportForm(p){
+  const modal=document.getElementById("modal");
+  document.getElementById("modalTitle").textContent="⚠️ FKK-Ort melden";
+  document.getElementById("modalText").innerHTML=`
+    <div class="reportIntro"><strong>${escapeHtml(p.name)}</strong><br><span>Hilf uns, diesen Eintrag aktuell zu halten.</span></div>
+    <label class="reportLabel" for="reportReason">Was stimmt nicht?</label>
+    <select id="reportReason" class="reportSelect">
+      <option value="FKK-Ort nicht mehr vorhanden">FKK-Ort nicht mehr vorhanden</option>
+      <option value="Standort falsch">Standort ist falsch</option>
+      <option value="Zugang nicht möglich">Zugang nicht möglich</option>
+      <option value="FKK nicht bestätigt">FKK nicht mehr bestätigt</option>
+      <option value="Angaben veraltet oder falsch">Angaben veraltet oder falsch</option>
+      <option value="Sonstiges">Sonstiges</option>
+    </select>
+    <label class="reportLabel" for="reportMessage">Zusätzliche Hinweise</label>
+    <textarea id="reportMessage" class="reportTextarea" rows="4" placeholder="Was hast du vor Ort festgestellt?"></textarea>
+    <div class="reportActions">
+      <button class="modalAction reportCancel" type="button">Abbrechen</button>
+      <button class="modalAction reportSubmit" type="button">Meldung vorbereiten</button>
+    </div>
+    <p class="reportPrivacy">Es werden keine Standortdaten von dir gespeichert. Beim Absenden öffnet sich GitHub, damit du die Meldung selbst abschicken kannst.</p>`;
+  modal.classList.remove("hidden");
+  document.querySelector(".reportCancel").onclick=()=>modal.classList.add("hidden");
+  document.querySelector(".reportSubmit").onclick=()=>{
+    const reason=document.getElementById("reportReason").value;
+    const message=document.getElementById("reportMessage").value.trim();
+    const title=`FKK-Ort melden: ${p.name}`;
+    const body=[
+      `### Meldung zum FKK-Ort`,
+      `**Ort:** ${p.name}`,
+      `**Meldegrund:** ${reason}`,
+      `**Koordinaten:** ${p.lat}, ${p.lon}`,
+      `**Aktueller Status:** ${p.status || ""}`,
+      `**Quelle:** ${p.source || ""}`,
+      `**Quelle-Link:** ${p.sourceUrl || ""}`,
+      `**Hinweise des Nutzers:** ${message || "Keine zusätzlichen Hinweise."}`
+    ].join("\n\n");
+    const url=`https://github.com/v6y8sntbzb-maker/fkk-strand-finder/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=${encodeURIComponent("Datenprüfung")}`;
+    window.open(url,"_blank","noopener");
+    modal.classList.add("hidden");
+  };
 }
 
 function navigationLinks(p){
@@ -660,6 +693,8 @@ function renderResults(items, radius){
       setTimeout(()=>{ map.invalidateSize(); map.flyTo([p.lat,p.lon],15,{duration:1.15,easeLinearity:0.12}); marker.openPopup(); },220);
     });
     resultsEl.appendChild(card);
+    const reportButton=card.querySelector(".reportButton");
+    reportButton.addEventListener("click",(event)=>{ event.stopPropagation(); openReportForm(p); });
   });
 
   const official=items.filter(p=>verificationInfo(p).kind==="official").length;
@@ -829,9 +864,15 @@ document.getElementById("footerMap").addEventListener("click",()=>{setFooterActi
 document.getElementById("footerFavorites").addEventListener("click",(event)=>{ event.preventDefault(); event.stopPropagation(); showFavorites(); });
 document.getElementById("footerMore").addEventListener("click",showMore);
 document.querySelector(".menuButton").addEventListener("click",showMore);
+document.addEventListener("click",(event)=>{
+  const btn=event.target.closest(".reportButton");
+  if(!btn || !btn.dataset.reportName) return;
+  const place=FKK_PLACES.find(p=>p.name===btn.dataset.reportName);
+  if(place){ event.preventDefault(); event.stopPropagation(); openReportForm(place); }
+});
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.3";
+window.FKK_APP_VERSION = "v58.5";

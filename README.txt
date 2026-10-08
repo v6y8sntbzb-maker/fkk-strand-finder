@@ -32,3 +32,6 @@ v58.2: Vollständige Ortsprofile ergänzt. Ergebnis-Karten und Karten-Popups bie
 
 
 v58.3: Offline-Grundmodus ergänzt. Die App, FKK-Datenbank und Favoriten können nach dem ersten Online-Aufruf weiter geöffnet werden. Bereits geladene Leaflet-/Kartendaten werden nach Möglichkeit zwischengespeichert. Neue Orts-/Adresssuche und nicht bereits geladene Kartenteile benötigen weiterhin Internet.
+
+
+Hinweis v58.5: Fehler melden wurde zu einem strukturierten Formular erweitert. Die Meldung wird mit Ort, Koordinaten, Status und Quelle als GitHub-Issue vorbereitet; der Nutzer sendet sie selbst ab.

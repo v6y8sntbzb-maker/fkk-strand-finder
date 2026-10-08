@@ -537,3 +537,16 @@ html, body {
 .offlineBanner{position:fixed;top:env(safe-area-inset-top,0px);left:50%;transform:translateX(-50%);z-index:3000;width:min(92%,520px);padding:10px 14px;border-radius:0 0 16px 16px;background:rgba(24,42,56,.94);color:#fff;font-size:13px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .offlineBanner.hidden{display:none}
 .favoriteToolbarButtons{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.favoriteToolbarButtons button{border:1px solid #d4e8ff;border-radius:11px;background:#eef7ff;color:#126dca;font-size:10px;font-weight:800;padding:8px 9px}.favoriteShare{background:#f5fbf8!important;color:#16815b!important;border-color:#d8eee4!important}.favoriteSortRow{display:flex;align-items:center;gap:6px;margin-top:5px;color:#71839a;font-size:10px;font-weight:700}.favoriteSortRow select{border:1px solid #dbe7f2;border-radius:9px;background:#fff;color:#34516e;font-size:10px;font-weight:700;padding:5px 7px;max-width:125px}
+
+
+/* v58.5 – strukturiertes Fehler-melden Formular */
+.reportBtn{font-family:inherit;cursor:pointer;box-sizing:border-box;}
+.reportIntro{background:#f7fafc;border:1px solid #e5edf5;border-radius:14px;padding:11px 12px;margin-bottom:13px;color:#173452;line-height:1.4;}
+.reportIntro span{font-size:12px;color:#6d7d8e;}
+.reportLabel{display:block;font-size:12px;font-weight:800;color:#52667a;margin:11px 0 5px;}
+.reportSelect,.reportTextarea{width:100%;box-sizing:border-box;border:1px solid #d9e5ef;border-radius:12px;background:#fff;padding:11px;color:#243b53;font:inherit;font-size:13px;outline:none;}
+.reportTextarea{resize:vertical;min-height:92px;}
+.reportSelect:focus,.reportTextarea:focus{border-color:#9bcdf7;box-shadow:0 0 0 3px rgba(38,145,225,.10);}
+.reportActions{display:grid;grid-template-columns:1fr 1.3fr;gap:8px;margin-top:13px;}
+.reportActions .reportSubmit{background:#126dca;color:#fff;}
+.reportPrivacy{font-size:10px!important;color:#8794a1!important;line-height:1.4!important;margin-top:10px!important;}
