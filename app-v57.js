@@ -620,7 +620,12 @@ function renderResults(items, radius){
       const popupEl = popup && popup.getElement ? popup.getElement() : null;
       const button = popupEl ? popupEl.querySelector(".mapFavoriteButton") : null;
       const detailsButton = popupEl ? popupEl.querySelector(".mapDetailsButton") : null;
+      const reportButton = popupEl ? popupEl.querySelector(".reportButton") : null;
       if (detailsButton) detailsButton.onclick = (event) => { event.stopPropagation(); openPlaceProfile(p); };
+      // Leaflet kann Klicks innerhalb eines Popups abfangen, bevor sie das
+      // globale Dokument-Event erreichen. Deshalb den Melde-Button direkt
+      // am geöffneten Popup verdrahten.
+      if (reportButton) reportButton.onclick = (event) => { event.preventDefault(); event.stopPropagation(); openReportForm(p); };
       if (!button) return;
       button.onclick = (event) => {
         event.stopPropagation();
@@ -879,4 +884,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.5";
+window.FKK_APP_VERSION = "v58.8";
