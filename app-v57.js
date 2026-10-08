@@ -398,6 +398,14 @@ function clearOrigin(){
   clearMarkers();
 }
 
+function verificationInfo(p){
+  const evidence=String(p.evidence||"").toLowerCase();
+  const status=String(p.status||"").toLowerCase();
+  if(evidence==="offizielle quelle") return {kind:"official",label:"Offiziell bestätigt",icon:"✓"};
+  if(/nicht bestätigt|nicht als fkk|unbestätigt|zweifelhaft|unklar/.test(status)) return {kind:"uncertain",label:"Nicht eindeutig bestätigt",icon:"?"};
+  return {kind:"directory",label:"FKK-Quelle vorhanden",icon:"i"};
+}
+
 function navMode(p){
   // Source-backed exact points are preferred. Approximate lake/area points
   // navigate by place name so the user is not sent to a misleading pin.
@@ -442,6 +450,7 @@ function renderResults(items, radius){
         <div class="mapPlacePopupTitle">${escapeHtml(p.name)}</div>
         <div class="mapPlacePopupDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>
         <div class="mapPlacePopupMeta"><strong>${escapeHtml(p.label)}</strong> · ${escapeHtml(p.type)}</div>
+        <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
         <div class="mapPlacePopupStatus">${escapeHtml(p.status)}</div>
         <div class="mapPlacePopupActions">
           <button class="mapFavoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${popupFavoriteLabel}" title="${popupFavoriteLabel}">${favorites.has(p.name)?"★":"☆"} ${popupFavoriteLabel}</button>
@@ -487,6 +496,7 @@ function renderResults(items, radius){
       <div class="meta resultMeta">
         <div class="distanceLine">📍 <strong>${p.distance.toFixed(1)} km</strong> entfernt</div>
         <div class="detailLine"><strong>${escapeHtml(p.label)}</strong> <span class="typePill">${escapeHtml(p.type)}</span></div>
+        <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
         <div class="detailLine">ℹ️ ${escapeHtml(p.status)}</div>
       </div>
       <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}</div>
@@ -512,8 +522,9 @@ function renderResults(items, radius){
     resultsEl.appendChild(card);
   });
 
-  const official=items.filter(p=>p.evidence==="offizielle Quelle").length;
-  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">Davon ${official} mit offizieller Quelle.</span>`;
+  const official=items.filter(p=>verificationInfo(p).kind==="official").length;
+  const directory=items.filter(p=>verificationInfo(p).kind==="directory").length;
+  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} offiziell bestätigt · ${directory} aus FKK-Verzeichnissen/Kartenquellen.</span>`;
 }
 
 function searchPlaces(){
@@ -529,10 +540,9 @@ function searchPlaces(){
     .filter(p=>p.distance<=radiusKm);
 
   if(confirmedOnlyEl && confirmedOnlyEl.checked){
-    items=items.filter(p=>{
-      const text=((p.label||"")+" "+(p.status||"")+" "+(p.evidence||"")).toLowerCase();
-      return !/(nicht bestätigt|nicht als fkk|unbestätigt|zweifelhaft|unklar|möglich)/i.test(text);
-    });
+    // "Offiziell" bedeutet in der App ausschließlich eine ausdrücklich
+    // als offizielle Quelle hinterlegte Bestätigung, nicht OSM oder Verzeichnisse.
+    items=items.filter(p=>verificationInfo(p).kind==="official");
   }
   if(typeFilterEl && typeFilterEl.value!=="all"){
     items=items.filter(p=>p.type===typeFilterEl.value);
