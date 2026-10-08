@@ -29,3 +29,6 @@ v57.9: Bei jedem FKK-Ort gibt es jetzt „⚠️ Fehler melden“. Der Button ö
 v58.1: Kartenansicht erweitert mit Schnellwahl für 10/25/50/100 km und „Hier suchen“ nach Verschieben der Karte.
 
 v58.2: Vollständige Ortsprofile ergänzt. Ergebnis-Karten und Karten-Popups bieten jetzt Ortsdetails mit FKK-Status, Zielpunkt, Typ, Hinweisen, Quelle, Datenstand, Favorit, Kartenansicht, Navigation und Fehler melden.
+
+
+v58.3: Offline-Grundmodus ergänzt. Die App, FKK-Datenbank und Favoriten können nach dem ersten Online-Aufruf weiter geöffnet werden. Bereits geladene Leaflet-/Kartendaten werden nach Möglichkeit zwischengespeichert. Neue Orts-/Adresssuche und nicht bereits geladene Kartenteile benötigen weiterhin Internet.

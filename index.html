@@ -9,8 +9,10 @@
   <title>FKK Strand Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
+  <div id="offlineBanner" class="offlineBanner hidden" role="status">📡 Offline – gespeicherte FKK-Orte und Favoriten sind weiterhin verfügbar.</div>
   <img class="beachBackground" src="beach-background.png" alt="" aria-hidden="true">
   <main class="appShell">
     <header id="startSection" class="topHeader">
@@ -124,5 +126,10 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app-v57.js"></script>
+<script>
+if ("serviceWorker" in navigator) { window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
+function updateOnlineState(){ const b=document.getElementById("offlineBanner"); if(b) b.classList.toggle("hidden",navigator.onLine); }
+window.addEventListener("online",updateOnlineState); window.addEventListener("offline",updateOnlineState); updateOnlineState();
+</script>
 </body>
 </html>
