@@ -641,31 +641,40 @@ function scrollToId(id){
   if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function renderFavorites(){
-  const favItems=FKK_PLACES.filter(p=>p.active!==false && favorites.has(p.name));
+  let favItems=FKK_PLACES.filter(p=>p.active!==false && favorites.has(p.name));
   document.getElementById("modalTitle").textContent="Favoriten";
   if(!favItems.length){
     document.getElementById("modalText").innerHTML='<div class="favoriteEmpty"><div class="favoriteEmptyIcon">☆</div><strong>Noch keine Favoriten</strong><p>Tippe bei einem FKK-Ort auf ☆, um ihn hier zu speichern.</p></div>';
-  } else {
-    const cards=favItems.map(p=>{
-      const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
-      const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${haversineKm(searchOrigin.lat,searchOrigin.lon,p.lat,p.lon).toFixed(1)} km entfernt</div>` : "";
-      return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${sourceLink}</div></div>`;
-    }).join("");
-    document.getElementById("modalText").innerHTML=`<div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><div class="favoriteList">${cards}</div>`;
-    document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{
-      favorites.delete(btn.dataset.fav);
-      localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
-      renderFavorites();
-      if(searchOrigin) searchPlaces();
-    }));
-    document.querySelectorAll(".favMapButton").forEach(btn=>btn.addEventListener("click",()=>{
-      const lat=Number(btn.dataset.lat), lon=Number(btn.dataset.lon);
-      document.getElementById("modal").classList.add("hidden");
-      setFooterActive("footerMap");
-      scrollToId("mapSection");
-      if(map){ setTimeout(()=>{ map.invalidateSize(); map.flyTo([lat,lon],14,{duration:1.05,easeLinearity:0.12}); const place=FKK_PLACES.find(p=>Math.abs(p.lat-lat)<1e-8&&Math.abs(p.lon-lon)<1e-8); if(place){ const marker=resultMarkers.find(m=>m.__fkkName===place.name); if(marker) marker.openPopup(); } },350); }
-    }));
+    return;
   }
+  if(searchOrigin){ favItems=favItems.map(p=>({...p,distance:haversineKm(searchOrigin.lat,searchOrigin.lon,p.lat,p.lon)})).sort((a,b)=>a.distance-b.distance); }
+  const cards=favItems.map(p=>{
+    const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
+    const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>` : "";
+    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${sourceLink}</div></div>`;
+  }).join("");
+  document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button></div><div class="favoriteList">${cards}</div>`;
+  document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{
+    favorites.delete(btn.dataset.fav);
+    localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
+    renderFavorites();
+    if(searchOrigin) searchPlaces();
+  }));
+  document.querySelectorAll(".favMapButton").forEach(btn=>btn.addEventListener("click",()=>{
+    const lat=Number(btn.dataset.lat), lon=Number(btn.dataset.lon);
+    document.getElementById("modal").classList.add("hidden");
+    setFooterActive("footerMap");
+    scrollToId("mapSection");
+    if(map){ setTimeout(()=>{ map.invalidateSize(); map.flyTo([lat,lon],14,{duration:1.05,easeLinearity:0.12}); const place=FKK_PLACES.find(p=>Math.abs(p.lat-lat)<1e-8&&Math.abs(p.lon-lon)<1e-8); if(place){ const marker=resultMarkers.find(m=>m.__fkkName===place.name); if(marker) marker.openPopup(); } },350); }
+  }));
+  document.getElementById("favoriteMapAll").addEventListener("click",()=>{
+    document.getElementById("modal").classList.add("hidden");
+    setFooterActive("footerMap");
+    scrollToId("mapSection");
+    const points=favItems.map(p=>[p.lat,p.lon]);
+    if(!map || !points.length) return;
+    setTimeout(()=>{ map.invalidateSize(); if(points.length===1){ map.flyTo(points[0],14,{duration:1.05,easeLinearity:0.12}); } else { map.flyToBounds(L.latLngBounds(points),{padding:[38,38],maxZoom:12,duration:1.1,easeLinearity:0.12}); } },350);
+  });
 }
 function showFavorites(){
   const modal=document.getElementById("modal");

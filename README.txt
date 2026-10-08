@@ -18,3 +18,6 @@ Audit v57.2: Mehrere zuvor auf die Seemitte gesetzte Koordinaten wurden auf veri
 
 
 v57.7: „In meiner Nähe“ führt direkt zur sortierten Trefferliste; Ergebnis-Karten zeigen Zielpunkt-Typ, Datenstand, Zugangshinweise und eine eigene „Auf Karte zeigen“-Aktion.
+
+
+v57.8: Favoriten erweitert – Favoriten werden bei vorhandenem Suchstandort nach Entfernung sortiert. Die Favoritenansicht enthält jetzt „Alle auf Karte“ und die Verifizierungskennzeichnung.

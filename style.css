@@ -498,3 +498,11 @@ html, body {
 .accessHint{margin-top:7px;padding:8px 9px;border-radius:11px;background:#fff8e7;border:1px solid #f0dfae;color:#765b16;font-size:10px;line-height:1.4}
 .resultActions{margin-top:9px}.mapResultButton{width:100%;border:1px solid #d4e8ff;border-radius:12px;background:#eef7ff;color:#126dca;font:800 11px/1.2 inherit;padding:9px 10px;cursor:pointer}.mapResultButton:active{transform:scale(.985)}
 .mapPlacePopup .destinationBadge{margin:4px 0 2px}.mapPlacePopup .accessHint{font-size:10px}
+
+
+/* v57.8 – Favoriten als vollständige Kartenansicht */
+.favoriteToolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.favoriteToolbar .favoriteCount{margin:0}
+.favoriteMapAll{border:1px solid #d4e8ff;border-radius:11px;background:#eef7ff;color:#126dca;font:800 10px/1.2 inherit;padding:8px 10px;cursor:pointer;white-space:nowrap}
+.favoriteMapAll:active{transform:scale(.98)}
+.favoriteModalCard .verificationBadge{margin:7px 0 2px}
