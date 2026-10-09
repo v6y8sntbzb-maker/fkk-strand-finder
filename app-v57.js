@@ -417,6 +417,7 @@ function openPlaceProfile(p){
     <div class="profileSection"><h3>🧾 Belegte Hinweise</h3>${amenityHints(p).length ? `<div class="amenityList">${amenityHints(p).map(x=>`<span>${x}</span>`).join("")}</div>` : `<p class="profileMuted">Für diesen Ort sind aktuell keine zusätzlichen Ausstattungsangaben hinterlegt.</p>`}</div>
     ${accessHint(p) ? `<div class="profileSection"><h3>⚠️ Zugang & Hinweise</h3><p>${escapeHtml(accessHint(p))}</p></div>` : ""}
     <div class="profileSection"><h3>🔎 Datenqualität</h3><p><strong>${qualityInfo(p).icon} ${qualityInfo(p).label}</strong></p><p class="profileMuted">Einordnung: ${escapeHtml(v.label)} · Zielpunkt: ${escapeHtml(d.label)}</p><p class="profileMuted">Datenstand der Zusammenstellung: ${DATA_SNAPSHOT_DATE}. Das ist kein Datum einer individuellen Vor-Ort-Prüfung.</p></div>
+    <div class="profileSection"><h3>📍 Kartenposition</h3><p>Breitengrad: <strong>${Number(p.lat).toFixed(5)}</strong><br>Längengrad: <strong>${Number(p.lon).toFixed(5)}</strong></p><p><a href="https://www.openstreetmap.org/?mlat=${encodeURIComponent(p.lat)}&mlon=${encodeURIComponent(p.lon)}#map=16/${encodeURIComponent(p.lat)}/${encodeURIComponent(p.lon)}" target="_blank" rel="noopener">Position in OpenStreetMap prüfen ↗</a></p>${dataQualityMarkup(p)}</div>
     <div class="profileSection"><h3>📚 Quelle</h3><p>${sourceLink}</p><p class="profileMuted">${escapeHtml(p.evidence||"Keine weitere Einordnung hinterlegt.")}</p></div>
     <div class="profileActions">
       <button id="profileFavoriteBtn" class="modalAction" type="button">${favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen"}</button>
@@ -751,7 +752,8 @@ function renderResults(items, radius){
 
   if (!items.length){
     statusEl.textContent=`ℹ️ Keine FKK-Orte innerhalb von ${radius} km in der lokalen Datenbank.`;
-    resultsEl.innerHTML='<div class="card"><div class="muted">Keine passenden FKK-Orte im gewählten Radius gefunden.</div><div class="source">Tipp: Größeren Suchradius wählen.</div></div>';
+    resultsEl.innerHTML='<div class="card"><div class="muted">Keine passenden FKK-Orte im gewählten Radius gefunden.</div><div class="source">Tipp: Suchradius vergrößern, den Ort ändern oder Filter zurücksetzen.</div><button class="resetFiltersButton" type="button" id="emptyResetFilters">Filter zurücksetzen</button></div>';
+    document.getElementById("emptyResetFilters")?.addEventListener("click",()=>document.getElementById("resetFilters")?.click());
     return;
   }
 
@@ -776,6 +778,7 @@ function renderResults(items, radius){
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
         <div class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</div>
         <div class="mapPlacePopupStatus">${escapeHtml(p.status)}</div>
+        ${dataQualityMarkup(p)}
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
         <div class="mapPlacePopupActions">
           <button class="mapFavoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${popupFavoriteLabel}" title="${popupFavoriteLabel}">${favorites.has(p.name)?"★":"☆"} ${popupFavoriteLabel}</button>
@@ -835,6 +838,7 @@ function renderResults(items, radius){
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
         <div class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</div>
         <div class="detailLine">ℹ️ ${escapeHtml(p.status)}</div>
+        ${dataQualityMarkup(p)}
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
       <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand der Zusammenstellung: ${DATA_SNAPSHOT_DATE}</div>
@@ -875,7 +879,8 @@ function renderResults(items, radius){
 
   const official=items.filter(p=>verificationInfo(p).kind==="official").length;
   const directory=items.filter(p=>verificationInfo(p).kind==="directory").length;
-  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} mit explizit hinterlegter offizieller Quelle · ${directory} Verzeichnis-/Karteneinträge · Datenstand ${DATA_SNAPSHOT_DATE}; nicht jeder Ort wurde vor Ort geprüft.</span>`;
+  const warningCount=items.filter(p=>placeDataWarnings(p).length>0).length;
+  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} mit explizit hinterlegter offizieller Quelle · ${directory} Verzeichnis-/Karteneinträge · ${warningCount} Eintrag/Einträge mit Datenhinweis · Datenstand ${DATA_SNAPSHOT_DATE}; nicht jeder Ort wurde vor Ort geprüft.${invalidCoordinateCount?` ${invalidCoordinateCount} Eintrag/Einträge mit unplausiblen Koordinaten wurden aus der Suche ausgeschlossen.`:""}</span>`;
 }
 
 function parseSmartSearch(raw){
@@ -890,6 +895,28 @@ function parseSmartSearch(raw){
   return { locationQuery: q, mode: smartSearchMode, original };
 }
 
+
+// v58.34: Laufzeit-Datencheck. Er erkennt unplausible Koordinaten und doppelte Kartenpunkte,
+// ohne einen Datensatz allein deshalb als offiziell oder vor Ort geprüft auszugeben.
+function placeDataWarnings(p){
+  const warnings=[];
+  const lat=Number(p.lat), lon=Number(p.lon);
+  if(!Number.isFinite(lat)||!Number.isFinite(lon)||lat < 47 || lat > 56 || lon < 5 || lon > 16){
+    warnings.push("Koordinaten außerhalb des erwarteten Deutschland-Bereichs – bitte prüfen");
+  }
+  const duplicate=FKK_PLACES.find(q=>q.name!==p.name && Number.isFinite(Number(q.lat)) && Number.isFinite(Number(q.lon)) &&
+    Math.abs(Number(q.lat)-lat)<0.00008 && Math.abs(Number(q.lon)-lon)<0.00008);
+  if(duplicate) warnings.push("Mehrere Datenbankeinträge liegen nahezu am selben Kartenpunkt");
+  if(!p.sourceUrl || !p.source) warnings.push("Keine verlinkte Quelle hinterlegt");
+  return warnings;
+}
+function dataQualityMarkup(p){
+  const warnings=placeDataWarnings(p);
+  return warnings.length
+    ? `<div class="dataAuditWarning" role="note">⚠️ Datenhinweis: ${warnings.map(escapeHtml).join(" · ")}</div>`
+    : "";
+}
+
 function searchPlaces(){
   if(!searchOrigin) return;
   updateRadiusCircle(true);
@@ -898,7 +925,13 @@ function searchPlaces(){
   statusEl.textContent="🔎 Suche in der lokalen FKK-Datenbank …";
   resultsEl.innerHTML='<div class="card">Orte werden nach Entfernung sortiert …</div>';
 
-  let items=FKK_PLACES.filter(p=>p.active!==false)
+  const activePlaces=FKK_PLACES.filter(p=>p.active!==false);
+  const invalidCoordinateCount=activePlaces.filter(p=>{
+    const la=Number(p.lat), lo=Number(p.lon);
+    return !Number.isFinite(la)||!Number.isFinite(lo)||la < 47||la > 56||lo < 5||lo > 16;
+  }).length;
+  let items=activePlaces
+    .filter(p=>Number.isFinite(Number(p.lat))&&Number.isFinite(Number(p.lon))&&Number(p.lat)>=47&&Number(p.lat)<=56&&Number(p.lon)>=5&&Number(p.lon)<=16)
     .map(p=>({...p,distance:haversineKm(lat,lon,p.lat,p.lon)}))
     .filter(p=>p.distance<=radiusKm);
 

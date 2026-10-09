@@ -109,3 +109,6 @@ Version 58.30: entfernt die unerwünschte Sortierzeile „Sortieren nach – Nä
 \n\nv58.32 – Offline/Stabilität: Offline-Hinweis reagiert auf Netzwechsel; informiert klar, welche Funktionen ohne Internet weiter verfügbar sind. Service-Worker-Cache aktualisiert. Kartenkacheln und neue Such-/Routingabfragen benötigen weiterhin Internet, sofern sie nicht bereits geladen/gespeichert sind.\n
 
 v58.33 – QA-Korrekturen: JavaScript-Syntaxfehler durch versehentliches literales „\\n“ behoben; Script-URL auf v58.33 aktualisiert; doppelter Online-Status-Handler entfernt, damit der Hinweis bei wiederhergestellter Verbindung sichtbar bleibt. Statische Syntax- und Paketprüfungen durchgeführt; iPhone-/Safari-Live-Test steht weiterhin aus.
+
+
+v58.34 – Punkte 1–3: Laufzeitprüfung auf Koordinaten außerhalb des Deutschland-Bereichs, Hinweise bei nahezu identischen Kartenpunkten und fehlenden Quellen; unplausible Koordinaten werden nicht als Suchtreffer ausgegeben. Radius-/Kartenlogik beibehalten. Ortsdetails zeigen jetzt Koordinaten und einen Link zur Kontrolle in OpenStreetMap; bei leeren Suchergebnissen gibt es einen direkten Filter-zurücksetzen-Button. Keine Behauptung einer externen Vor-Ort-Verifikation.

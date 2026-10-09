@@ -809,3 +809,17 @@ input, select, textarea { font-size: 16px; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+
+/* v58.34 – Hinweise zur Datenqualität */
+.dataAuditWarning{
+  margin:8px 0;
+  padding:9px 11px;
+  border:1px solid rgba(202,128,25,.35);
+  border-radius:12px;
+  background:rgba(255,190,80,.14);
+  color:var(--text-color, #65420b);
+  font-size:.88rem;
+  line-height:1.4;
+}
+body.darkMode .dataAuditWarning{color:#ffe2a8;background:rgba(202,128,25,.18)}
