@@ -132,11 +132,10 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-  <script src="app-v57.js?v=58.31"></script>
+  <script src="app-v57.js?v=58.33"></script>
 <script>
 if ("serviceWorker" in navigator) { window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
-function updateOnlineState(){ const b=document.getElementById("offlineBanner"); if(b) b.classList.toggle("hidden",navigator.onLine); }
-window.addEventListener("online",updateOnlineState); window.addEventListener("offline",updateOnlineState); updateOnlineState();
+
 </script>
 </body>
 </html>

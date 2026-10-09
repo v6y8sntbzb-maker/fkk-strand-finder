@@ -107,3 +107,5 @@ Version v58.27 – Anfahrt verbessert
 
 Version 58.30: entfernt die unerwünschte Sortierzeile „Sortieren nach – Nächste zuerst“ und erneuert den Service-Worker-Cache, damit iPhones die aktualisierte Version laden.
 \n\nv58.32 – Offline/Stabilität: Offline-Hinweis reagiert auf Netzwechsel; informiert klar, welche Funktionen ohne Internet weiter verfügbar sind. Service-Worker-Cache aktualisiert. Kartenkacheln und neue Such-/Routingabfragen benötigen weiterhin Internet, sofern sie nicht bereits geladen/gespeichert sind.\n
+
+v58.33 – QA-Korrekturen: JavaScript-Syntaxfehler durch versehentliches literales „\\n“ behoben; Script-URL auf v58.33 aktualisiert; doppelter Online-Status-Handler entfernt, damit der Hinweis bei wiederhergestellter Verbindung sichtbar bleibt. Statische Syntax- und Paketprüfungen durchgeführt; iPhone-/Safari-Live-Test steht weiterhin aus.

@@ -31,13 +31,14 @@ function setDarkMode(enabled){
   window.addEventListener("offline",updateNetworkStatus);
   document.addEventListener("DOMContentLoaded",updateNetworkStatus);
 })();
-\n// FKK Strand Finder v56
+
+// FKK Strand Finder v56
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.32";
+const APP_VERSION = "v58.33";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -1093,7 +1094,7 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.30";
+window.FKK_APP_VERSION = "v58.33";
 
 
 
