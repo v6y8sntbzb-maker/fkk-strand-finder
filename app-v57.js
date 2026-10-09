@@ -17,8 +17,8 @@ function setDarkMode(enabled){
 
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
-const DATA_AUDIT_DATE = "08.10.2026";
-const APP_VERSION = "v58.22";
+const DATA_SNAPSHOT_DATE = "08.10.2026";
+const APP_VERSION = "v58.23";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -388,7 +388,7 @@ function openPlaceProfile(p){
     <div class="profileSection"><h3>🕒 Öffnungszeiten / Saison</h3>${openingSeasonInfo(p)}</div>
     <div class="profileSection"><h3>🧾 Belegte Hinweise</h3>${amenityHints(p).length ? `<div class="amenityList">${amenityHints(p).map(x=>`<span>${x}</span>`).join("")}</div>` : `<p class="profileMuted">Für diesen Ort sind aktuell keine zusätzlichen Ausstattungsangaben hinterlegt.</p>`}</div>
     ${accessHint(p) ? `<div class="profileSection"><h3>⚠️ Zugang & Hinweise</h3><p>${escapeHtml(accessHint(p))}</p></div>` : ""}
-    <div class="profileSection"><h3>🔎 Datenqualität</h3><p><strong>${qualityInfo(p).icon} ${qualityInfo(p).label}</strong></p><p class="profileMuted">FKK-Status: ${escapeHtml(v.label)} · Zielpunkt: ${escapeHtml(d.label)}</p><p class="profileMuted">Geprüft: ${DATA_AUDIT_DATE}</p></div>
+    <div class="profileSection"><h3>🔎 Datenqualität</h3><p><strong>${qualityInfo(p).icon} ${qualityInfo(p).label}</strong></p><p class="profileMuted">Einordnung: ${escapeHtml(v.label)} · Zielpunkt: ${escapeHtml(d.label)}</p><p class="profileMuted">Datenstand der Zusammenstellung: ${DATA_SNAPSHOT_DATE}. Das ist kein Datum einer individuellen Vor-Ort-Prüfung.</p></div>
     <div class="profileSection"><h3>📚 Quelle</h3><p>${sourceLink}</p><p class="profileMuted">${escapeHtml(p.evidence||"Keine weitere Einordnung hinterlegt.")}</p></div>
     <div class="profileActions">
       <button id="profileFavoriteBtn" class="modalAction" type="button">${favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen"}</button>
@@ -598,11 +598,17 @@ function clearOrigin(){
 }
 
 function verificationInfo(p){
-  const evidence=String(p.evidence||"").toLowerCase();
+  const evidence=String(p.evidence||"").trim().toLowerCase();
+  const source=String(p.source||"").trim().toLowerCase();
   const status=String(p.status||"").toLowerCase();
-  if(evidence==="offizielle quelle") return {kind:"official",label:"Offiziell bestätigt",icon:"✓"};
-  if(/nicht bestätigt|nicht als fkk|unbestätigt|zweifelhaft|unklar/.test(status)) return {kind:"uncertain",label:"Nicht eindeutig bestätigt",icon:"?"};
-  return {kind:"directory",label:"FKK-Quelle vorhanden",icon:"i"};
+  // Official status is only used for records explicitly marked as backed by an official source.
+  if(evidence==="offizielle quelle" || evidence==="amtliche quelle" || evidence==="offizielle bestätigung") {
+    return {kind:"official",label:"Offizielle Quelle hinterlegt",icon:"✓"};
+  }
+  if(!p.sourceUrl || !p.source || /nicht bestätigt|nicht als fkk|unbestätigt|zweifelhaft|unklar|keine aktuelle|keine badefreigabe/.test(status)) {
+    return {kind:"uncertain",label:"Bitte vor Ort prüfen",icon:"⚠"};
+  }
+  return {kind:"directory",label:"Verzeichnis-/Karteneintrag",icon:"i"};
 }
 
 function accessHint(p){
@@ -616,16 +622,10 @@ function accessHint(p){
 function qualityInfo(p){
   const v=verificationInfo(p);
   const d=destinationInfo(p);
-  const source=String(p.source||"").toLowerCase();
-  const evidence=String(p.evidence||"").toLowerCase();
-  let score=0;
-  if(v.kind==="official") score+=2; else if(v.kind==="directory") score+=1;
-  if(d.kind==="direct") score+=2;
-  if(p.sourceUrl) score+=1;
-  if(p.status) score+=1;
-  if(score>=5) return {label:"Sehr gut belegt",kind:"good",icon:"✓"};
-  if(score>=3) return {label:"Geprüfte Angaben",kind:"checked",icon:"●"};
-  return {label:"Weitere Prüfung empfohlen",kind:"review",icon:"!"};
+  if(v.kind==="official") return {label:"Amtliche Quelle hinterlegt",kind:"good",icon:"✓"};
+  if(v.kind==="uncertain") return {label:"Aktuelle Prüfung empfohlen",kind:"review",icon:"!"};
+  if(d.kind==="direct") return {label:"Kartierter FKK-Punkt · Status nicht amtlich bestätigt",kind:"checked",icon:"●"};
+  return {label:"Verzeichniseintrag · Status nicht amtlich bestätigt",kind:"checked",icon:"●"};
 }
 
 function amenityHints(p){
@@ -801,7 +801,7 @@ function renderResults(items, radius){
         <div class="detailLine">ℹ️ ${escapeHtml(p.status)}</div>
         ${accessHint(p) ? `<div class="accessHint">⚠️ ${escapeHtml(accessHint(p))}</div>` : ""}
       </div>
-      <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand: ${DATA_AUDIT_DATE}</div>
+      <div class="source">Quelle: ${sourceLink}<br>Einordnung: ${escapeHtml(p.evidence)}<br>Datenstand der Zusammenstellung: ${DATA_SNAPSHOT_DATE}</div>
       <div class="resultActions"><button class="profileButton" type="button">🏖️ Ortsdetails</button><button class="mapResultButton" type="button">🗺️ Auf Karte zeigen</button>${reportIssueLink(p)}</div>
       ${navigationLinks(p)}`;
     const favoriteButton = card.querySelector(".favoriteButton");
@@ -839,7 +839,7 @@ function renderResults(items, radius){
 
   const official=items.filter(p=>verificationInfo(p).kind==="official").length;
   const directory=items.filter(p=>verificationInfo(p).kind==="directory").length;
-  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} offiziell bestätigt · ${directory} aus FKK-Verzeichnissen/Kartenquellen · Datenprüfung ${DATA_AUDIT_DATE}.</span>`;
+  statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} mit explizit hinterlegter offizieller Quelle · ${directory} Verzeichnis-/Karteneinträge · Datenstand ${DATA_SNAPSHOT_DATE}; nicht jeder Ort wurde vor Ort geprüft.</span>`;
 }
 
 function parseSmartSearch(raw){

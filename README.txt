@@ -73,3 +73,11 @@ Version v58.21: Alle Abschnitte in den Ortsdetails (Informationen, Belegte Hinwe
 
 
 Version v58.22: Ortsprofile zeigen Wetterdaten vor Ort, sofern online verfügbar; ergänzen einen vorsichtigen Öffnungszeiten-/Saisonhinweis nur aus vorhandenen Statusangaben und bieten eine Teilen-Schaltfläche für einzelne FKK-Orte. Keine Öffnungszeiten werden erfunden.
+
+
+Version v58.23 – Datenqualität transparenter
+- „Offiziell“ wird nur angezeigt, wenn der Datensatz ausdrücklich eine offizielle/amtliche Quelle kennzeichnet.
+- Andere belegte Einträge werden als Verzeichnis-/Karteneintrag bezeichnet und nicht als amtlich bestätigt ausgegeben.
+- Fehlende Quellen oder Hinweise auf Unsicherheit lösen den Hinweis „Bitte vor Ort prüfen“ aus.
+- Das Datum wird als Datenstand der Zusammenstellung bezeichnet, nicht als individuelle Prüfung jedes Orts.
+- Quellenlink und bisherige Ortsangaben bleiben erhalten; lokale Regeln und aktuelle Beschilderung vor Ort haben Vorrang.
