@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_AUDIT_DATE = "08.10.2026";
-const APP_VERSION = "v58.21";
+const APP_VERSION = "v58.22";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -354,6 +354,20 @@ async function loadDriveTime(p){
   }catch(e){ el.innerHTML='<div class="liveDataMuted">⚠️ Fahrzeit konnte gerade nicht berechnet werden.</div>'; }
 }
 
+function openingSeasonInfo(p){
+  const text=String(p.status||"");
+  const season=text.match(/(?:saison|geöffnet|öffnungszeiten|öffnungszeit)[^.;]{0,90}/i);
+  if(!season) return '<p class="profileMuted">Keine verlässlichen Öffnungszeiten oder Saisonangaben hinterlegt. Bitte Hinweise des Betreibers vor Ort prüfen.</p>';
+  return `<p>${escapeHtml(season[0].trim())}</p><p class="profileMuted">Angabe aus dem hinterlegten Eintrag; bitte vor dem Besuch aktuell bestätigen.</p>`;
+}
+function sharePlace(p){
+  const url=(p.sourceUrl && /^https?:\/\//i.test(p.sourceUrl)) ? p.sourceUrl : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name+", Deutschland")}`;
+  const text=`Diesen FKK-Ort habe ich gefunden: ${p.name}\n${url}`;
+  if(navigator.share){ navigator.share({title:p.name,text,url}).catch(()=>{}); }
+  else if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>alert("Link zum FKK-Ort wurde kopiert."),()=>window.prompt("Link kopieren:",text)); }
+  else window.prompt("Link kopieren:",text);
+}
+
 function openPlaceProfile(p){
   if(!modalEl) return;
   const v=verificationInfo(p);
@@ -371,6 +385,7 @@ function openPlaceProfile(p){
     </div>
     <div class="profileLiveGrid"><div class="profileLiveCard"><h3>🌤️ Wetter vor Ort</h3><div id="profileWeather"></div></div><div class="profileLiveCard"><h3>🧭 Fahrzeit</h3><div id="profileDrive"></div></div></div>
     <div class="profileSection"><h3>ℹ️ Informationen</h3><p>${escapeHtml(p.status||"Keine zusätzlichen Angaben hinterlegt.")}</p></div>
+    <div class="profileSection"><h3>🕒 Öffnungszeiten / Saison</h3>${openingSeasonInfo(p)}</div>
     <div class="profileSection"><h3>🧾 Belegte Hinweise</h3>${amenityHints(p).length ? `<div class="amenityList">${amenityHints(p).map(x=>`<span>${x}</span>`).join("")}</div>` : `<p class="profileMuted">Für diesen Ort sind aktuell keine zusätzlichen Ausstattungsangaben hinterlegt.</p>`}</div>
     ${accessHint(p) ? `<div class="profileSection"><h3>⚠️ Zugang & Hinweise</h3><p>${escapeHtml(accessHint(p))}</p></div>` : ""}
     <div class="profileSection"><h3>🔎 Datenqualität</h3><p><strong>${qualityInfo(p).icon} ${qualityInfo(p).label}</strong></p><p class="profileMuted">FKK-Status: ${escapeHtml(v.label)} · Zielpunkt: ${escapeHtml(d.label)}</p><p class="profileMuted">Geprüft: ${DATA_AUDIT_DATE}</p></div>
@@ -378,6 +393,7 @@ function openPlaceProfile(p){
     <div class="profileActions">
       <button id="profileFavoriteBtn" class="modalAction" type="button">${favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen"}</button>
       <button id="profileMapBtn" class="modalAction" type="button">🗺️ Auf Karte zeigen</button>
+      <button id="profileShareBtn" class="modalAction" type="button">❤️ FKK-Ort teilen</button>
       ${navigationLinks(p)}
       ${reportIssueLink(p)}
     </div>`;
@@ -392,6 +408,7 @@ function openPlaceProfile(p){
     favBtn.textContent=favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen";
     renderFavorites();
   };
+  document.getElementById("profileShareBtn").onclick=()=>sharePlace(p);
   document.getElementById("profileMapBtn").onclick=()=>{
     modalEl.classList.add("hidden");
     document.body.classList.remove("modalOpen");
@@ -1022,4 +1039,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.21";
+window.FKK_APP_VERSION = "v58.22";

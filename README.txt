@@ -70,3 +70,6 @@ Version v58.20 – Favoriten, Datenqualität und iPhone-Optimierung
 
 
 Version v58.21: Alle Abschnitte in den Ortsdetails (Informationen, Belegte Hinweise, Datenqualität, Quelle und Zugangshinweise) haben jetzt abgerundete, meerblaue Kacheln passend zur Fahrzeit-Kachel.
+
+
+Version v58.22: Ortsprofile zeigen Wetterdaten vor Ort, sofern online verfügbar; ergänzen einen vorsichtigen Öffnungszeiten-/Saisonhinweis nur aus vorhandenen Statusangaben und bieten eine Teilen-Schaltfläche für einzelne FKK-Orte. Keine Öffnungszeiten werden erfunden.
