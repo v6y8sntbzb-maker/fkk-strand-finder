@@ -690,3 +690,14 @@ body.darkMode .mapPlacePopupMeta,body.darkMode .mapPlacePopupStatus {
 /* v58.19: Distanz als Luftlinie klar kennzeichnen */
 .distanceHint{font-size:11px;line-height:1.35;margin-top:2px;color:#e6f7ff!important;opacity:.92}
 body.darkMode .distanceHint{color:#d6efff!important}
+
+
+/* v58.20: iPhone-Touchflächen und Favoriten-Datenhinweis */
+.footerItem{min-height:56px;min-width:58px;padding:7px 8px}
+.footerItem small{font-size:11px}
+.favoriteRemove,.favoriteButton,.close{min-width:44px;min-height:44px}
+.favoriteMapAll,.favoriteShare,.favMapButton,.favoriteToolbar select,.favoriteSortRow select{min-height:44px}
+.favoriteQualityNote{margin-top:5px;max-width:54ch;font-size:12px;line-height:1.45;color:#526b7c}
+body.darkMode .favoriteQualityNote{color:#b9cbd7}
+button,a,select,input{touch-action:manipulation}
+@media(max-width:430px){.modalBox{padding:18px 14px 22px}.favoriteToolbar{gap:12px}.favoriteToolbarButtons{gap:8px;flex-wrap:wrap}.favoriteMapAll,.favoriteShare{font-size:12px;padding:10px 12px}}
