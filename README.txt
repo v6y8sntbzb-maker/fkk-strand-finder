@@ -54,3 +54,6 @@ Version v58.16 – Kartenansicht verbessert
 
 
 Version v58.17 – graue Schrift auf den meerblauen Kacheln auf Weiß umgestellt; helle Schrift im dunklen Modus beibehalten.
+
+
+v58.18: Verbesserte Suche versteht Suchanfragen wie „FKK bei Hannover“, „FKK See“ und „FKK Strand“. Ortsnamen werden von FKK-/Kategoriebegriffen getrennt; See- und Strandwünsche grenzen die Ergebnisse entsprechend ein.

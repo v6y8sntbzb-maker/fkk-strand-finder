@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_AUDIT_DATE = "08.10.2026";
-const APP_VERSION = "v58.17";
+const APP_VERSION = "v58.18";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -285,6 +285,7 @@ let radiusCircle = null;
 let resultMarkers = [];
 let markerClusterGroup = null;
 let searchOrigin = null; // {lat, lon, label, kind}
+let smartSearchMode = "all";
 let searchTimer = null;
 let favorites = new Set(JSON.parse(localStorage.getItem("fkkFavorites") || "[]"));
 
@@ -824,6 +825,18 @@ function renderResults(items, radius){
   statusEl.innerHTML=`✅ ${items.length} FKK-Ort(e) innerhalb von ${radius} km gefunden. <span class="statusSmall">${official} offiziell bestätigt · ${directory} aus FKK-Verzeichnissen/Kartenquellen · Datenprüfung ${DATA_AUDIT_DATE}.</span>`;
 }
 
+function parseSmartSearch(raw){
+  const original = (raw || "").trim();
+  let q = original.replace(/[“”„”]/g, "").trim();
+  const normalized = q.toLocaleLowerCase("de-DE");
+  smartSearchMode = "all";
+  if (/\bsee(?:n)?\b|\bbadesee\b|\bweiher\b/.test(normalized)) smartSearchMode = "see";
+  if (/\bstrand\b|\bmeer\b|\bnordsee\b|\bostsee\b/.test(normalized)) smartSearchMode = "strand";
+  // Remove search-topic words and common connectors, leaving the actual place name.
+  q = q.replace(/\bfkk\b/ig, " ").replace(/\b(nackt?baden|textilfrei|badesee|seen?|weiher|strand|strände|meer|nordsee|ostsee|bei|in|am|an|der|dem|den|nähe|umgebung|um|von|orte?|finden|suche|suchen)\b/ig, " ").replace(/[,:;]+/g, " ").replace(/\s+/g, " ").trim();
+  return { locationQuery: q, mode: smartSearchMode, original };
+}
+
 function searchPlaces(){
   if(!searchOrigin) return;
   updateRadiusCircle(true);
@@ -835,6 +848,9 @@ function searchPlaces(){
   let items=FKK_PLACES.filter(p=>p.active!==false)
     .map(p=>({...p,distance:haversineKm(lat,lon,p.lat,p.lon)}))
     .filter(p=>p.distance<=radiusKm);
+
+  if(smartSearchMode === "see") items=items.filter(p=>/see|badesee|weiher|teich|naturbad|natursee/i.test(`${p.name} ${p.type} ${p.label}`));
+  if(smartSearchMode === "strand") items=items.filter(p=>/strand|ufer|küste|nordsee|ostsee/i.test(`${p.name} ${p.type} ${p.label}`));
 
   if(confirmedOnlyEl && confirmedOnlyEl.checked){
     // "Offiziell" bedeutet in der App ausschließlich eine ausdrücklich
@@ -870,10 +886,16 @@ function useLocation(){
 }
 
 async function searchFromPlace(){
-  const q=placeInput.value.trim();
-  if(!q){ statusEl.textContent="Bitte zuerst einen Ort oder eine Adresse eingeben."; placeInput.focus(); return; }
+  const parsed=parseSmartSearch(placeInput.value);
+  const q=parsed.locationQuery;
+  if(!parsed.original){ statusEl.textContent="Bitte einen Ort eingeben, z. B. Hannover oder ‘FKK bei Hannover’."; placeInput.focus(); return; }
+  if(!q){
+    if(!searchOrigin){ statusEl.textContent="Für ‘FKK See’ oder ‘FKK Strand’ gib bitte auch einen Ort ein, z. B. ‘FKK See bei Hannover’, oder nutze ‘FKK-Orte in meiner Nähe’."; placeInput.focus(); return; }
+    searchPlaces();
+    return;
+  }
   placeSearchBtn.disabled=true;
-  statusEl.textContent="🔎 Ort wird gesucht …";
+  statusEl.textContent="🔎 Passenden Suchort wird ermittelt …";
   try{
     const url=`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=de&accept-language=de&q=${encodeURIComponent(q)}`;
     const res=await fetch(url,{headers:{"Accept":"application/json"}});
@@ -897,7 +919,7 @@ async function searchFromPlace(){
 }
 
 locateBtn.addEventListener("click",useLocation);
-document.getElementById("searchAction").addEventListener("click",()=>{ if(searchOrigin) searchPlaces(); else searchFromPlace(); });
+document.getElementById("searchAction").addEventListener("click",()=>{ const parsed=parseSmartSearch(placeInput.value); if(parsed.locationQuery || !searchOrigin) searchFromPlace(); else searchPlaces(); });
 placeSearchBtn.addEventListener("click",searchFromPlace);
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 
