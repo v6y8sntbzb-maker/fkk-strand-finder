@@ -1,3 +1,5 @@
+v58.28: Die Zeile „Sortieren nach / Nächste zuerst“ wurde aus der Suchoberfläche entfernt. „Filter zurücksetzen“ bleibt verfügbar.
+
 FKK Strand Finder v57
 
 Basis: v56.5
