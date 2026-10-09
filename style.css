@@ -734,3 +734,78 @@ body.darkMode .resetFiltersButton{background:rgba(5,30,46,.75);border-color:#3d7
 .driveDistance b{font-size:14px;color:#087f91}
 body.darkMode .driveDistance{color:#d3e8ef;background:rgba(35,154,177,.15);border-color:rgba(91,194,210,.28)}
 body.darkMode .driveDistance b{color:#72d5e1}
+
+
+/* v58.31 – iPhone-Bedienung, Safari-Safe-Areas und bessere Touchziele */
+:root { color-scheme: light; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 16px;
+  scroll-padding-bottom: calc(120px + env(safe-area-inset-bottom));
+  overscroll-behavior-y: contain;
+}
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top, 0px);
+  -webkit-tap-highlight-color: transparent;
+}
+button, a, select, input, label { touch-action: manipulation; }
+button, .navBtn, .iconButton, .menuButton, .searchHereButton,
+.mapRadiusQuick button, .footerItem, .resetFiltersButton {
+  -webkit-appearance: none;
+  appearance: none;
+}
+/* Große, gut treffbare Bedienelemente ohne das Layout zu überladen */
+.iconButton { min-width: 44px; min-height: 44px; }
+.locationButton, .primaryButton, .searchHereButton, .resetFiltersButton,
+.favoriteMapAll, .favoriteShare, .favMapButton, .mapResultButton,
+.mapDetailsButton, .favoriteToolbar select, .favoriteSortRow select,
+.filterRow select, .navBtn { min-height: 46px; }
+.filterCheck { min-height: 44px; display: flex; align-items: center; gap: 9px; }
+.filterCheck input { width: 20px; height: 20px; flex: 0 0 auto; }
+input, select, textarea { font-size: 16px; }
+#radius { min-height: 30px; cursor: pointer; }
+.footerNav {
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  isolation: isolate;
+}
+.footerItem { min-height: 54px; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border-radius: 15px; }
+.footerItem small { font-size: 11px; line-height: 1.15; }
+.footerItem:focus-visible, button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 3px solid rgba(13,110,253,.65);
+  outline-offset: 2px;
+}
+.modal { padding-top: env(safe-area-inset-top, 0px); }
+.modalBox { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: max(22px, env(safe-area-inset-bottom)); }
+#map { height: min(56vh, 620px); height: min(56dvh, 620px); min-height: 320px; }
+@media (max-width: 430px) {
+  .appShell { padding-left: 10px; padding-right: 10px; padding-bottom: calc(132px + env(safe-area-inset-bottom)) !important; }
+  .topHeader { gap: 8px; }
+  .brandText h1 { font-size: clamp(20px, 5.4vw, 25px); }
+  .brandText p { font-size: 12px; }
+  .searchCard { padding: 13px; }
+  .sectionTitle h2, .mapHeader h2, .resultsHeader h2 { font-size: 17px; line-height: 1.25; }
+  .inputShell { gap: 6px; }
+  .inputShell input { min-width: 0; width: 100%; font-size: 16px; }
+  .controlGrid { gap: 8px; }
+  .locationButton { font-size: 13px; line-height: 1.25; }
+  .mapControlsTop { flex-wrap: wrap; gap: 8px; }
+  .mapRadiusQuick { max-width: 100%; }
+  .mapRadiusQuick button { min-width: 38px; min-height: 40px; }
+  .searchHereButton { min-height: 44px; }
+  #map { min-height: 300px; height: 48vh; height: 48dvh; }
+  .card { padding: 13px 12px; }
+  .navButtons { gap: 8px; }
+  .navBtn { padding: 10px 6px; font-size: 12px; }
+  .footerNav { bottom: calc(6px + env(safe-area-inset-bottom)) !important; padding: 6px; }
+  .footerItem { min-height: 52px; }
+  .modal { padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important; }
+  .modalBox { max-height: calc(82dvh - 104px) !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

@@ -1,6 +1,6 @@
-const CACHE_NAME = "fkk-strand-finder-v58.30";
+const CACHE_NAME = "fkk-strand-finder-v58.31";
 const APP_SHELL = [
-  "./", "./index.html", "./style.css", "./app-v57.js", "./beach-background.png", "./manifest.webmanifest", "./app-icon.svg"
+  "./", "./index.html", "./style.css", "./app-v57.js", "./beach-background.png", "./manifest.webmanifest", "./app-icon.svg", "./apple-touch-icon.png"
 ];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
