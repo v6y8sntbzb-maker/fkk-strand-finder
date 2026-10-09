@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.26";
+const APP_VERSION = "v58.27";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -985,7 +985,7 @@ function renderFavorites(){
   const cards=favItems.map(p=>{
     const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
     const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km Luftlinie</div>` : "";
-    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
+    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button><button class="modalAction favShareOne" type="button" data-fav-share="${escapeHtml(p.name)}">↗️ Diesen Ort teilen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
   }).join("");
   document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div><div class="favoriteCount">Meine FKK-Orte · ${favItems.length} gespeichert</div><div class="favoriteQualityNote">✓ Offiziell bestätigt = mit offizieller Quelle belegt. Andere Einträge stammen aus FKK-Verzeichnissen oder Kartendaten; bitte örtliche Hinweise prüfen.</div><div class="favoriteSortRow"><label for="favoriteSort">Sortieren</label><select id="favoriteSort"><option value="distance" ${favoriteSort==="distance"?"selected":""} ${searchOrigin?"":"disabled"}>📍 Entfernung</option><option value="name" ${favoriteSort==="name"?"selected":""}>🔤 Name</option></select></div></div><div class="favoriteToolbarButtons"><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button><button class="favoriteShare" id="favoriteShare" type="button">↗️ Teilen</button></div></div><div class="favoriteList">${cards}</div>`;
   document.getElementById("favoriteSort").addEventListener("change",(event)=>{
@@ -1000,6 +1000,10 @@ function renderFavorites(){
       else { alert(shareText); }
     }catch(e){ if(e && e.name !== "AbortError") console.warn(e); }
   });
+  document.querySelectorAll(".favShareOne").forEach(btn=>btn.addEventListener("click",()=>{
+    const place=FKK_PLACES.find(p=>p.name===btn.dataset.favShare);
+    if(place) sharePlace(place);
+  }));
   document.querySelectorAll(".favoriteRemove").forEach(btn=>btn.addEventListener("click",()=>{
     favorites.delete(btn.dataset.fav);
     localStorage.setItem("fkkFavorites",JSON.stringify([...favorites]));
@@ -1070,4 +1074,4 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.26";
+window.FKK_APP_VERSION = "v58.27";

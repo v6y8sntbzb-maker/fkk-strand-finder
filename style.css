@@ -485,7 +485,8 @@ html, body {
 .mapPlacePopupActions .mapFavoriteButton:active{transform:scale(.98)}
 
 
-.filterRow{display:flex;align-items:center;gap:8px;margin-top:12px}.filterCheck{flex:1;display:flex;align-items:center;gap:7px;min-height:40px;padding:0 10px;border:1px solid #dbe7f2;border-radius:13px;background:#fbfdff;color:#34516e;font-size:11px;font-weight:700}.filterCheck input{width:17px;height:17px;accent-color:#1685ec}.filterRow select{height:40px;max-width:125px;border:1px solid #dbe7f2;border-radius:13px;background:#fbfdff;color:#34516e;padding:0 8px;font-size:11px;font-weight:700}.favoriteModalDistance{font-size:11px;color:#126dca;font-weight:700;margin:5px 0}.favMapButton{width:100%;background:#eef7ff!important;color:#126dca!important;border:1px solid #d4e8ff!important}.favoriteModalActions .navButtons{margin-top:7px}
+.filterRow{display:flex;align-items:center;gap:8px;margin-top:12px}.filterCheck{flex:1;display:flex;align-items:center;gap:7px;min-height:40px;padding:0 10px;border:1px solid #dbe7f2;border-radius:13px;background:#fbfdff;color:#34516e;font-size:11px;font-weight:700}.filterCheck input{width:17px;height:17px;accent-color:#1685ec}.filterRow select{height:40px;max-width:125px;border:1px solid #dbe7f2;border-radius:13px;background:#fbfdff;color:#34516e;padding:0 8px;font-size:11px;font-weight:700}.favoriteModalDistance{font-size:11px;color:#126dca;font-weight:700;margin:5px 0}.favMapButton{width:100%;background:#eef7ff!important;color:#126dca!important;border:1px solid #d4e8ff!important}
+.favShareOne{width:100%;background:#f0fbf6!important;color:#16815b!important;border:1px solid #d5eee2!important;min-height:44px}.favoriteModalActions .favShareOne{flex:1 1 100%}.favoriteModalActions .navButtons{margin-top:7px}
 @media(max-width:380px){.filterRow{align-items:stretch;flex-direction:column}.filterRow select{max-width:none;width:100%}}
 
 .verificationBadge{display:inline-flex;align-items:center;gap:4px;width:max-content;margin:5px 0;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.1px}.verification-official{background:#e9f8ef;color:#177245;border:1px solid #bfe8cf}.verification-directory{background:#eef6ff;color:#2168a8;border:1px solid #cfe3f7}.verification-uncertain{background:#fff6df;color:#8a6500;border:1px solid #eed59a}.mapPlacePopup .verificationBadge{margin:5px 0 7px}.mapPlacePopupStatus{font-size:11px;line-height:1.35;color:#536b83}.statusSmall{font-size:10px}
@@ -572,7 +573,7 @@ body.darkMode .mapRadiusQuick,body.darkMode .searchHereButton{background:rgba(12
 body.darkMode .mapRadiusQuick button{color:#c8dce9}
 body.darkMode .resultCard,body.darkMode .profileGrid>div,body.darkMode .profileSection{background:#102334;border-color:#294458}
 body.darkMode .resultCard h3,body.darkMode .profileGrid strong,body.darkMode .profileSection h3,body.darkMode .distanceLine,body.darkMode .mapPlacePopupTitle{color:#e9f5fb}
-body.darkMode .mapResultButton,body.darkMode .mapDetailsButton,body.darkMode .favMapButton,body.darkMode .favoriteMapAll{background:#123b58!important;border-color:#285a7e!important;color:#9ed7ff!important}
+body.darkMode .mapResultButton,body.darkMode .mapDetailsButton,body.darkMode .favMapButton,body.darkMode .favShareOne,body.darkMode .favoriteMapAll{background:#123b58!important;border-color:#285a7e!important;color:#9ed7ff!important}
 body.darkMode .mapPlacePopupActions .mapFavoriteButton{background:#102a3e;color:#cfe8f8;border-color:#35566c}
 body.darkMode .mapPlacePopupActions .mapFavoriteButton.isFavorite{background:#3d3515;color:#ffe89a;border-color:#6d5b21}
 body.darkMode .reportBtn{background:#351f1d;border-color:#70413a;color:#ffb8ad}

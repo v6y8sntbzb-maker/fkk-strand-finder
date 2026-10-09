@@ -96,7 +96,7 @@ Version v58.25 – Wetter vor Ort verbessert
 - Wetterdaten werden vom externen Dienst Open-Meteo abgerufen und benötigen Internet.
 
 
-Version v58.26 – Anfahrt verbessert
+Version v58.27 – Anfahrt verbessert
 - Ortsdetails zeigen jetzt zusätzlich zur ungefähren Fahrzeit auch die berechnete Straßenentfernung.
 - Straßenentfernung und Luftlinie bleiben klar voneinander getrennt.
 - Die vorhandenen Apple-Karten- und Google-Maps-Schaltflächen starten weiterhin die Navigation zum ausgewählten Ort.
