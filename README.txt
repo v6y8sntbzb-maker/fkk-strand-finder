@@ -115,3 +115,6 @@ v58.34 – Punkte 1–3: Laufzeitprüfung auf Koordinaten außerhalb des Deutsch
 
 
 v58.35 – Punkt 4 Favoriten verbessert: persönliche Notizen pro gespeichertem FKK-Ort, automatische lokale Speicherung auf dem Gerät, Notizen werden beim Teilen der Favoritenliste mit aufgenommen. Bestehende Favoriten, Sterne auf der Karte, Sortierung und Karten-/Navigationsaktionen bleiben erhalten. Keine Kontosynchronisierung; Notizen bleiben im Browser dieses Geräts. Statische Syntax-/Paketprüfung, kein vollständiger iPhone-Live-Test.
+
+
+Version v58.36 – Punkt 5: Zusätzliche optionale Filter für Parkplatz-, WC/Sanitär- und Eintritt/Gebühren-Hinweise. Diese Filter prüfen nur, ob ein Hinweis im Datenbank-Status hinterlegt ist; sie garantieren keine aktuelle Ausstattung oder Preise. Filter zurücksetzen setzt auch diese Optionen zurück.

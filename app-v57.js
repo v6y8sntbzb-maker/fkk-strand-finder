@@ -316,6 +316,9 @@ const resultsEl = document.getElementById("results");
 const locateBtn = document.getElementById("locateBtn");
 const confirmedOnlyEl = document.getElementById("confirmedOnly");
 const typeFilterEl = document.getElementById("typeFilter");
+const parkingFilterEl = document.getElementById("parkingFilter");
+const wcFilterEl = document.getElementById("wcFilter");
+const feeFilterEl = document.getElementById("feeFilter");
 const resultSortEl = document.getElementById("resultSort");
 const resetFiltersEl = document.getElementById("resetFilters");
 const placeInput = document.getElementById("placeInput");
@@ -946,6 +949,11 @@ function searchPlaces(){
   if(typeFilterEl && typeFilterEl.value!=="all"){
     items=items.filter(p=>p.type===typeFilterEl.value);
   }
+  // Ausstattung-Filter zeigen nur Datensätze mit einem passenden Hinweis im Statusfeld.
+  // Ein Hinweis ist keine Garantie für aktuelle Verfügbarkeit vor Ort.
+  if(parkingFilterEl && parkingFilterEl.checked) items=items.filter(p=>/parkplatz|parken/i.test(String(p.status||"")));
+  if(wcFilterEl && wcFilterEl.checked) items=items.filter(p=>/\bwc\b|toilette|sanitär/i.test(String(p.status||"")));
+  if(feeFilterEl && feeFilterEl.checked) items=items.filter(p=>/eintritt|gebühr|kostenpflicht/i.test(String(p.status||"")));
   const sortMode = resultSortEl ? resultSortEl.value : "distance";
   if(sortMode === "name") items.sort((a,b)=>a.name.localeCompare(b.name, "de-DE"));
   else if(sortMode === "official") items.sort((a,b)=>{
@@ -1128,17 +1136,21 @@ document.addEventListener("click",(event)=>{
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
+[parkingFilterEl,wcFilterEl,feeFilterEl].forEach(el=>el?.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); }));
 if(resultSortEl) resultSortEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
   if(typeFilterEl) typeFilterEl.value="all";
   if(confirmedOnlyEl) confirmedOnlyEl.checked=false;
+  if(parkingFilterEl) parkingFilterEl.checked=false;
+  if(wcFilterEl) wcFilterEl.checked=false;
+  if(feeFilterEl) feeFilterEl.checked=false;
   if(resultSortEl) resultSortEl.value="distance";
   if(searchOrigin) searchPlaces();
   else statusEl.textContent="Filter zurückgesetzt. Wähle einen Suchort, um FKK-Orte zu finden.";
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.35";
+window.FKK_APP_VERSION = "v58.36";
 
 
 
