@@ -1075,3 +1075,30 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 
 initMap();
 window.FKK_APP_VERSION = "v58.27";
+
+
+/* v58.29: remove the unwanted “Sortieren nach – Nächste zuerst” row.
+   Also handles an older cached/dynamically rendered markup variant. */
+(function removeUnwantedSortRow(){
+  const unwanted = /sortieren\s+nach/i;
+  const defaultSort = /nächste\s+zuerst/i;
+  function clean(){
+    document.querySelectorAll('label, select, div, section, fieldset').forEach(el=>{
+      if(!el.isConnected) return;
+      const text=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+      if(!text || text.length>180 || !unwanted.test(text) || !defaultSort.test(text)) return;
+      // Remove the smallest layout wrapper containing both the label and selector.
+      let target=el;
+      for(let i=0;i<3 && target.parentElement;i++){
+        const p=target.parentElement;
+        const t=(p.innerText||p.textContent||'').replace(/\s+/g,' ').trim();
+        if(t.length>220 || !unwanted.test(t) || !defaultSort.test(t)) break;
+        target=p;
+      }
+      if(target && target.parentElement) target.remove();
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',clean,{once:true}); else clean();
+  const observer=new MutationObserver(()=>clean());
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
