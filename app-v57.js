@@ -1074,31 +1074,47 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.27";
+window.FKK_APP_VERSION = "v58.30";
 
 
-/* v58.29: remove the unwanted “Sortieren nach – Nächste zuerst” row.
-   Also handles an older cached/dynamically rendered markup variant. */
+
+/* v58.30: robustly remove the unwanted result-sort row and refresh cached app assets. */
 (function removeUnwantedSortRow(){
-  const unwanted = /sortieren\s+nach/i;
-  const defaultSort = /nächste\s+zuerst/i;
+  const labelRe = /sortieren\s+nach/i;
+  const valueRe = /nächste\s+zuerst/i;
   function clean(){
-    document.querySelectorAll('label, select, div, section, fieldset').forEach(el=>{
-      if(!el.isConnected) return;
-      const text=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
-      if(!text || text.length>180 || !unwanted.test(text) || !defaultSort.test(text)) return;
-      // Remove the smallest layout wrapper containing both the label and selector.
-      let target=el;
-      for(let i=0;i<3 && target.parentElement;i++){
-        const p=target.parentElement;
-        const t=(p.innerText||p.textContent||'').replace(/\s+/g,' ').trim();
-        if(t.length>220 || !unwanted.test(t) || !defaultSort.test(t)) break;
-        target=p;
+    // Find the visible label even when the label and select are separate siblings.
+    const candidates = [...document.querySelectorAll('label, span, div, section, p, strong')];
+    for (const el of candidates) {
+      if (!el.isConnected) continue;
+      const own = (el.childElementCount === 0 ? el.textContent : '').replace(/\s+/g,' ').trim();
+      if (!labelRe.test(own)) continue;
+      let target = el;
+      for (let i=0; i<5 && target.parentElement; i++) {
+        const parent = target.parentElement;
+        const txt = (parent.innerText || parent.textContent || '').replace(/\s+/g,' ').trim();
+        if (txt.length > 260) break;
+        if (valueRe.test(txt)) { target = parent; break; }
+        target = parent;
       }
-      if(target && target.parentElement) target.remove();
-    });
+      const txt = (target.innerText || target.textContent || '').replace(/\s+/g,' ').trim();
+      if (valueRe.test(txt) && target.parentElement) target.remove();
+    }
+    // Fallback for compact layout wrappers where the label is not a leaf element.
+    for (const el of document.querySelectorAll('div, section, fieldset, label')) {
+      const txt = (el.innerText || el.textContent || '').replace(/\s+/g,' ').trim();
+      if (txt.length > 180 || !labelRe.test(txt) || !valueRe.test(txt)) continue;
+      let target = el;
+      for (let i=0; i<3 && target.parentElement; i++) {
+        const p = target.parentElement;
+        const t = (p.innerText || p.textContent || '').replace(/\s+/g,' ').trim();
+        if (t.length > 220 || !labelRe.test(t) || !valueRe.test(t)) break;
+        target = p;
+      }
+      if (target.parentElement) target.remove();
+    }
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',clean,{once:true}); else clean();
-  const observer=new MutationObserver(()=>clean());
-  observer.observe(document.documentElement,{childList:true,subtree:true});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', clean, {once:true}); else clean();
+  const observer = new MutationObserver(clean);
+  observer.observe(document.documentElement, {childList:true, subtree:true});
 })();

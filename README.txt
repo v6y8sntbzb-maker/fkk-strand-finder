@@ -105,4 +105,4 @@ Version v58.27 – Anfahrt verbessert
 - Die Fahrzeit und Straßenentfernung benötigen Internet und sind Schätzungen; Verkehr und Sperrungen können abweichen.
 
 
-Version 58.29: entfernt die unerwünschte Sortierzeile „Sortieren nach – Nächste zuerst“ und erneuert den Service-Worker-Cache, damit iPhones die aktualisierte Version laden.
+Version 58.30: entfernt die unerwünschte Sortierzeile „Sortieren nach – Nächste zuerst“ und erneuert den Service-Worker-Cache, damit iPhones die aktualisierte Version laden.
