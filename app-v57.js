@@ -12,13 +12,32 @@ function setDarkMode(enabled){
   if(b) b.textContent=enabled?"☀️ Heller Modus":"🌙 Dunkler Modus";
   if(typeof map!=="undefined" && map) setTimeout(()=>map.invalidateSize(),80);
 }
-// FKK Strand Finder v56
+// v58.32: Zuverlässiger Offline-Hinweis und erneute Größenberechnung nach Rückkehr des Netzes.
+(function(){
+  function updateNetworkStatus(){
+    const banner=document.getElementById("offlineBanner");
+    if(!banner) return;
+    const offline=!navigator.onLine;
+    banner.classList.toggle("hidden",!offline);
+    banner.textContent=offline
+      ? "📡 Offline – gespeicherte FKK-Orte und Favoriten sind verfügbar. Kartenkacheln, neue Ortssuchen und Fahrzeiten benötigen Internet."
+      : "✅ Verbindung wiederhergestellt.";
+    if(!offline){
+      window.setTimeout(()=>banner.classList.add("hidden"),2600);
+      if(typeof map!=="undefined" && map) window.setTimeout(()=>map.invalidateSize(),150);
+    }
+  }
+  window.addEventListener("online",updateNetworkStatus);
+  window.addEventListener("offline",updateNetworkStatus);
+  document.addEventListener("DOMContentLoaded",updateNetworkStatus);
+})();
+\n// FKK Strand Finder v56
 // Statische FKK-Datenbasis. Die Suche kann vom GPS-Standort ODER von einem eingegebenen Ort starten.
 
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.27";
+const APP_VERSION = "v58.32";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
