@@ -118,3 +118,6 @@ v58.35 – Punkt 4 Favoriten verbessert: persönliche Notizen pro gespeichertem 
 
 
 Version v58.36 – Punkt 5: Zusätzliche optionale Filter für Parkplatz-, WC/Sanitär- und Eintritt/Gebühren-Hinweise. Diese Filter prüfen nur, ob ein Hinweis im Datenbank-Status hinterlegt ist; sie garantieren keine aktuelle Ausstattung oder Preise. Filter zurücksetzen setzt auch diese Optionen zurück.
+
+
+Version v58.37 – Die aufklappbare Gruppe „Weitere Filter“ (Parkplatz-, WC/Sanitär- und Eintritt/Gebühren-Hinweise) wurde auf Wunsch entfernt. Die übrigen Suchfilter und „Filter zurücksetzen“ bleiben erhalten.
