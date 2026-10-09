@@ -112,3 +112,6 @@ v58.33 – QA-Korrekturen: JavaScript-Syntaxfehler durch versehentliches literal
 
 
 v58.34 – Punkte 1–3: Laufzeitprüfung auf Koordinaten außerhalb des Deutschland-Bereichs, Hinweise bei nahezu identischen Kartenpunkten und fehlenden Quellen; unplausible Koordinaten werden nicht als Suchtreffer ausgegeben. Radius-/Kartenlogik beibehalten. Ortsdetails zeigen jetzt Koordinaten und einen Link zur Kontrolle in OpenStreetMap; bei leeren Suchergebnissen gibt es einen direkten Filter-zurücksetzen-Button. Keine Behauptung einer externen Vor-Ort-Verifikation.
+
+
+v58.35 – Punkt 4 Favoriten verbessert: persönliche Notizen pro gespeichertem FKK-Ort, automatische lokale Speicherung auf dem Gerät, Notizen werden beim Teilen der Favoritenliste mit aufgenommen. Bestehende Favoriten, Sterne auf der Karte, Sortierung und Karten-/Navigationsaktionen bleiben erhalten. Keine Kontosynchronisierung; Notizen bleiben im Browser dieses Geräts. Statische Syntax-/Paketprüfung, kein vollständiger iPhone-Live-Test.

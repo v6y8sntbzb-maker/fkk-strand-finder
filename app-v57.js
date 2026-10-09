@@ -38,7 +38,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.33";
+const APP_VERSION = "v58.35";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -1038,15 +1038,26 @@ function renderFavorites(){
   const cards=favItems.map(p=>{
     const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
     const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km Luftlinie</div>` : "";
-    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button><button class="modalAction favShareOne" type="button" data-fav-share="${escapeHtml(p.name)}">↗️ Diesen Ort teilen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
+    const savedNote=(JSON.parse(localStorage.getItem("fkkFavoriteNotes")||"{}"))[p.name]||"";
+    return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><label class="favoriteNoteLabel" for="favNote-${encodeURIComponent(p.name).replace(/%/g,"_")}">📝 Meine Notiz</label><textarea class="favoriteNoteInput" id="favNote-${encodeURIComponent(p.name).replace(/%/g,"_")}" data-fav-note="${escapeHtml(p.name)}" maxlength="500" rows="2" placeholder="z. B. Parkplatz, Zugang, bester Besuchszeitpunkt …">${escapeHtml(savedNote)}</textarea><div class="favoriteNoteStatus" aria-live="polite">${savedNote ? "Notiz gespeichert" : "Wird automatisch auf diesem Gerät gespeichert"}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button><button class="modalAction favShareOne" type="button" data-fav-share="${escapeHtml(p.name)}">↗️ Diesen Ort teilen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
   }).join("");
   document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div><div class="favoriteCount">Meine FKK-Orte · ${favItems.length} gespeichert</div><div class="favoriteQualityNote">✓ Offiziell bestätigt = mit offizieller Quelle belegt. Andere Einträge stammen aus FKK-Verzeichnissen oder Kartendaten; bitte örtliche Hinweise prüfen.</div><div class="favoriteSortRow"><label for="favoriteSort">Sortieren</label><select id="favoriteSort"><option value="distance" ${favoriteSort==="distance"?"selected":""} ${searchOrigin?"":"disabled"}>📍 Entfernung</option><option value="name" ${favoriteSort==="name"?"selected":""}>🔤 Name</option></select></div></div><div class="favoriteToolbarButtons"><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button><button class="favoriteShare" id="favoriteShare" type="button">↗️ Teilen</button></div></div><div class="favoriteList">${cards}</div>`;
   document.getElementById("favoriteSort").addEventListener("change",(event)=>{
     localStorage.setItem("fkkFavoriteSort",event.target.value);
     renderFavorites();
   });
+  document.querySelectorAll(".favoriteNoteInput").forEach(input=>input.addEventListener("input",()=>{
+    let notes={};
+    try{ notes=JSON.parse(localStorage.getItem("fkkFavoriteNotes")||"{}"); }catch(e){ notes={}; }
+    const value=input.value.slice(0,500);
+    if(value.trim()) notes[input.dataset.favNote]=value; else delete notes[input.dataset.favNote];
+    try{ localStorage.setItem("fkkFavoriteNotes",JSON.stringify(notes)); }catch(e){ console.warn("Favoriten-Notiz konnte nicht gespeichert werden",e); }
+    const status=input.parentElement.querySelector(".favoriteNoteStatus");
+    if(status) status.textContent="✓ Lokal gespeichert";
+  }));
   document.getElementById("favoriteShare").addEventListener("click",async()=>{
-    const shareText = "Meine FKK-Favoriten\n\n" + favItems.map((p,i)=>`${i+1}. ${p.name}${searchOrigin && Number.isFinite(p.distance)?` – ${p.distance.toFixed(1)} km`:""}`).join("\n");
+    let noteMap={}; try{ noteMap=JSON.parse(localStorage.getItem("fkkFavoriteNotes")||"{}"); }catch(e){}
+    const shareText = "Meine FKK-Favoriten\n\n" + favItems.map((p,i)=>`${i+1}. ${p.name}${searchOrigin && Number.isFinite(p.distance)?` – ${p.distance.toFixed(1)} km`:""}${noteMap[p.name]?`\n   Notiz: ${noteMap[p.name]}`:""}`).join("\n");
     try{
       if(navigator.share){ await navigator.share({title:"Meine FKK-Favoriten",text:shareText}); }
       else if(navigator.clipboard){ await navigator.clipboard.writeText(shareText); alert("Favoriten wurden in die Zwischenablage kopiert."); }
@@ -1127,7 +1138,7 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.33";
+window.FKK_APP_VERSION = "v58.35";
 
 
 

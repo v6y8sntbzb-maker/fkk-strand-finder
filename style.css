@@ -823,3 +823,12 @@ input, select, textarea { font-size: 16px; }
   line-height:1.4;
 }
 body.darkMode .dataAuditWarning{color:#ffe2a8;background:rgba(202,128,25,.18)}
+
+/* v58.35: persönliche Notizen zu Favoriten */
+.favoriteNoteLabel{display:block;margin-top:10px;color:#315777;font-size:11px;font-weight:800}
+.favoriteNoteInput{display:block;width:100%;box-sizing:border-box;min-height:58px;margin-top:5px;padding:10px 11px;border:1px solid #cfe0ef;border-radius:12px;background:#fff;color:#183a59;font:inherit;font-size:12px;line-height:1.45;resize:vertical}
+.favoriteNoteInput:focus{outline:2px solid #78baf0;outline-offset:1px}
+.favoriteNoteStatus{margin-top:4px;color:#16815b;font-size:10px;font-weight:700}
+body.darkMode .favoriteNoteLabel{color:#d4e8fb}
+body.darkMode .favoriteNoteInput{background:#14283b;color:#f2f7fc;border-color:#34536e}
+body.darkMode .favoriteNoteStatus{color:#7cddb2}
