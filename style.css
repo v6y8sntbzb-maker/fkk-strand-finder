@@ -655,3 +655,34 @@ body.darkMode .featureStrip>div,body.darkMode .footerNav,body.darkMode .mapLegen
 body.darkMode #results .card,body.darkMode .profileGrid>div,body.darkMode .profileSection,body.darkMode .profileLiveCard{
   background:rgba(17,83,112,.88)!important;border-color:rgba(117,197,224,.35)!important;
 }
+
+
+/* v58.17 – graue Schrift auf den meerblauen Kacheln in Weiß anzeigen */
+.searchCard .tinyLabel,.searchCard .searchExamples,.searchCard .controlLabel,
+.searchCard .rangeLabels,.searchCard .statusSmall,.searchCard .controlCard small,
+.mapSection .tinyLabel,.mapSection .mapSubtitle,.mapSection .mapLegend,
+.resultsSection .resultHint,#results .meta,#results .source,#results .source a,#results .navHint,
+.infoBox,.infoBox p,.infoBox strong,
+.featureStrip>div small,
+.footerNav .footerItem,.footerNav .footerItem small,
+.favoriteCount,.favoriteModalStatus,.favoriteEmpty,
+.modalBox .reportIntro span,.modalBox .reportLabel,.modalBox .reportPrivacy,
+.modalBox .privacyCard,.modalBox .privacyCard .privacySmall,
+.profileGrid>div span,.profileSection p,.profileMuted,
+.profileLiveCard .weatherMeta,.profileLiveCard small,.profileLiveCard .driveTime span,
+.profileLiveCard .liveDataLoading,.profileLiveCard .liveDataMuted,
+.favoriteSortRow,.mapPlacePopupMeta,.mapPlacePopupStatus {
+  color:#fff !important;
+}
+/* Graue Untertexte in der Karte und bei den Suchtreffern */
+body.darkMode .searchCard .tinyLabel,body.darkMode .searchCard .searchExamples,
+body.darkMode .searchCard .controlLabel,body.darkMode .searchCard .rangeLabels,
+body.darkMode .searchCard .statusSmall,body.darkMode .mapSection .mapSubtitle,
+body.darkMode .resultsSection .resultHint,body.darkMode #results .meta,
+body.darkMode #results .source,body.darkMode #results .source a,
+body.darkMode #results .navHint,body.darkMode .footerNav .footerItem,
+body.darkMode .favoriteCount,body.darkMode .favoriteModalStatus,
+body.darkMode .profileSection p,body.darkMode .profileMuted,
+body.darkMode .mapPlacePopupMeta,body.darkMode .mapPlacePopupStatus {
+  color:#fff !important;
+}

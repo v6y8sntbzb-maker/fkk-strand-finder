@@ -51,3 +51,6 @@ Version v58.16 – Kartenansicht verbessert
 - Nach dem Verschieben der Karte wird „Hier suchen“ hervorgehoben. Beim Start der Suche gibt es eine kurze Rückmeldung.
 - Plus-/Minus-Zoom-Schaltflächen bleiben deaktiviert; Pinch-to-Zoom funktioniert weiterhin.
 - Wenn das Cluster-Zusatzmodul nicht geladen werden kann, zeigt die Karte die Marker einzeln an.
+
+
+Version v58.17 – graue Schrift auf den meerblauen Kacheln auf Weiß umgestellt; helle Schrift im dunklen Modus beibehalten.
