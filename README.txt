@@ -43,3 +43,11 @@ v58.11: Ortsprofile erweitert um Datenqualität, belegte Hinweise und klarere Pr
 
 
 Hinweis v58.13: Ortsprofile zeigen online aktuelle Wetterdaten über Open-Meteo und – wenn ein Suchort festgelegt ist – eine ungefähre Fahrzeit über OSRM. Diese Live-Dienste benötigen eine Internetverbindung.
+
+Version v58.15 – Kartenansicht verbessert
+- FKK-Marker werden bei geringer Zoomstufe zu anklickbaren Gruppen zusammengefasst.
+- Beim Vergrößern erscheinen einzelne Orte; bei maximaler Nähe lassen sich nahe Marker auffächern.
+- Favoriten bleiben als Sterne erkennbar; die Kartenlegende erklärt jetzt auch den Stern.
+- Nach dem Verschieben der Karte wird „Hier suchen“ hervorgehoben. Beim Start der Suche gibt es eine kurze Rückmeldung.
+- Plus-/Minus-Zoom-Schaltflächen bleiben deaktiviert; Pinch-to-Zoom funktioniert weiterhin.
+- Wenn das Cluster-Zusatzmodul nicht geladen werden kann, zeigt die Karte die Marker einzeln an.

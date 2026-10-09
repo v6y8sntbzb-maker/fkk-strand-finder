@@ -1,4 +1,4 @@
-const CACHE_NAME = "fkk-strand-finder-v58.13";
+const CACHE_NAME = "fkk-strand-finder-v58.15";
 const APP_SHELL = [
   "./", "./index.html", "./style.css", "./app-v57.js", "./beach-background.png", "./manifest.webmanifest"
 ];

@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_AUDIT_DATE = "08.10.2026";
-const APP_VERSION = "v58.13";
+const APP_VERSION = "v58.15";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -283,6 +283,7 @@ let map;
 let userMarker = null;
 let radiusCircle = null;
 let resultMarkers = [];
+let markerClusterGroup = null;
 let searchOrigin = null; // {lat, lon, label, kind}
 let searchTimer = null;
 let favorites = new Set(JSON.parse(localStorage.getItem("fkkFavorites") || "[]"));
@@ -439,7 +440,9 @@ if (searchHereBtn) {
     placeInput.value = "";
     showOrigin(searchOrigin);
     searchHereBtn.classList.remove("isReady");
+    searchHereBtn.textContent = "✓ Suche läuft …";
     searchPlaces();
+    window.setTimeout(()=>{ if(searchHereBtn) searchHereBtn.textContent="⌖ Hier suchen"; },650);
     setFooterActive("footerMap");
   });
 }
@@ -468,10 +471,27 @@ function initMap(){
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom:19, attribution:"© OpenStreetMap-Mitwirkende"
   }).addTo(map);
+  // Orte werden bei kleiner Zoomstufe zusammengefasst. Falls das Zusatzmodul
+  // offline nicht geladen werden kann, bleiben einzelne Marker weiterhin nutzbar.
+  if (typeof L.markerClusterGroup === "function") {
+    markerClusterGroup = L.markerClusterGroup({
+      showCoverageOnHover:false, spiderfyOnMaxZoom:true, zoomToBoundsOnClick:true,
+      disableClusteringAtZoom:13, maxClusterRadius:48,
+      iconCreateFunction: function(cluster) {
+        const count = cluster.getChildCount();
+        const size = count < 10 ? "small" : count < 50 ? "medium" : "large";
+        return L.divIcon({html:`<span>${count}</span>`,className:`fkkCluster fkkCluster-${size}`,iconSize:[42,42]});
+      }
+    }).addTo(map);
+  }
   map.on("dragstart", () => { mapDragging = true; });
   map.on("dragend", () => {
     mapDragging = false;
-    if (searchHereBtn) searchHereBtn.classList.add("isReady");
+    if (searchHereBtn) {
+      searchHereBtn.classList.add("isReady");
+      searchHereBtn.textContent = "⌖ Hier suchen";
+      searchHereBtn.setAttribute("aria-label", "Im sichtbaren Kartenausschnitt nach FKK-Orten suchen");
+    }
   });
 }
 
@@ -488,7 +508,8 @@ function escapeHtml(s){
 }
 
 function clearMarkers(){
-  resultMarkers.forEach(m=>map.removeLayer(m));
+  if (markerClusterGroup) markerClusterGroup.clearLayers();
+  resultMarkers.forEach(m=>{ if (!markerClusterGroup && map.hasLayer(m)) map.removeLayer(m); });
   resultMarkers=[];
 }
 
@@ -688,7 +709,7 @@ function renderResults(items, radius){
         : `<div class="fkkMarker"><span class="markerUmbrella" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 23c3-10 11-15 16-15s13 5 16 15H8Z"/><path d="M24 23v15c0 3 2 5 5 5"/><path d="M18 43h12"/></svg></span></div>`,
       iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-30]
     });
-    const marker=L.marker([p.lat,p.lon],{icon:makeFkkIcon(favorites.has(p.name))}).addTo(map);
+    const marker=L.marker([p.lat,p.lon],{icon:makeFkkIcon(favorites.has(p.name))});
     marker.__fkkName=p.name;
     const popupNav = navigationLinks(p);
     const popupFavoriteLabel = favorites.has(p.name) ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen";
@@ -745,6 +766,7 @@ function renderResults(items, radius){
       };
     });
     resultMarkers.push(marker);
+    if (markerClusterGroup) markerClusterGroup.addLayer(marker); else marker.addTo(map);
 
     const sourceLink = p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(p.source)}</a>` : escapeHtml(p.source||"");
     const card=document.createElement("div");

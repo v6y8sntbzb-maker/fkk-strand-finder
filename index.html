@@ -8,6 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>FKK Strand Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -80,6 +82,7 @@
           <span><i class="legendDot searchDot"></i> Suchort</span>
           <span><i class="legendDot gpsDot"></i> Dein Standort</span>
           <span><i class="legendPin"></i> FKK-Ort</span>
+          <span><b class="legendStar">★</b> Favorit</span>
         </div>
       </div>
     </section>
@@ -125,6 +128,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="app-v57.js"></script>
 <script>
 if ("serviceWorker" in navigator) { window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }

@@ -627,3 +627,14 @@ body.darkMode #results .card{
   box-shadow:0 8px 24px rgba(0,0,0,.16);
 }
 body.darkMode #results .card:hover{background:rgba(14,29,43,.66)}
+
+
+/* v58.15 – Kartencluster und klare Legende */
+.fkkCluster{background:rgba(22,133,236,.16);border:1px solid rgba(22,133,236,.42);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(16,76,130,.18);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.fkkCluster span{display:flex;align-items:center;justify-content:center;width:31px;height:31px;border-radius:50%;background:rgba(22,133,236,.92);color:#fff;font:800 12px/1 system-ui,-apple-system,sans-serif;border:2px solid rgba(255,255,255,.92)}
+.fkkCluster-medium{background:rgba(20,151,111,.17);border-color:rgba(20,151,111,.42)}.fkkCluster-medium span{background:rgba(20,151,111,.94)}
+.fkkCluster-large{background:rgba(16,112,84,.18);border-color:rgba(16,112,84,.45)}.fkkCluster-large span{background:rgba(16,112,84,.95)}
+.legendStar{color:#f2b928;text-shadow:0 1px 2px rgba(90,60,0,.22);font-size:15px;line-height:1}
+.searchHereButton.isReady{outline:2px solid rgba(22,133,236,.22);outline-offset:2px}
+.darkMode .fkkCluster{background:rgba(50,135,218,.24);border-color:rgba(122,190,250,.55)}
+.darkMode .fkkCluster span{border-color:rgba(20,35,48,.9)}
