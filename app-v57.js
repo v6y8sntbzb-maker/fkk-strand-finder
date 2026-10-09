@@ -38,7 +38,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.35";
+const APP_VERSION = "v58.38";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -917,30 +917,70 @@ function dataQualityMarkup(p){
     : "";
 }
 
-function searchPlaces(){
+async function fetchOpenStreetMapFkkPlaces(lat, lon, radiusKm){
+  if(!navigator.onLine) return [];
+  const radiusM=Math.max(1000,Math.min(100000,Math.round(radiusKm*1000)));
+  // Nur ausdrücklich als textilfrei markierte OSM-Objekte abfragen; keine bloßen Seen/Strände erraten.
+  const query=`[out:json][timeout:8];(nwr(around:${radiusM},${lat},${lon})[nudism~"^(yes|designated|permissive)$",i];);out center tags;`;
+  const endpoints=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter"];
+  for(const endpoint of endpoints){
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),9000);
+    try{
+      const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8","Accept":"application/json"},body:"data="+encodeURIComponent(query),signal:controller.signal,cache:"no-store"});
+      if(!response.ok) throw new Error("Overpass response");
+      const data=await response.json();
+      return (data.elements||[]).map(el=>{
+        const tags=el.tags||{};
+        const point=el.type==="node"?{lat:el.lat,lon:el.lon}:el.center||{};
+        const name=String(tags.name||tags.description||tags.operator||"").trim();
+        if(!name || !Number.isFinite(Number(point.lat)) || !Number.isFinite(Number(point.lon))) return null;
+        const label=String(tags.nudism||"").toLowerCase();
+        const type=/beach|strand|coast/i.test(`${tags.natural||""} ${tags.leisure||""} ${name}`)?"FKK-Strand":(/swimming|bathing|water/i.test(`${tags.leisure||""} ${tags.sport||""} ${name}`)?"Badestelle":"FKK-Bereich");
+        return {name,lat:Number(point.lat),lon:Number(point.lon),label:"FKK · OSM",type,evidence:"OpenStreetMap nudism-Tag",source:"OpenStreetMap",sourceUrl:`https://www.openstreetmap.org/${el.type}/${el.id}`,status:`In OpenStreetMap mit nudism=${label} markiert. Kennzeichnung und Zugänglichkeit vor Ort prüfen.`,active:true,osmId:`${el.type}/${el.id}`,isLiveOsm:true};
+      }).filter(Boolean);
+    }catch(e){ /* zweite öffentliche Overpass-Instanz versuchen */ }
+    finally{clearTimeout(timeout);}
+  }
+  return [];
+}
+
+async function searchPlaces(){
   if(!searchOrigin) return;
   updateRadiusCircle(true);
   const {lat,lon}=searchOrigin;
   const radiusKm=Number(radiusEl.value);
-  statusEl.textContent="🔎 Suche in der lokalen FKK-Datenbank …";
-  resultsEl.innerHTML='<div class="card">Orte werden nach Entfernung sortiert …</div>';
+  statusEl.textContent="🔎 Suche in der lokalen Datenbank und in OpenStreetMap …";
+  resultsEl.innerHTML='<div class="card">FKK-Orte werden gesucht …</div>';
 
   const activePlaces=FKK_PLACES.filter(p=>p.active!==false);
   const invalidCoordinateCount=activePlaces.filter(p=>{
     const la=Number(p.lat), lo=Number(p.lon);
     return !Number.isFinite(la)||!Number.isFinite(lo)||la < 47||la > 56||lo < 5||lo > 16;
   }).length;
-  let items=activePlaces
+  const local=activePlaces
     .filter(p=>Number.isFinite(Number(p.lat))&&Number.isFinite(Number(p.lon))&&Number(p.lat)>=47&&Number(p.lat)<=56&&Number(p.lon)>=5&&Number(p.lon)<=16)
     .map(p=>({...p,distance:haversineKm(lat,lon,p.lat,p.lon)}))
     .filter(p=>p.distance<=radiusKm);
 
+  const live=await fetchOpenStreetMapFkkPlaces(lat,lon,radiusKm);
+  const merged=[...local];
+  for(const p of live){
+    const distance=haversineKm(lat,lon,p.lat,p.lon);
+    if(distance>radiusKm) continue;
+    const nameKey=p.name.toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]/g,"");
+    const duplicate=merged.some(q=>{
+      const qName=String(q.name||"").toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]/g,"");
+      return qName===nameKey || haversineKm(p.lat,p.lon,q.lat,q.lon)<0.15;
+    });
+    if(!duplicate) merged.push({...p,distance});
+  }
+  let items=merged;
   if(smartSearchMode === "see") items=items.filter(p=>/see|badesee|weiher|teich|naturbad|natursee/i.test(`${p.name} ${p.type} ${p.label}`));
   if(smartSearchMode === "strand") items=items.filter(p=>/strand|ufer|küste|nordsee|ostsee/i.test(`${p.name} ${p.type} ${p.label}`));
 
   if(confirmedOnlyEl && confirmedOnlyEl.checked){
-    // "Offiziell" bedeutet in der App ausschließlich eine ausdrücklich
-    // als offizielle Quelle hinterlegte Bestätigung, nicht OSM oder Verzeichnisse.
+    // OSM-Tags sind kein amtlicher Nachweis und werden deshalb hier nicht als offiziell ausgegeben.
     items=items.filter(p=>verificationInfo(p).kind==="official");
   }
   if(typeFilterEl && typeFilterEl.value!=="all"){
@@ -954,6 +994,13 @@ function searchPlaces(){
   });
   else items.sort((a,b)=>a.distance-b.distance);
   renderResults(items,radiusKm);
+  if(live.length){
+    statusEl.textContent=`✅ ${items.length} passende Orte · lokale Datenbank + OpenStreetMap (${live.length} Online-Treffer vor Dublettenprüfung). OSM-Angaben sind nicht automatisch amtlich bestätigt.`;
+  }else if(navigator.onLine){
+    statusEl.textContent=`ℹ️ ${items.length} passende Orte aus der lokalen Datenbank. OpenStreetMap lieferte gerade keine zusätzlichen Treffer; bitte später erneut versuchen.`;
+  }else{
+    statusEl.textContent=`📡 Offline: ${items.length} passende Orte aus der lokalen Datenbank.`;
+  }
 }
 
 function useLocation(){
@@ -1138,7 +1185,7 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.37";
+window.FKK_APP_VERSION = "v58.38";
 
 
 
