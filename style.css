@@ -686,3 +686,7 @@ body.darkMode .profileSection p,body.darkMode .profileMuted,
 body.darkMode .mapPlacePopupMeta,body.darkMode .mapPlacePopupStatus {
   color:#fff !important;
 }
+
+/* v58.19: Distanz als Luftlinie klar kennzeichnen */
+.distanceHint{font-size:11px;line-height:1.35;margin-top:2px;color:#e6f7ff!important;opacity:.92}
+body.darkMode .distanceHint{color:#d6efff!important}

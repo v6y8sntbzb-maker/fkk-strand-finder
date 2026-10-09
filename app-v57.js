@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_AUDIT_DATE = "08.10.2026";
-const APP_VERSION = "v58.18";
+const APP_VERSION = "v58.19";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -362,7 +362,7 @@ function openPlaceProfile(p){
   modalTitleEl.textContent=p.name;
   modalTextEl.innerHTML=`
     <div class="profileHero">
-      <div class="profileDistance">📍 ${p.distance!=null ? p.distance.toFixed(1)+" km entfernt" : "Entfernung nicht berechnet"}</div>
+      <div class="profileDistance">📍 ${p.distance!=null ? p.distance.toFixed(1)+" km Luftlinie" : "Entfernung nicht berechnet"}</div>
       <div class="profileBadges"><span class="destinationBadge destination-${d.kind}">📍 ${d.label}</span><span class="verificationBadge verification-${v.kind}">${v.icon} ${v.label}</span><span class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</span></div>
     </div>
     <div class="profileGrid">
@@ -717,7 +717,7 @@ function renderResults(items, radius){
     marker.bindPopup(`
       <div class="mapPlacePopup">
         <div class="mapPlacePopupTitle">${escapeHtml(p.name)}</div>
-        <div class="mapPlacePopupDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>
+        <div class="mapPlacePopupDistance">📍 ${p.distance.toFixed(1)} km Luftlinie</div>
         <div class="mapPlacePopupMeta"><strong>${escapeHtml(p.label)}</strong> · ${escapeHtml(p.type)}</div>
         <div class="destinationBadge destination-${destinationInfo(p).kind}">📍 ${destinationInfo(p).label}</div>
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
@@ -776,7 +776,7 @@ function renderResults(items, radius){
       <button class="favoriteButton ${favorites.has(p.name)?"isFavorite":""}" type="button" aria-label="${favorites.has(p.name)?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen"}" title="${favorites.has(p.name)?"Aus Favoriten entfernen":"Zu Favoriten hinzufügen"}">${favorites.has(p.name)?"★":"☆"}</button>
       <h3 class="favoriteTitle">${escapeHtml(p.name)}</h3>
       <div class="meta resultMeta">
-        <div class="distanceLine">📍 <strong>${p.distance.toFixed(1)} km</strong> entfernt</div>
+        <div class="distanceLine">📍 <strong>${p.distance.toFixed(1)} km</strong> Luftlinie</div><div class="distanceHint">🧭 Genaue Fahrzeit in „Ortsdetails“ berechnen</div>
         <div class="detailLine"><strong>${escapeHtml(p.label)}</strong> <span class="typePill">${escapeHtml(p.type)}</span></div>
         <div class="destinationBadge destination-${destinationInfo(p).kind}">📍 ${destinationInfo(p).label}</div>
         <div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div>
@@ -944,7 +944,7 @@ function renderFavorites(){
   if(favoriteSort === "name") favItems.sort((a,b)=>a.name.localeCompare(b.name,"de"));
   const cards=favItems.map(p=>{
     const sourceLink=p.sourceUrl ? `<a href="${escapeHtml(p.sourceUrl)}" target="_blank" rel="noopener">Quelle öffnen</a>` : "";
-    const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km entfernt</div>` : "";
+    const dist=searchOrigin ? `<div class="favoriteModalDistance">📍 ${p.distance.toFixed(1)} km Luftlinie</div>` : "";
     return `<div class="favoriteModalCard"><div class="favoriteModalTop"><strong>${escapeHtml(p.name)}</strong><button class="favoriteRemove" type="button" data-fav="${escapeHtml(p.name)}" aria-label="Aus Favoriten entfernen">★</button></div><div class="favoriteModalMeta">${escapeHtml(p.label)} · ${escapeHtml(p.type)}</div>${dist}<div class="verificationBadge verification-${verificationInfo(p).kind}">${verificationInfo(p).icon} ${verificationInfo(p).label}</div><div class="favoriteModalStatus">${escapeHtml(p.status)}</div><div class="favoriteModalActions"><button class="modalAction favMapButton" type="button" data-lat="${p.lat}" data-lon="${p.lon}">🗺️ Auf Karte zeigen</button>${navigationLinks(p)}${reportIssueLink(p)}${sourceLink}</div></div>`;
   }).join("");
   document.getElementById("modalText").innerHTML=`<div class="favoriteToolbar"><div><div class="favoriteCount">${favItems.length} gespeicherte FKK-Orte</div><div class="favoriteSortRow"><label for="favoriteSort">Sortieren</label><select id="favoriteSort"><option value="distance" ${favoriteSort==="distance"?"selected":""} ${searchOrigin?"":"disabled"}>📍 Entfernung</option><option value="name" ${favoriteSort==="name"?"selected":""}>🔤 Name</option></select></div></div><div class="favoriteToolbarButtons"><button class="favoriteMapAll" id="favoriteMapAll" type="button">🗺️ Alle auf Karte</button><button class="favoriteShare" id="favoriteShare" type="button">↗️ Teilen</button></div></div><div class="favoriteList">${cards}</div>`;
@@ -1022,4 +1022,4 @@ confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces();
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 
 initMap();
-window.FKK_APP_VERSION = "v58.17";
+window.FKK_APP_VERSION = "v58.19";

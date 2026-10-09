@@ -57,3 +57,6 @@ Version v58.17 – graue Schrift auf den meerblauen Kacheln auf Weiß umgestellt
 
 
 v58.18: Verbesserte Suche versteht Suchanfragen wie „FKK bei Hannover“, „FKK See“ und „FKK Strand“. Ortsnamen werden von FKK-/Kategoriebegriffen getrennt; See- und Strandwünsche grenzen die Ergebnisse entsprechend ein.
+
+
+Version v58.19: Entfernungen werden klar als Luftlinie gekennzeichnet. In Ergebnis-Kacheln wird erklärt, dass die Fahrzeit in den Ortsdetails über eine Routing-Datenquelle berechnet wird.
