@@ -81,3 +81,9 @@ Version v58.23 – Datenqualität transparenter
 - Fehlende Quellen oder Hinweise auf Unsicherheit lösen den Hinweis „Bitte vor Ort prüfen“ aus.
 - Das Datum wird als Datenstand der Zusammenstellung bezeichnet, nicht als individuelle Prüfung jedes Orts.
 - Quellenlink und bisherige Ortsangaben bleiben erhalten; lokale Regeln und aktuelle Beschilderung vor Ort haben Vorrang.
+
+
+Version v58.24 – Suchfilter verbessert
+- Suchergebnisse können nach Entfernung, Name A–Z oder offizieller Kennzeichnung sortiert werden.
+- Filter lassen sich mit „Filter zurücksetzen“ gemeinsam zurücksetzen.
+- Der Standard bleibt „Nächste zuerst“; offizielle Quellen werden nicht automatisch behauptet, sondern anhand der hinterlegten Kennzeichnung sortiert.

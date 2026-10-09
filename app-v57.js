@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.23";
+const APP_VERSION = "v58.24";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -296,6 +296,8 @@ const resultsEl = document.getElementById("results");
 const locateBtn = document.getElementById("locateBtn");
 const confirmedOnlyEl = document.getElementById("confirmedOnly");
 const typeFilterEl = document.getElementById("typeFilter");
+const resultSortEl = document.getElementById("resultSort");
+const resetFiltersEl = document.getElementById("resetFilters");
 const placeInput = document.getElementById("placeInput");
 const placeSearchBtn = document.getElementById("placeSearchBtn");
 const originInfoEl = document.getElementById("originInfo");
@@ -711,7 +713,15 @@ function navigationLinks(p){
 function renderResults(items, radius){
   clearMarkers();
   resultsEl.innerHTML="";
-  items.sort((a,b)=>a.distance-b.distance);
+  const sortMode = resultSortEl ? resultSortEl.value : "distance";
+  items.sort((a,b)=>{
+    if(sortMode === "name") return a.name.localeCompare(b.name, "de-DE");
+    if(sortMode === "official") {
+      const score = p => verificationInfo(p).kind === "official" ? 0 : verificationInfo(p).kind === "directory" ? 1 : 2;
+      return score(a)-score(b) || a.distance-b.distance;
+    }
+    return a.distance-b.distance;
+  });
 
   if (!items.length){
     statusEl.textContent=`ℹ️ Keine FKK-Orte innerhalb von ${radius} km in der lokalen Datenbank.`;
@@ -877,6 +887,13 @@ function searchPlaces(){
   if(typeFilterEl && typeFilterEl.value!=="all"){
     items=items.filter(p=>p.type===typeFilterEl.value);
   }
+  const sortMode = resultSortEl ? resultSortEl.value : "distance";
+  if(sortMode === "name") items.sort((a,b)=>a.name.localeCompare(b.name, "de-DE"));
+  else if(sortMode === "official") items.sort((a,b)=>{
+    const score = p => verificationInfo(p).kind === "official" ? 0 : verificationInfo(p).kind === "directory" ? 1 : 2;
+    return score(a)-score(b) || a.distance-b.distance;
+  });
+  else items.sort((a,b)=>a.distance-b.distance);
   renderResults(items,radiusKm);
 }
 
@@ -1037,6 +1054,14 @@ document.addEventListener("click",(event)=>{
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("modal").classList.add("hidden"));
 confirmedOnlyEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
 typeFilterEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
+if(resultSortEl) resultSortEl.addEventListener("change",()=>{ if(searchOrigin) searchPlaces(); });
+if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
+  if(typeFilterEl) typeFilterEl.value="all";
+  if(confirmedOnlyEl) confirmedOnlyEl.checked=false;
+  if(resultSortEl) resultSortEl.value="distance";
+  if(searchOrigin) searchPlaces();
+  else statusEl.textContent="Filter zurückgesetzt. Wähle einen Suchort, um FKK-Orte zu finden.";
+});
 
 initMap();
-window.FKK_APP_VERSION = "v58.22";
+window.FKK_APP_VERSION = "v58.24";
