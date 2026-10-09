@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.25";
+const APP_VERSION = "v58.26";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -350,12 +350,15 @@ async function loadDriveTime(p){
     const url=`https://router.project-osrm.org/route/v1/driving/${coords}?overview=false&alternatives=false&steps=false`;
     const r=await fetch(url,{cache:"no-store"});
     if(!r.ok) throw new Error("route");
-    const d=await r.json(); const sec=d.routes?.[0]?.duration;
-    if(!Number.isFinite(sec)) throw new Error("route");
+    const d=await r.json(); const route=d.routes?.[0];
+    const sec=route?.duration, meters=route?.distance;
+    if(!Number.isFinite(sec) || !Number.isFinite(meters)) throw new Error("route");
     const mins=Math.max(1,Math.round(sec/60));
     const h=Math.floor(mins/60), m=mins%60;
     const text=h?`${h} Std. ${m} Min.`:`${m} Min.`;
-    el.innerHTML=`<div class="driveTime"><strong>🧭 ca. ${text}</strong><span>Fahrzeit ab ${escapeHtml(searchOrigin.label||"deinem Suchort")}</span><small>Routenberechnung · OpenStreetMap/OSRM</small></div>`;
+    const km=meters/1000;
+    const distanceText=km>=100?km.toLocaleString("de-DE",{maximumFractionDigits:0}):km.toLocaleString("de-DE",{maximumFractionDigits:1});
+    el.innerHTML=`<div class="driveTime"><strong>🧭 ca. ${text}</strong><div class="driveDistance">🚗 Straßenentfernung: <b>${distanceText} km</b></div><span>Ab ${escapeHtml(searchOrigin.label||"deinem Suchort")}</span><small>Geschätzte Route · OpenStreetMap/OSRM. Verkehr und Sperrungen können abweichen.</small></div>`;
   }catch(e){ el.innerHTML='<div class="liveDataMuted">⚠️ Fahrzeit konnte gerade nicht berechnet werden.</div>'; }
 }
 
@@ -1067,4 +1070,4 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.25";
+window.FKK_APP_VERSION = "v58.26";

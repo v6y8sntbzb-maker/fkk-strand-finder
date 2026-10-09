@@ -727,3 +727,9 @@ body.darkMode .profileSection{
 body.darkMode .sortLabel{color:#e4f5ff}
 body.darkMode .resetFiltersButton{background:rgba(5,30,46,.75);border-color:#3d718a;color:#f3fbff}
 @media(min-width:520px){.filterRowExtra{grid-template-columns:auto minmax(160px,1fr) auto}.resetFiltersButton{grid-column:auto}}
+
+/* v58.26 – Straßenentfernung in der Fahrzeit-Kachel */
+.driveDistance{font-size:13px;color:#28465c;background:rgba(35,154,177,.10);border:1px solid rgba(35,154,177,.22);border-radius:11px;padding:8px 10px}
+.driveDistance b{font-size:14px;color:#087f91}
+body.darkMode .driveDistance{color:#d3e8ef;background:rgba(35,154,177,.15);border-color:rgba(91,194,210,.28)}
+body.darkMode .driveDistance b{color:#72d5e1}
