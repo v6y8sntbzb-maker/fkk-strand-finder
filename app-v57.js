@@ -18,7 +18,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.24";
+const APP_VERSION = "v58.25";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -329,11 +329,14 @@ async function loadPlaceWeather(p){
   if(!navigator.onLine){ el.innerHTML='<div class="liveDataMuted">📡 Wetter ist offline nicht verfügbar.</div>'; return; }
   el.innerHTML='<div class="liveDataLoading">🌤️ Wetter wird geladen …</div>';
   try{
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(p.lat)}&longitude=${encodeURIComponent(p.lon)}&current=temperature_2m,weather_code,wind_speed_10m,precipitation&timezone=auto`;
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(p.lat)}&longitude=${encodeURIComponent(p.lon)}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,precipitation&daily=precipitation_probability_max&forecast_days=1&timezone=auto`;
     const r=await fetch(url,{cache:"no-store"});
     if(!r.ok) throw new Error("weather");
     const d=await r.json(); const c=d.current||{};
-    el.innerHTML=`<div class="liveWeather"><div class="weatherMain"><span class="weatherIcon">${weatherIcon(c.weather_code)}</span><strong>${Number.isFinite(c.temperature_2m)?Math.round(c.temperature_2m):"–"} °C</strong><span>${escapeHtml(weatherDescription(c.weather_code))}</span></div><div class="weatherMeta"><span>💨 ${Number.isFinite(c.wind_speed_10m)?Math.round(c.wind_speed_10m):"–"} km/h</span><span>🌧️ ${Number.isFinite(c.precipitation)?c.precipitation.toFixed(1):"–"} mm</span></div><small>Aktuelle Wetterdaten · Open-Meteo</small></div>`;
+    const rainProb=Array.isArray(d.daily?.precipitation_probability_max)?d.daily.precipitation_probability_max[0]:null;
+    const windDir=Number.isFinite(c.wind_direction_10m)?`${Math.round(c.wind_direction_10m)}°`:"–";
+    const updated=c.time?new Date(c.time).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit",timeZone:d.timezone||undefined}):"";
+    el.innerHTML=`<div class="liveWeather"><div class="weatherMain"><span class="weatherIcon">${weatherIcon(c.weather_code)}</span><strong>${Number.isFinite(c.temperature_2m)?Math.round(c.temperature_2m):"–"} °C</strong><span>${escapeHtml(weatherDescription(c.weather_code))}</span></div><div class="weatherMeta"><span>💨 Wind ${Number.isFinite(c.wind_speed_10m)?Math.round(c.wind_speed_10m):"–"} km/h (${windDir})</span><span>🌧️ Regen heute: ${Number.isFinite(rainProb)?rainProb+" %":"keine Angabe"}</span><span>💧 Niederschlag aktuell: ${Number.isFinite(c.precipitation)?c.precipitation.toFixed(1):"–"} mm</span></div><small>Open-Meteo · ${updated?"Stand "+escapeHtml(updated):"Aktuelle Wetterdaten"} · Regenwert = Tageshöchstwahrscheinlichkeit</small></div>`;
   }catch(e){ el.innerHTML='<div class="liveDataMuted">⚠️ Wetterdaten konnten gerade nicht geladen werden.</div>'; }
 }
 async function loadDriveTime(p){
@@ -1064,4 +1067,4 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.24";
+window.FKK_APP_VERSION = "v58.25";

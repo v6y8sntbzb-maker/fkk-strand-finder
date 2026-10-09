@@ -87,3 +87,10 @@ Version v58.24 – Suchfilter verbessert
 - Suchergebnisse können nach Entfernung, Name A–Z oder offizieller Kennzeichnung sortiert werden.
 - Filter lassen sich mit „Filter zurücksetzen“ gemeinsam zurücksetzen.
 - Der Standard bleibt „Nächste zuerst“; offizielle Quellen werden nicht automatisch behauptet, sondern anhand der hinterlegten Kennzeichnung sortiert.
+
+
+Version v58.25 – Wetter vor Ort verbessert
+- Wetterprofil zeigt Temperatur, Wetterlage, Windgeschwindigkeit und Windrichtung.
+- Ergänzt die maximale Regenwahrscheinlichkeit für den heutigen Tag, getrennt von der aktuell gemessenen Niederschlagsmenge.
+- Zeigt den Zeitstand der Wetterdaten, sofern vom Wetterdienst geliefert.
+- Wetterdaten werden vom externen Dienst Open-Meteo abgerufen und benötigen Internet.
