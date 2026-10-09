@@ -638,3 +638,20 @@ body.darkMode #results .card:hover{background:rgba(14,29,43,.66)}
 .searchHereButton.isReady{outline:2px solid rgba(22,133,236,.22);outline-offset:2px}
 .darkMode .fkkCluster{background:rgba(50,135,218,.24);border-color:rgba(122,190,250,.55)}
 .darkMode .fkkCluster span{border-color:rgba(20,35,48,.9)}
+
+/* v58.16 – weiße Kacheln in ein sanftes Meeresblau ändern */
+:root{--sea-tile:rgba(88,184,220,.78);--sea-tile-border:rgba(191,235,250,.82);}
+.searchCard,.mapSection,.resultsSection,.infoBox,
+.featureStrip>div,.footerNav,.mapLegend,.modalBox,
+#results .card,.profileGrid>div,.profileSection,.profileLiveCard{
+  background:var(--sea-tile)!important;
+  border-color:var(--sea-tile-border)!important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+#results .card:hover{background:rgba(65,164,205,.86)!important}
+body.darkMode .searchCard,body.darkMode .mapSection,body.darkMode .resultsSection,body.darkMode .infoBox,
+body.darkMode .featureStrip>div,body.darkMode .footerNav,body.darkMode .mapLegend,body.darkMode .modalBox,
+body.darkMode #results .card,body.darkMode .profileGrid>div,body.darkMode .profileSection,body.darkMode .profileLiveCard{
+  background:rgba(17,83,112,.88)!important;border-color:rgba(117,197,224,.35)!important;
+}
