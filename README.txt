@@ -67,3 +67,6 @@ Version v58.20 – Favoriten, Datenqualität und iPhone-Optimierung
 - Größere Touchflächen für Navigation, Favoriten und wichtige Aktionen auf dem iPhone.
 - App-Symbol ergänzt und in Web-App-Manifest sowie Service-Worker aufgenommen.
 - Favoriten bleiben lokal im Browser gespeichert; keine Synchronisierung zwischen Geräten.
+
+
+Version v58.21: Alle Abschnitte in den Ortsdetails (Informationen, Belegte Hinweise, Datenqualität, Quelle und Zugangshinweise) haben jetzt abgerundete, meerblaue Kacheln passend zur Fahrzeit-Kachel.

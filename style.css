@@ -701,3 +701,18 @@ body.darkMode .distanceHint{color:#d6efff!important}
 body.darkMode .favoriteQualityNote{color:#b9cbd7}
 button,a,select,input{touch-action:manipulation}
 @media(max-width:430px){.modalBox{padding:18px 14px 22px}.favoriteToolbar{gap:12px}.favoriteToolbarButtons{gap:8px;flex-wrap:wrap}.favoriteMapAll,.favoriteShare{font-size:12px;padding:10px 12px}}
+
+
+/* v58.21 – alle Ortsprofil-Abschnitte mit abgerundeten Kacheln wie „Fahrzeit“ */
+.profileSection{
+  border:1px solid var(--sea-tile-border) !important;
+  border-radius:16px !important;
+  padding:12px !important;
+  margin:10px 0 !important;
+  background:var(--sea-tile) !important;
+  box-sizing:border-box;
+}
+body.darkMode .profileSection{
+  background:rgba(17,83,112,.88) !important;
+  border-color:rgba(117,197,224,.35) !important;
+}
