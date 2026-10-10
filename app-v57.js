@@ -38,7 +38,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.40";
+const APP_VERSION = "v58.41";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -1018,14 +1018,28 @@ async function fetchOpenStreetMapFkkPlaces(lat, lon, radiusKm){
   return [];
 }
 
+let searchRequestId = 0;
+function filterSortPlaces(merged){
+  let items=merged;
+  if(smartSearchMode === "see") items=items.filter(p=>/see|badesee|weiher|teich|naturbad|natursee/i.test(`${p.name} ${p.type} ${p.label}`));
+  if(smartSearchMode === "strand") items=items.filter(p=>/strand|ufer|küste|nordsee|ostsee/i.test(`${p.name} ${p.type} ${p.label}`));
+  if(confirmedOnlyEl && confirmedOnlyEl.checked) items=items.filter(p=>verificationInfo(p).kind==="official");
+  if(typeFilterEl && typeFilterEl.value!=="all") items=items.filter(p=>p.type===typeFilterEl.value);
+  const sortMode = resultSortEl ? resultSortEl.value : "distance";
+  if(sortMode === "name") items.sort((a,b)=>a.name.localeCompare(b.name, "de-DE"));
+  else if(sortMode === "official") items.sort((a,b)=>{
+    const score = p => verificationInfo(p).kind === "official" ? 0 : verificationInfo(p).kind === "directory" ? 1 : 2;
+    return score(a)-score(b) || a.distance-b.distance;
+  });
+  else items.sort((a,b)=>a.distance-b.distance);
+  return items;
+}
 async function searchPlaces(){
   if(!searchOrigin) return;
+  const requestId=++searchRequestId;
   updateRadiusCircle(true);
   const {lat,lon}=searchOrigin;
   const radiusKm=Number(radiusEl.value);
-  statusEl.textContent="🔎 Suche in der lokalen Datenbank und in OpenStreetMap …";
-  resultsEl.innerHTML='<div class="card">FKK-Orte werden gesucht …</div>';
-
   const activePlaces=FKK_PLACES.filter(p=>p.active!==false);
   const invalidCoordinateCount=activePlaces.filter(p=>{
     const la=Number(p.lat), lo=Number(p.lon);
@@ -1036,44 +1050,31 @@ async function searchPlaces(){
     .map(p=>({...p,distance:haversineKm(lat,lon,p.lat,p.lon)}))
     .filter(p=>p.distance<=radiusKm);
 
-  const live=await fetchOpenStreetMapFkkPlaces(lat,lon,radiusKm);
-  const merged=[...local];
-  for(const p of live){
-    const distance=haversineKm(lat,lon,p.lat,p.lon);
-    if(distance>radiusKm) continue;
-    const nameKey=p.name.toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]/g,"");
-    const duplicate=merged.some(q=>{
-      const qName=String(q.name||"").toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]/g,"");
-      return qName===nameKey || haversineKm(p.lat,p.lon,q.lat,q.lon)<0.15;
-    });
-    if(!duplicate) merged.push({...p,distance});
-  }
-  let items=merged;
-  if(smartSearchMode === "see") items=items.filter(p=>/see|badesee|weiher|teich|naturbad|natursee/i.test(`${p.name} ${p.type} ${p.label}`));
-  if(smartSearchMode === "strand") items=items.filter(p=>/strand|ufer|küste|nordsee|ostsee/i.test(`${p.name} ${p.type} ${p.label}`));
-
-  if(confirmedOnlyEl && confirmedOnlyEl.checked){
-    // OSM-Tags sind kein amtlicher Nachweis und werden deshalb hier nicht als offiziell ausgegeben.
-    items=items.filter(p=>verificationInfo(p).kind==="official");
-  }
-  if(typeFilterEl && typeFilterEl.value!=="all"){
-    items=items.filter(p=>p.type===typeFilterEl.value);
-  }
-  const sortMode = resultSortEl ? resultSortEl.value : "distance";
-  if(sortMode === "name") items.sort((a,b)=>a.name.localeCompare(b.name, "de-DE"));
-  else if(sortMode === "official") items.sort((a,b)=>{
-    const score = p => verificationInfo(p).kind === "official" ? 0 : verificationInfo(p).kind === "directory" ? 1 : 2;
-    return score(a)-score(b) || a.distance-b.distance;
+  // Zeige lokale Treffer sofort an; die langsamere öffentliche OSM-Abfrage läuft danach im Hintergrund.
+  renderResults(filterSortPlaces([...local]),radiusKm);
+  statusEl.textContent=`⚡ ${filterSortPlaces([...local]).length} Treffer aus der lokalen Datenbank. Zusätzliche Online-Treffer werden im Hintergrund gesucht …`;
+  if(!navigator.onLine){ statusEl.textContent=`📡 Offline: ${filterSortPlaces([...local]).length} Treffer aus der lokalen Datenbank.`; return; }
+  fetchOpenStreetMapFkkPlaces(lat,lon,radiusKm).then(live=>{
+    if(requestId!==searchRequestId || !searchOrigin || searchOrigin.lat!==lat || searchOrigin.lon!==lon) return;
+    const merged=[...local];
+    for(const p of live){
+      const distance=haversineKm(lat,lon,p.lat,p.lon);
+      if(distance>radiusKm) continue;
+      const nameKey=p.name.toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]/g,"");
+      const duplicate=merged.some(q=>{
+        const qName=String(q.name||"").toLocaleLowerCase("de-DE").replace(/[^a-z0-9äöüß]/g,"");
+        return qName===nameKey || haversineKm(p.lat,p.lon,q.lat,q.lon)<0.15;
+      });
+      if(!duplicate) merged.push({...p,distance});
+    }
+    const items=filterSortPlaces(merged);
+    renderResults(items,radiusKm);
+    statusEl.textContent=live.length
+      ? `✅ ${items.length} passende Orte · lokale Datenbank + OpenStreetMap (${live.length} Online-Treffer vor Dublettenprüfung). OSM-Angaben sind nicht automatisch amtlich bestätigt.`
+      : `ℹ️ ${items.length} passende Orte aus der lokalen Datenbank. OpenStreetMap lieferte keine zusätzlichen Treffer.`;
+  }).catch(()=>{
+    if(requestId===searchRequestId) statusEl.textContent=`ℹ️ ${filterSortPlaces([...local]).length} Treffer aus der lokalen Datenbank. Online-Suche derzeit nicht verfügbar.`;
   });
-  else items.sort((a,b)=>a.distance-b.distance);
-  renderResults(items,radiusKm);
-  if(live.length){
-    statusEl.textContent=`✅ ${items.length} passende Orte · lokale Datenbank + OpenStreetMap (${live.length} Online-Treffer vor Dublettenprüfung). OSM-Angaben sind nicht automatisch amtlich bestätigt.`;
-  }else if(navigator.onLine){
-    statusEl.textContent=`ℹ️ ${items.length} passende Orte aus der lokalen Datenbank. OpenStreetMap lieferte gerade keine zusätzlichen Treffer; bitte später erneut versuchen.`;
-  }else{
-    statusEl.textContent=`📡 Offline: ${items.length} passende Orte aus der lokalen Datenbank.`;
-  }
 }
 
 function useLocation(){
@@ -1258,7 +1259,7 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.40";
+window.FKK_APP_VERSION = "v58.41";
 
 
 
