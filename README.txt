@@ -123,3 +123,10 @@ Version v58.36 – Punkt 5: Zusätzliche optionale Filter für Parkplatz-, WC/Sa
 Version v58.37 – Die aufklappbare Gruppe „Weitere Filter“ (Parkplatz-, WC/Sanitär- und Eintritt/Gebühren-Hinweise) wurde auf Wunsch entfernt. Die übrigen Suchfilter und „Filter zurücksetzen“ bleiben erhalten.
 
 Version v58.38 – Suche erweitert: zusätzlich zur lokalen Datenbank werden online ausdrücklich mit nudism=yes/designated/permissive markierte OpenStreetMap-Objekte im Suchradius abgefragt. Treffer werden nach Name/Koordinatennähe dedupliziert; OSM-Treffer gelten nicht als amtlich bestätigt. Offline bleibt die lokale Suche verfügbar. Overpass-Verfügbarkeit und Vollständigkeit sind nicht garantiert.
+
+
+Version v58.39 – Standortfotos
+- Ortsdetails versuchen ein Foto aus Wikimedia Commons im Umkreis von 500 m zu finden.
+- Foto-Quellseite mit Urheber-/Lizenzangaben ist verlinkt.
+- Wenn kein passendes Foto gefunden wird oder offline, wird ein verständlicher Hinweis angezeigt.
+- Fotos werden nur beim Öffnen der Ortsdetails geladen; das spart Datenvolumen bei der normalen Suche.

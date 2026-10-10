@@ -38,7 +38,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.38";
+const APP_VERSION = "v58.39";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -396,6 +396,43 @@ function sharePlace(p){
   else window.prompt("Link kopieren:",text);
 }
 
+async function loadPlacePhoto(p){
+  const target=document.getElementById("profilePlacePhoto");
+  if(!target) return;
+  target.innerHTML='<div class="placePhotoLoading">📷 Suche nach einem passenden Ortsfoto …</div>';
+  const cacheKey=`fkkPlacePhoto:${p.lat.toFixed(4)}:${p.lon.toFixed(4)}`;
+  try{
+    let cached=null;
+    try{ cached=JSON.parse(sessionStorage.getItem(cacheKey)||"null"); }catch(_e){}
+    let photo=cached;
+    if(!photo){
+      const params=new URLSearchParams({action:"query",generator:"geosearch",ggscoord:`${p.lat}|${p.lon}`,ggsradius:"500",ggslimit:"10",ggsnamespace:"6",prop:"imageinfo",iiprop:"url|extmetadata",iiurlwidth:"1000",format:"json",origin:"*"});
+      const response=await fetch(`https://commons.wikimedia.org/w/api.php?${params.toString()}`,{headers:{Accept:"application/json"}});
+      if(!response.ok) throw new Error("Fotoquelle nicht erreichbar");
+      const data=await response.json();
+      const pages=Object.values(data?.query?.pages||{});
+      const candidates=pages.map(page=>{
+        const info=page.imageinfo?.[0];
+        const meta=info?.extmetadata||{};
+        const distance=Number(page?.coordinates?.[0]?.dist ?? 999999);
+        return {title:page.title,thumb:info?.thumburl||info?.url, pageUrl:info?.descriptionurl, author:meta.Artist?.value||"Urheberangabe auf Wikimedia Commons", license:meta.LicenseShortName?.value||meta.UsageTerms?.value||"Lizenzangaben auf der Quellseite", distance};
+      }).filter(x=>x.thumb && x.pageUrl && /\.(jpe?g|png|webp)$/i.test(new URL(x.thumb).pathname));
+      candidates.sort((a,b)=>a.distance-b.distance);
+      photo=candidates[0]||null;
+      try{sessionStorage.setItem(cacheKey,JSON.stringify(photo));}catch(_e){}
+    }
+    const current=document.getElementById("profilePlacePhoto");
+    if(!current) return;
+    if(!photo){ current.innerHTML='<div class="placePhotoEmpty">Für diesen Ort wurde kein passendes, frei nutzbares Foto in Wikimedia Commons gefunden.</div>'; return; }
+    current.innerHTML=`<figure class="placePhotoFigure"><a href="${escapeHtml(photo.pageUrl)}" target="_blank" rel="noopener" aria-label="Fotoquelle und Lizenzangaben öffnen"><img src="${escapeHtml(photo.thumb)}" alt="Foto aus der Umgebung von ${escapeHtml(p.name)}" loading="lazy" referrerpolicy="no-referrer"></a><figcaption>📷 ${escapeHtml(photo.title.replace(/^File:/,""))}<br><span>${escapeHtml(photo.license)} · <a href="${escapeHtml(photo.pageUrl)}" target="_blank" rel="noopener">Urheber & Lizenz</a></span></figcaption></figure>`;
+    const img=current.querySelector("img");
+    if(img) img.onerror=()=>{current.innerHTML='<div class="placePhotoEmpty">Das Foto kann gerade nicht geladen werden. <a href="'+escapeHtml(photo.pageUrl)+'" target="_blank" rel="noopener">Fotoquelle öffnen</a></div>';};
+  }catch(_e){
+    const current=document.getElementById("profilePlacePhoto");
+    if(current) current.innerHTML='<div class="placePhotoEmpty">Fotos benötigen eine Internetverbindung. Bitte später erneut versuchen.</div>';
+  }
+}
+
 function openPlaceProfile(p){
   if(!modalEl) return;
   const v=verificationInfo(p);
@@ -407,6 +444,7 @@ function openPlaceProfile(p){
       <div class="profileDistance">📍 ${p.distance!=null ? p.distance.toFixed(1)+" km Luftlinie" : "Entfernung nicht berechnet"}</div>
       <div class="profileBadges"><span class="destinationBadge destination-${d.kind}">📍 ${d.label}</span><span class="verificationBadge verification-${v.kind}">${v.icon} ${v.label}</span><span class="qualityBadge quality-${qualityInfo(p).kind}">${qualityInfo(p).icon} ${qualityInfo(p).label}</span></div>
     </div>
+    <div class="profileSection profilePhotoSection"><h3>📷 Foto vom Standort</h3><div id="profilePlacePhoto" aria-live="polite"><div class="placePhotoLoading">Foto wird vorbereitet …</div></div><p class="profileMuted">Fotos stammen aus Wikimedia Commons und können die nähere Umgebung zeigen. Urheber und Lizenz findest du über das Foto.</p></div>
     <div class="profileGrid">
       <div><span>Art</span><strong>${escapeHtml(p.label||"FKK-Ort")}</strong></div>
       <div><span>Typ</span><strong>${escapeHtml(p.type||"–")}</strong></div>
@@ -428,6 +466,7 @@ function openPlaceProfile(p){
     </div>`;
   modalEl.classList.remove("hidden");
   document.body.classList.add("modalOpen");
+  loadPlacePhoto(p);
   loadPlaceWeather(p);
   loadDriveTime(p);
   const favBtn=document.getElementById("profileFavoriteBtn");

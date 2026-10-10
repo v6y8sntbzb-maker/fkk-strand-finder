@@ -832,3 +832,6 @@ body.darkMode .dataAuditWarning{color:#ffe2a8;background:rgba(202,128,25,.18)}
 body.darkMode .favoriteNoteLabel{color:#d4e8fb}
 body.darkMode .favoriteNoteInput{background:#14283b;color:#f2f7fc;border-color:#34536e}
 body.darkMode .favoriteNoteStatus{color:#7cddb2}
+
+/* v58.39 – Standortfotos mit Quellen- und Lizenzlink */
+.profilePhotoSection{overflow:hidden}.placePhotoLoading,.placePhotoEmpty{padding:13px;border:1px dashed #c9dbe8;border-radius:13px;background:rgba(239,247,252,.75);color:#587083;font-size:12px;line-height:1.45}.placePhotoFigure{margin:0}.placePhotoFigure>a{display:block;overflow:hidden;border-radius:15px;background:#eaf1f6}.placePhotoFigure img{display:block;width:100%;max-height:300px;object-fit:cover;min-height:130px}.placePhotoFigure figcaption{padding:7px 2px 0;color:#50677a;font-size:11px;line-height:1.45;overflow-wrap:anywhere}.placePhotoFigure figcaption span{color:#7b8b99;font-size:10px}.placePhotoFigure figcaption a,.placePhotoEmpty a{color:#1671bb;text-decoration:underline}body.darkMode .placePhotoLoading,body.darkMode .placePhotoEmpty{background:#102334;border-color:#294458;color:#a9bdca}body.darkMode .placePhotoFigure figcaption{color:#a9bdca}body.darkMode .placePhotoFigure figcaption span{color:#8fa6b8}
