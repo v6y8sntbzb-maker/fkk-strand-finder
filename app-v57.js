@@ -38,7 +38,7 @@ function setDarkMode(enabled){
 document.addEventListener("DOMContentLoaded",()=>{ const b=document.getElementById("searchAction"); if(b) b.innerHTML='<span aria-hidden="true">⌕</span> FKK-Orte suchen'; });
 
 const DATA_SNAPSHOT_DATE = "08.10.2026";
-const APP_VERSION = "v58.39";
+const APP_VERSION = "v58.40";
 
 const FKK_PLACES = [
   // v56 – weitere FKK-Badestellen aus aktueller FKK-Liste, Koordinaten separat geprüft
@@ -433,6 +433,38 @@ async function loadPlacePhoto(p){
   }
 }
 
+function placeReviewKey(p){return 'fkkPlaceReviews:'+String(p.name||'').trim().toLowerCase()+'|'+Number(p.lat).toFixed(4)+'|'+Number(p.lon).toFixed(4)}
+function getPlaceReviews(p){try{return JSON.parse(localStorage.getItem(placeReviewKey(p))||'[]')}catch(_e){return []}}
+function renderPlaceReviews(p){
+  const host=document.getElementById('placeReviewsList'); if(!host)return;
+  const reviews=getPlaceReviews(p); const count=reviews.length;
+  const avg=count?reviews.reduce((sum,r)=>sum+Number(r.rating||0),0)/count:0;
+  const summary=document.getElementById('placeReviewSummary');
+  if(summary) summary.innerHTML=count?`<strong class="reviewAvg">${avg.toFixed(1)} ★</strong> <span>${count} ${count===1?'Bewertung':'Bewertungen'}</span>`:'Noch keine Bewertungen – sei der Erste!';
+  host.innerHTML=count?reviews.slice().reverse().map(r=>`<article class="placeReview"><div class="placeReviewTop"><span class="reviewStars" aria-label="${Number(r.rating)} von 5 Sternen">${'★'.repeat(Number(r.rating))}${'☆'.repeat(5-Number(r.rating))}</span><span class="reviewDate">${escapeHtml(r.date||'')}</span></div>${r.text?`<p>${escapeHtml(r.text)}</p>`:''}${r.photos&&r.photos.length?`<div class="reviewPhotos">${r.photos.map(src=>`<a href="${src}" target="_blank" rel="noopener"><img src="${src}" alt="Vom Nutzer hinzugefügtes Foto" loading="lazy"></a>`).join('')}</div>`:''}</article>`).join(''):'<p class="profileMuted">Hier gibt es noch keine Erfahrungsberichte.</p>';
+}
+function setupPlaceReviews(p){
+  const form=document.getElementById('placeReviewForm'); if(!form)return;
+  let selectedRating=5; const ratingInput=document.getElementById('placeReviewRating');
+  const stars=[...form.querySelectorAll('[data-review-rating]')];
+  function updateStars(){stars.forEach(b=>{const on=Number(b.dataset.reviewRating)<=selectedRating;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(Number(b.dataset.reviewRating)===selectedRating));});if(ratingInput)ratingInput.value=String(selectedRating)}
+  stars.forEach(b=>b.addEventListener('click',()=>{selectedRating=Number(b.dataset.reviewRating);updateStars()}));updateStars();renderPlaceReviews(p);
+  form.addEventListener('submit',async ev=>{
+    ev.preventDefault();const save=form.querySelector('button[type="submit"]');const status=document.getElementById('placeReviewStatus');
+    const text=document.getElementById('placeReviewText').value.trim();const files=[...(document.getElementById('placeReviewPhotos').files||[])].slice(0,3);
+    if(!text&&!files.length){if(status)status.textContent='Bitte schreibe einen kurzen Eindruck oder füge ein Foto hinzu.';return}
+    if(save){save.disabled=true;save.textContent='Wird gespeichert …'}
+    try{
+      const photos=[];
+      for(const file of files){if(!file.type.startsWith('image/'))continue;const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>{const im=new Image();im.onload=()=>{const scale=Math.min(1,900/Math.max(im.width,im.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(im.width*scale));canvas.height=Math.max(1,Math.round(im.height*scale));canvas.getContext('2d').drawImage(im,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',0.72))};im.onerror=reject;im.src=reader.result};reader.onerror=reject;reader.readAsDataURL(file)});photos.push(data)}
+      const reviews=getPlaceReviews(p);reviews.push({rating:selectedRating,text,photos,date:new Date().toLocaleDateString('de-DE')});
+      try{localStorage.setItem(placeReviewKey(p),JSON.stringify(reviews))}catch(_e){throw new Error('Der lokale Speicher ist voll. Bitte weniger oder kleinere Fotos auswählen.')}
+      form.reset();selectedRating=5;updateStars();renderPlaceReviews(p);if(status)status.textContent='Bewertung und Fotos wurden auf diesem Gerät gespeichert.';
+    }catch(err){if(status)status.textContent=err.message||'Speichern fehlgeschlagen. Bitte kleinere Fotos versuchen.'}
+    finally{if(save){save.disabled=false;save.textContent='Bewertung speichern'}}
+  });
+}
+
 function openPlaceProfile(p){
   if(!modalEl) return;
   const v=verificationInfo(p);
@@ -456,6 +488,7 @@ function openPlaceProfile(p){
     ${accessHint(p) ? `<div class="profileSection"><h3>⚠️ Zugang & Hinweise</h3><p>${escapeHtml(accessHint(p))}</p></div>` : ""}
     <div class="profileSection"><h3>🔎 Datenqualität</h3><p><strong>${qualityInfo(p).icon} ${qualityInfo(p).label}</strong></p><p class="profileMuted">Einordnung: ${escapeHtml(v.label)} · Zielpunkt: ${escapeHtml(d.label)}</p><p class="profileMuted">Datenstand der Zusammenstellung: ${DATA_SNAPSHOT_DATE}. Das ist kein Datum einer individuellen Vor-Ort-Prüfung.</p></div>
     <div class="profileSection"><h3>📍 Kartenposition</h3><p>Breitengrad: <strong>${Number(p.lat).toFixed(5)}</strong><br>Längengrad: <strong>${Number(p.lon).toFixed(5)}</strong></p><p><a href="https://www.openstreetmap.org/?mlat=${encodeURIComponent(p.lat)}&mlon=${encodeURIComponent(p.lon)}#map=16/${encodeURIComponent(p.lat)}/${encodeURIComponent(p.lon)}" target="_blank" rel="noopener">Position in OpenStreetMap prüfen ↗</a></p>${dataQualityMarkup(p)}</div>
+    <div class="profileSection profileReviewsSection"><h3>⭐ Bewertungen & Fotos</h3><div id="placeReviewSummary" class="placeReviewSummary"></div><form id="placeReviewForm" class="placeReviewForm"><label>Deine Bewertung</label><div class="reviewStarPicker" role="group" aria-label="Bewertung von 1 bis 5 Sternen">${[1,2,3,4,5].map(n=>`<button type="button" data-review-rating="${n}" aria-label="${n} Sterne" aria-pressed="false">★</button>`).join('')}</div><input id="placeReviewRating" type="hidden" value="5"><label for="placeReviewText">Dein Eindruck (optional)</label><textarea id="placeReviewText" rows="3" maxlength="800" placeholder="Wie war der Strand? Zugang, Sauberkeit, Ruhe …"></textarea><label for="placeReviewPhotos">Fotos hinzufügen (max. 3)</label><input id="placeReviewPhotos" type="file" accept="image/*" multiple><p class="profileMuted">Bitte keine erkennbaren Personen ohne deren Zustimmung fotografieren. Bewertungen und Fotos werden nur auf diesem Gerät gespeichert und nicht öffentlich übertragen.</p><button class="modalAction reviewSubmit" type="submit">Bewertung speichern</button><p id="placeReviewStatus" class="profileMuted" aria-live="polite"></p></form><div id="placeReviewsList" class="placeReviewsList"></div></div>
     <div class="profileSection"><h3>📚 Quelle</h3><p>${sourceLink}</p><p class="profileMuted">${escapeHtml(p.evidence||"Keine weitere Einordnung hinterlegt.")}</p></div>
     <div class="profileActions">
       <button id="profileFavoriteBtn" class="modalAction" type="button">${favorites.has(p.name)?"★ Aus Favoriten entfernen":"☆ Zu Favoriten hinzufügen"}</button>
@@ -466,6 +499,7 @@ function openPlaceProfile(p){
     </div>`;
   modalEl.classList.remove("hidden");
   document.body.classList.add("modalOpen");
+  setupPlaceReviews(p);
   loadPlacePhoto(p);
   loadPlaceWeather(p);
   loadDriveTime(p);
@@ -1224,7 +1258,7 @@ if(resetFiltersEl) resetFiltersEl.addEventListener("click",()=>{
 });
 
 initMap();
-window.FKK_APP_VERSION = "v58.38";
+window.FKK_APP_VERSION = "v58.40";
 
 
 
